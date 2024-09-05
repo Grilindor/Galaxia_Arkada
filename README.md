@@ -1,4 +1,4 @@
-![logo](logo.png)
+![logo]([logo.png](https://github.com/Grilindor/Galaxia_Arkada/blob/main/frontend/public/images/logo.png))
 
 ## Introduction
 Galaxia Arkada is an online game hosting web application created by two students from Holberton School.
