@@ -1,10 +1,13 @@
-## Galaxia_Arkada
-![logo](https://files.slack.com/files-pri/T0423U1MW21-F07JS2CNXLM/dall__e_2024-08-22_11.08.04_-_a_very_simple__minimalist_logo_featuring_an_abstract_galaxy_swirl_in_a_basic__clean_design._the_galaxy_is_composed_of_two_or_three_contrasting_colors_.png)
+![logo](logo.png)
+
 ## Introduction
+Galaxia Arkada is an online game hosting web application created by two students from Holberton School.
+The platform is designed to feature a selection of small games, each developed by Holberton School students specializing in AR/VR.
+The aim is to provide a fun, interactive environment where users can enjoy and explore innovative game designs.
 
 ## The Projet and The Context
-Galaxia Arkada is an online game hosting web application imagined by two Holberton School students,
-which aims to offer a list of small games which themselves will have been developed by Holberton School students in AR/VR specialization.
+Galaxia Arkada serves as a platform for showcasing the creativity and technical skills of Holberton School students.
+Each game hosted on the platform highlights the cutting-edge work being done in the AR/VR specialization, providing a seamless integration of these technologies into an engaging user experience.
 
 ## The Team
 Marc CORNABAS - Back-end Developer
@@ -21,16 +24,27 @@ His work directly impacts the user experience, ensuring the platform is both vis
 ## Blog posts
 After the development phase, we each wrote a blog post to reflect on the Galaxia_Arkada.
 
-* Antonin article : [Galaxia_Arkada](lien)
-* Marc article : [Galaxia_Arkada](lien)
+* Antonin article : [Galaxia_Arkada]()
+* Marc article : [Galaxia_Arkada]()
+
+# Architecture
+![Architecture](Architecture.png)
+
+## Run Galaxia_Arkada
 
 ## Tutorial
-## Take a tour of the deployed version at Galaxia_Arkada
-## Run Galaxia_Arkada
+
 ## Known bugs
-# Architecture
+
 ## Overview
+
 ### List of components
+
 ### Authentication
+
+## Take a tour of the deployed version at Galaxia_Arkada
+
 # Acknowledgments
+
 # License
+This project is licensed under the MIT License - see the LICENSE file for details.
