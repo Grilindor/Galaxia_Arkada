@@ -1,5 +1,5 @@
 # Utilise une image de base Node.js
-FROM node:14
+FROM node:lts as build
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
