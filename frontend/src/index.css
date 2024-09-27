@@ -1,13 +1,44 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.background {
+  background-color: lightblue;
+}
+
+a {
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 5px;
+  line-height: 5px;
+  text-shadow: 2cm;
+  color: rgb(194, 0, 253);
+}
+
+h2 {
+  text-align: center;
+  color: rgb(245, 15, 15);
+}
+
+h6 {
+  text-align: center;
+  color: rgb(245, 15, 15);
+}
+
+p {
+  text-align: center;
+}
+
+.image {
+  background-image: url(https://unsplash.com/fr/photos/un-gros-plan-dune-fleur-blanche-avec-un-centre-vert-H_J12AlvBtM);
 }

@@ -1,38 +1,121 @@
+/* Global styles */
+body,
+html,
+#root,
 .App {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  height: 100%;
+}
+
+/* Header (en-tête) */
+.header {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+  background: linear-gradient(130deg, #000000, #000000, #000000);
+}
+
+.nav button,
+.user-actions button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.banner {
+  height: 200px;
+  background-color: #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.banner-content {
+  font-size: 24px;
+  color: #333;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+  background-color: #f9f9f9;
+}
+
+.filters select,
+.filters input {
+  margin: 0 10px;
+  padding: 10px;
+}
+
+/* Main content */
+.main-content {
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.sidebar-left,
+.sidebar-right {
+  width: 20%;
+  background-color: #f0f0f0;
+}
+
+.sidebar-left .ad,
+.sidebar-right .event {
+  margin: 20px;
+  background-color: #ccc;
+  padding: 20px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.games-list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 60%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.game {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  text-align: center;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.game-image {
+  background-color: #ccc;
+  height: 100px;
+  margin-bottom: 10px;
 }
 
-.App-link {
-  color: #61dafb;
+/* Footer */
+.footer {
+  padding: 20px;
+  text-align: center;
+  background-color: #f1f1f1;
+  position: relative;
+  bottom: 0;
+  width: 100%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.logo img {
+  width: 150px; /* Ajuste la taille selon tes besoins */
+  height: auto; /* Maintient les proportions de l'image */
+}
+
+.logo {
+  margin-left: 40px;
 }
