@@ -1,38 +1,38 @@
-const { type } = require("os");
-const { Sequelize } = require("sequelize");
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
+    id: {
+      type: Sequelize.UUID,
+      defaultValue: Sequelize.UUIDV4, // Utilise UUIDV4 par défaut
+      primaryKey: true,
+    },
     firstname: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     lastname: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     userpsedo: {
       type: Sequelize.STRING,
       allowNull: false,
-      unique: true
+      unique: true,
     },
     email: {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true
-      }
     },
     password: {
       type: Sequelize.STRING,
-      allowNull: false
+      allowNull: false,
     },
     role: {
       type: Sequelize.STRING,
-      defaultValue: "user"
-    }
+      defaultValue: "user",
+    },
   });
-
   return User;
-}
+};
