@@ -13,15 +13,15 @@ module.exports = function(app) {
   // Voir tous les utilisateurs avec pagination
   app.get("/api/users", [authJwt.verifyToken], controller.getAllUsers);
 
-  // Voir un utilisateur par ID
-  app.get("/api/users/:id", [authJwt.verifyToken], controller.getUserById);
+  // Voir un utilisateur par UUID
+  app.get("/api/users/:uuid", [authJwt.verifyToken], controller.getUser);
 
-  // Créer un nouvel utilisateur
-  app.post("/api/users", [authJwt.verifyToken], controller.createUser);
+  // Créer un utilisateur
+  app.post("/api/users", controller.createUser);
 
-  // Mettre à jour un utilisateur
-  app.put("/api/users/:id", [authJwt.verifyToken], controller.updateUser);
+  // Mettre à jour un utilisateur par UUID
+  app.put("/api/users/:uuid", [authJwt.verifyToken], controller.updateUser);
 
-  // Supprimer un utilisateur
-  app.delete("/api/users/:id", [authJwt.verifyToken], controller.deleteUser);
+  // Supprimer un utilisateur par UUID
+  app.delete("/api/users/:uuid", [authJwt.verifyToken], controller.deleteUser);
 };

@@ -37,9 +37,9 @@ exports.getUser = async (req, res) => {
   }
 };
 
-// Créer un utilisateur
+// Créer un utilisateur avec le rôle
 exports.createUser = async (req, res) => {
-  const { firstname, lastname, userpseudo, email, password } = req.body;
+  const { firstname, lastname, userpseudo, email, password, role } = req.body;
   try {
     const user = await User.create({
       firstname,
@@ -47,6 +47,7 @@ exports.createUser = async (req, res) => {
       userpseudo,
       email,
       password,
+      role: role || "user", // Valeur par défaut "user"
     });
     res.status(201).send(user);
   } catch (err) {
@@ -54,7 +55,7 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Mettre à jour un utilisateur par UUID
+// Mettre à jour un utilisateur par UUID (y compris le rôle)
 exports.updateUser = async (req, res) => {
   const { uuid } = req.params;
   try {
