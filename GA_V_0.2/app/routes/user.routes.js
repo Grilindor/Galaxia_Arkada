@@ -1,5 +1,7 @@
 const { authJwt } = require("../middleware");
 const controller = require("../controllers/user.controller");
+const checkUserExistsByEmail = require("../middleware/checkUserExistsByEmail");
+const { checkUserExists } = require("../middleware/user.middleware");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -11,17 +13,17 @@ module.exports = function(app) {
   });
 
   // Voir tous les utilisateurs avec pagination
-  app.get("/api/users", [authJwt.verifyToken], controller.getAllUsers);
+  app.get("/api/users", [authJwt.verifyToken, checkUserExists], controller.getAllUsers);
 
   // Voir un utilisateur par UUID
-  app.get("/api/users/:uuid", [authJwt.verifyToken], controller.getUser);
+  app.get("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.getUser);
 
   // Créer un utilisateur
   app.post("/api/users", [checkUserExistsByEmail], controller.createUser);
 
   // Mettre à jour un utilisateur par UUID
-  app.put("/api/users/:uuid", [authJwt.verifyToken], controller.updateUser);
+  app.put("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.updateUser);
 
   // Supprimer un utilisateur par UUID
-  app.delete("/api/users/:uuid", [authJwt.verifyToken], controller.deleteUser);
+  app.delete("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.deleteUser);
 };
