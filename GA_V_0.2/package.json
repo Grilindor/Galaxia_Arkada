@@ -1,0 +1,34 @@
+{
+  "name": "alpha",
+  "version": "1.0.0",
+  "description": "README.md",
+  "main": "server.js",
+  "scripts": {
+    "test": "non"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Grilindor/Galaxia_Arkada.git#Marc"
+  },
+  "keywords": [
+    "Node.js",
+    "sequelize",
+    "jwt",
+    "cors",
+    "bcryptjs",
+    "postgreSQL",
+    "Backend",
+    "express"
+  ],
+  "author": "Marc CORNABAS",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Grilindor/Galaxia_Arkada/issues"
+  },
+  "homepage": "https://github.com/Grilindor/Galaxia_Arkada/tree/Marc#readme",
+  "devDependencies": {
+    "eslint": "^9.11.1",
+    "globals": "^15.9.0",
+    "nodemon": "^3.1.7"
+  }
+}
