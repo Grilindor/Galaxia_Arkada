@@ -1,4 +1,4 @@
-module.exports = (sequelize, Sequelize) => {
+module.exports = async (sequelize, Sequelize) => {
   const Role = sequelize.define("role", {
     id: {
       type: Sequelize.INTEGER,

@@ -1,6 +1,6 @@
 const { type } = require("os");
 
-module.exports = (sequelize, Sequelize) => {
+module.exports = async (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
     username: {
       type: Sequelize.STRING,
