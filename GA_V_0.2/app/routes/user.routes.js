@@ -1,4 +1,4 @@
-const { authJwt } = require("../middleware");
+const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/user.controller");
 const checkUserExistsByEmail = require("../middleware/checkUserExistsByEmail");
 const { checkUserExists } = require("../middleware/user.middleware");
