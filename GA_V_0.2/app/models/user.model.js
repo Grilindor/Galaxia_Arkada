@@ -15,7 +15,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
-    userpsedo: {
+    userpseudo: {
       type: Sequelize.STRING,
       allowNull: false,
       unique: true,

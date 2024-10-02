@@ -19,7 +19,7 @@ module.exports = function(app) {
   app.get("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.getUser);
 
   // Créer un utilisateur
-  app.post("/api/users", [checkUserExistsByEmail], controller.createUser);
+  app.post("/api/users/signup", [checkUserExistsByEmail], controller.createUser);
 
   // Mettre à jour un utilisateur par UUID
   app.put("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.updateUser);
