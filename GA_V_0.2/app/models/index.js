@@ -29,10 +29,15 @@ db.role = require("./role.model.js")(sequelize, Sequelize);
 // Définir les relations entre modèles
 db.role.belongsToMany(db.user, {
   through: "user_roles",
+  foreignKey: "roleId",
+  otherKey: "userId"
 });
 db.user.belongsToMany(db.role, {
   through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId"
 });
+
 
 db.ROLES = ["user", "admin", "moderator"];
 
