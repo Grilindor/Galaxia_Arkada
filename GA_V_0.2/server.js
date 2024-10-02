@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const db = require("./models");
+const db = require("./app/models");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -11,8 +11,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-require("./routes/user.routes")(app);
-require("./routes/game.routes")(app);
+require("./app/routes/user.routes")(app);
+// require("./app/routes/game.routes")(app);
 
 // Synchronisation de la base de données
 db.sequelize.sync({ force: false }).then(() => {
