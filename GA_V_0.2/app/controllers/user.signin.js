@@ -1,24 +1,22 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
+require('dotenv').config();
 const User = db.user;
 
 exports.signIn = async (req, res) => {
-  const { email, userpseudo, password } = req.body;
+  const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({
-      where: {
-        [db.Sequelize.Op.or]: [{ email }, { userpseudo }] // Vérification de l'email ou du userpseudo
-      }
-    });
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
       return res.status(404).send({ message: "User Not Found." });
     }
 
-    // Comparer le mot de passe avec le hashé
-    const passwordIsValid = await bcrypt.compare(password, user.password);
+    // Comparer le mot de passe avec le mot de passe hashé
+    const passwordIsValid = await bcrypt.compare(req.body.password, user.password);
+
     if (!passwordIsValid) {
       return res.status(401).send({ accessToken: null, message: "Invalid Password!" });
     }

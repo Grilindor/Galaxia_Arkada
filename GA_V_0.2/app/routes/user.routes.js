@@ -2,6 +2,7 @@ const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/user.controller");
 const checkUserExistsByEmail = require("../middleware/checkUserExistsByEmail");
 const { checkUserExists } = require("../middleware/user.middleware");
+const signin = require("../controllers/user.signin")
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -20,6 +21,9 @@ module.exports = function(app) {
 
   // Créer un utilisateur
   app.post("/api/users/signup", [checkUserExistsByEmail], controller.createUser);
+
+  // connection d'un utilisateur
+  app.post("/api/users/signin", signin.signIn);
 
   // Mettre à jour un utilisateur par UUID
   app.put("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.updateUser);

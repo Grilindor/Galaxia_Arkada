@@ -1,5 +1,7 @@
 const db = require("../models");
 const User = db.user;
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 // Voir tous les utilisateurs avec pagination
 exports.getAllUsers = async (req, res) => {
@@ -46,7 +48,7 @@ exports.createUser = async (req, res) => {
       lastname,
       userpseudo,
       email,
-      password,
+      password: await bcrypt.hash(password, saltRounds), // Hash le mot de passe avant de le stocker
       role: role || "user", // Valeur par défaut "user"
     });
     res.status(201).send(user);
