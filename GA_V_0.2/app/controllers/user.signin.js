@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const db = require("../models");
 require('dotenv').config();
 const User = db.user;
+const Token = db.token;
 
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
@@ -14,16 +15,22 @@ exports.signIn = async (req, res) => {
       return res.status(404).send({ message: "User Not Found." });
     }
 
-    // Comparer le mot de passe avec le mot de passe hashé
-    const passwordIsValid = await bcrypt.compare(req.body.password, user.password);
+    const passwordIsValid = await bcrypt.compare(password, user.password);
+    //const passwordIsValid = await bcrypt.compare(req.body.password, user.password);
 
     if (!passwordIsValid) {
       return res.status(401).send({ accessToken: null, message: "Invalid Password!" });
     }
 
-    // Générer un token JWT valide pendant 12 heures
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: 43200, // 12 heures en secondes
+      expiresIn: 43200, // 12 heures
+    });
+
+    // Sauvegarder le token dans la base de données
+    await Token.create({
+      token: token,
+      userId: user.id,
+      expiresAt: new Date(Date.now() + 43200 * 1000), // Expiration dans 12 heures
     });
 
     res.status(200).send({
@@ -32,8 +39,8 @@ exports.signIn = async (req, res) => {
       user: {
         id: user.id,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
   } catch (err) {
     res.status(500).send({ message: err.message });
