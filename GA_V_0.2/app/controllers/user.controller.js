@@ -53,6 +53,7 @@ exports.createUser = async (req, res) => {
     });
     res.status(201).send(user);
   } catch (err) {
+    console.log(err);
     res.status(500).send({ message: err.message });
   }
 };
@@ -68,6 +69,7 @@ exports.updateUser = async (req, res) => {
     await user.update(req.body);
     res.status(200).send(user);
   } catch (err) {
+    console.log(err);
     res.status(500).send({ message: err.message });
   }
 };
