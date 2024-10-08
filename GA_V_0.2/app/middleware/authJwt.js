@@ -2,14 +2,24 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/db.config.js");
 const db = require("../models");
 const User = db.user;
+const Token = db.token;
+require('dotenv').config();
 
 // Vérifie le token JWT
-verifyToken = (req, res, next) => {
-  const token = req.headers["x-access-token"];
+verifyToken = async (req, res, next) => {
+  let token = req.headers["x-access-token"];
+
   if (!token) {
     return res.status(403).send({ message: "No token provided!" });
   }
-  jwt.verify(token, config.secret, (err, decoded) => {
+
+  // Vérifier si le token existe en base de données
+  const storedToken = await Token.findOne({ where: { token } });
+  if (!storedToken) {
+    return res.status(401).send({ message: "Invalid token!" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(401).send({ message: "Unauthorized!" });
     }
