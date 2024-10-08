@@ -25,6 +25,7 @@ db.sequelize = sequelize;
 // Charger les modèles
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.role = require("./role.model.js")(sequelize, Sequelize);
+db.token = require("./token.model.js")(sequelize, Sequelize);
 
 // Définir les relations entre modèles
 db.role.belongsToMany(db.user, {
@@ -38,6 +39,9 @@ db.user.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
+// Relation One-to-One entre User et Token
+db.user.hasOne(db.token, { foreignKey: "userId", onDelete: "CASCADE" });
+db.token.belongsTo(db.user, { foreignKey: "userId" });
 
 db.ROLES = ["user", "admin", "moderator"];
 
