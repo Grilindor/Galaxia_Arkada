@@ -2,7 +2,8 @@ const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/user.controller");
 const checkUserExistsByEmail = require("../middleware/checkUserExistsByEmail");
 const { checkUserExists } = require("../middleware/user.middleware");
-const signin = require("../controllers/user.signin")
+const signin = require("../controllers/user.signin");
+const { signOut } = require('../controllers/user.signout');
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -17,7 +18,7 @@ module.exports = function(app) {
   app.get("/api/users", [authJwt.verifyToken, checkUserExists], controller.getAllUsers);
 
   // Voir un utilisateur par UUID
-  app.get("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.getUser);
+  app.get("/api/users/:id", [authJwt.verifyToken, checkUserExists], controller.getUser);
 
   // Créer un utilisateur
   app.post("/api/users/signup", [checkUserExistsByEmail], controller.createUser);
@@ -30,4 +31,7 @@ module.exports = function(app) {
 
   // Supprimer un utilisateur par UUID
   app.delete("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.deleteUser);
+
+  // déconnection d'un utilisateur
+  app.post("/api/auth/signout", signOut);
 };
