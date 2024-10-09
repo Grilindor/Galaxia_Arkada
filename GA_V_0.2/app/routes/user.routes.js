@@ -17,7 +17,7 @@ module.exports = function(app) {
   // Voir tous les utilisateurs avec pagination
   app.get("/api/users", [authJwt.verifyToken, checkUserExists], controller.getAllUsers);
 
-  // Voir un utilisateur par UUID
+  // Voir un utilisateur par ID
   app.get("/api/users/:id", [authJwt.verifyToken, checkUserExists], controller.getUser);
 
   // Créer un utilisateur
@@ -26,11 +26,16 @@ module.exports = function(app) {
   // connection d'un utilisateur
   app.post("/api/users/signin", signin.signIn);
 
-  // Mettre à jour un utilisateur par UUID
-  app.put("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.updateUser);
+  // Mettre à jour un utilisateur par ID
+  app.put("/api/users/update", [authJwt.verifyToken], (req, res, next) => {
+    const idFromToken = req.userId; // récupéré depuis le middleware authJwt.verifyToken
+    req.params.id = idFromToken; // Ajoute l'ID dans les paramètres de la requête
+    next();
+  }, checkUserExists, controller.updateUser); // Appelle le contrôleur
+
 
   // Supprimer un utilisateur par UUID
-  app.delete("/api/users/:uuid", [authJwt.verifyToken, checkUserExists], controller.deleteUser);
+  app.delete("/api/users/delet", [authJwt.verifyToken, checkUserExists], controller.deleteUser);
 
   // déconnection d'un utilisateur
   app.post("/api/auth/signout", signOut);

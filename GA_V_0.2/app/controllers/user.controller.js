@@ -25,11 +25,11 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
-// Voir un utilisateur par UUID
+// Voir un utilisateur par ID
 exports.getUser = async (req, res) => {
-  const { uuid } = req.params;
+  const id = req.params.id;
   try {
-    const user = await User.findOne({ where: { uuid } });
+    const user = await User.findOne({ where: { id } });
     if (!user) {
       return res.status(404).send({ message: "User Not Found." });
     }
@@ -58,27 +58,28 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// Mettre à jour un utilisateur par UUID (y compris le rôle)
+// Mettre à jour un utilisateur par ID (y compris le rôle)
 exports.updateUser = async (req, res) => {
-  const { uuid } = req.params;
+  const id = req.userId || req.params.id;
   try {
-    const user = await User.findOne({ where: { uuid } });
+    const user = await User.findOne({ where: { id } });
     if (!user) {
       return res.status(404).send({ message: "User Not Found." });
     }
+    // Met à jour l'utilisateur avec les données reçues dans req.body
     await user.update(req.body);
     res.status(200).send(user);
   } catch (err) {
-    console.log(err);
+    // console.log(err);
     res.status(500).send({ message: err.message });
   }
 };
 
 // Supprimer un utilisateur par UUID
 exports.deleteUser = async (req, res) => {
-  const { uuid } = req.params;
+  const id = req.params.id;
   try {
-    const user = await User.findOne({ where: { uuid } });
+    const user = await User.findOne({ where: { id } });
     if (!user) {
       return res.status(404).send({ message: "User Not Found." });
     }
