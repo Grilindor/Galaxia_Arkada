@@ -75,7 +75,7 @@ exports.updateUser = async (req, res) => {
   }
 };
 
-// Supprimer un utilisateur par UUID
+// Supprimer un utilisateur par ID depuis jwt
 exports.deleteUser = async (req, res) => {
   const id = req.params.id;
   try {

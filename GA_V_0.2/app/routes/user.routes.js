@@ -35,7 +35,11 @@ module.exports = function(app) {
 
 
   // Supprimer un utilisateur par UUID
-  app.delete("/api/users/delet", [authJwt.verifyToken, checkUserExists], controller.deleteUser);
+  app.delete("/api/users/delet", [authJwt.verifyToken], (req, res, next) => {
+    const idFromToken = req.userId; // récupéré depuis le middleware authJwt.verifyToken
+    req.params.id = idFromToken;
+    next();
+  }, checkUserExists, controller.deleteUser);
 
   // déconnection d'un utilisateur
   app.post("/api/auth/signout", signOut);
