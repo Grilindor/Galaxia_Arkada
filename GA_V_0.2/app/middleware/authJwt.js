@@ -35,6 +35,7 @@ verifyToken = async (req, res, next) => {
     }
     // Attacher l'UUID de l'utilisateur à l'objet req
     req.userId = decoded.id;
+    req.token = token; // Sauvegarde aussi le token
     next();
   });
 };
