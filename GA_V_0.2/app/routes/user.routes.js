@@ -1,7 +1,6 @@
 const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/user.controller");
 const { checkUserExistsByEmail, checkUserExistsByID } = require("../middleware/checkUserExists");
-const { checkUserExists } = require("../middleware/user.middleware");
 const signin = require("../controllers/user.signin");
 const { signOut } = require('../controllers/user.signout');
 
@@ -31,7 +30,7 @@ module.exports = function(app) {
     const idFromToken = req.userId; // récupéré depuis le middleware authJwt.verifyToken
     req.params.id = idFromToken; // Ajoute l'ID dans les paramètres de la requête
     next();
-  }, checkUserExists, controller.updateUser); // Appelle le contrôleur
+  }, checkUserExistsByID, controller.updateUser); // Appelle le contrôleur
 
 
   // Supprimer un utilisateur par UUID
@@ -39,7 +38,7 @@ module.exports = function(app) {
     const idFromToken = req.userId; // récupéré depuis le middleware authJwt.verifyToken
     req.params.id = idFromToken;
     next();
-  }, checkUserExists, controller.deleteUser);
+  }, checkUserExistsByID, controller.deleteUser);
 
   // déconnection d'un utilisateur
   app.post("/api/auth/signout", [authJwt.verifyToken, checkUserExistsByID], signOut);
