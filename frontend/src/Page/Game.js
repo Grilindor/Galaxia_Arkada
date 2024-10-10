@@ -34,7 +34,7 @@ const Button = styled.button`
 // Nouveau composant stylisé pour les boutons Play et Installer
 const PlayInstallButton = styled(Button)`
   background-color: #e74c3c; /* Couleur différente */
-  width: 1000px; /* Longueur spécifique */
+  width: 200px; /* Longueur spécifique */
 
   &:hover {
     background-color: #c0392b; /* Couleur au survol */
@@ -105,6 +105,15 @@ const Footer = styled.div`
 
 function Game() {
   const navigate = useNavigate();
+
+  const handlePlayClick = () => {
+    window.open("https://simmer.io/@ayana53/the-beggar-king", "_blank"); // Ouvre le jeu dans un nouvel onglet
+  };
+
+  const handleInstallClick = () => {
+    alert("Installer le jeu !"); // Remplace par la logique d'installation
+  };
+
   return (
     <div>
       <ButtonContainer>
@@ -120,8 +129,10 @@ function Game() {
       </EventImageContainer>
 
       <PlayButtonContainer>
-        <PlayInstallButton>Play</PlayInstallButton>
-        <PlayInstallButton>Installer</PlayInstallButton>
+        <PlayInstallButton onClick={handlePlayClick}>Play</PlayInstallButton>
+        <PlayInstallButton onClick={handleInstallClick}>
+          Installer
+        </PlayInstallButton>
       </PlayButtonContainer>
 
       <GameInfoContainer>

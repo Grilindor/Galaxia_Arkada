@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import logo from "../image/logo_1.png"; // Assurez-vous que le chemin est correct
+import logo from "../image/logo_1.png";
+import { useNavigate } from "react-router-dom"; // Assurez-vous que le chemin est correct
 
 // Composants stylisés
 const ForgotPasswordContainer = styled.div`
@@ -70,10 +71,15 @@ function ForgotPassword() {
     console.log("Email de réinitialisation envoyé à :", email);
   };
 
+  const homenavigate = useNavigate();
+  const handleHomeClick = () => {
+    homenavigate("/home");
+  };
+
   return (
     <ForgotPasswordContainer>
       <FormContainer>
-        <LogoImage src={logo} alt="Logo" />
+        <LogoImage src={logo} alt="Logo" onClick={handleHomeClick} />
         <Title>Mot de passe oublié</Title>
         <form onSubmit={handleSubmit}>
           <InputField
