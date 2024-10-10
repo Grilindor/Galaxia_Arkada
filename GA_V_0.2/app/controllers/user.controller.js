@@ -61,16 +61,23 @@ exports.createUser = async (req, res) => {
 // Mettre à jour un utilisateur par ID (y compris le rôle)
 exports.updateUser = async (req, res) => {
   const id = req.userId || req.params.id;
+  const { password, ...updateData } = req.body; //exclure le mot de passe temporairement
+
   try {
     const user = await User.findOne({ where: { id } });
     if (!user) {
       return res.status(404).send({ message: "User Not Found." });
     }
-    // Met à jour l'utilisateur avec les données reçues dans req.body
-    await user.update(req.body);
+
+    // Si un mot de passe est fourni, le crypter
+    if (password) {
+      updateData.password = await bcrypt.hash(password, saltRounds);
+    }
+
+    // Mettre à jour l'utilisateur avec les nouvelles données
+    await user.update(updateData);
     res.status(200).send(user);
   } catch (err) {
-    // console.log(err);
     res.status(500).send({ message: err.message });
   }
 };
