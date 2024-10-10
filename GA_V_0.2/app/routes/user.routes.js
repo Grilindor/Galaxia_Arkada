@@ -1,6 +1,6 @@
 const authJwt = require("../middleware/authJwt");
 const controller = require("../controllers/user.controller");
-const checkUserExistsByEmail = require("../middleware/checkUserExistsByEmail");
+const { checkUserExistsByEmail, checkUserExistsByID } = require("../middleware/checkUserExists");
 const { checkUserExists } = require("../middleware/user.middleware");
 const signin = require("../controllers/user.signin");
 const { signOut } = require('../controllers/user.signout');
@@ -15,10 +15,10 @@ module.exports = function(app) {
   });
 
   // Voir tous les utilisateurs avec pagination
-  app.get("/api/users", [authJwt.verifyToken, checkUserExists], controller.getAllUsers);
+  app.get("/api/users", [authJwt.verifyToken, checkUserExistsByEmail], controller.getAllUsers);
 
   // Voir un utilisateur par ID
-  app.get("/api/users/:id", [authJwt.verifyToken, checkUserExists], controller.getUser);
+  app.get("/api/users/:id", [authJwt.verifyToken, checkUserExistsByEmail], controller.getUser);
 
   // Créer un utilisateur
   app.post("/api/users/signup", [checkUserExistsByEmail], controller.createUser);
@@ -42,5 +42,5 @@ module.exports = function(app) {
   }, checkUserExists, controller.deleteUser);
 
   // déconnection d'un utilisateur
-  app.post("/api/auth/signout", signOut);
+  app.post("/api/auth/signout", [authJwt.verifyToken, checkUserExistsByID], signOut);
 };
