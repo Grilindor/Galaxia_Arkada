@@ -1,35 +1,43 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { StyleSheet, css } from "aphrodite";
 import logo from "../image/logo_1.png";
 
 const SignUp = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [birthdate, setBirthdate] = useState("");
-  const [receiveEmail, setReceiveEmail] = useState(false);
-  const [isRobot, setIsRobot] = useState(false);
-  const [data, setData] = useState(null);
+  const [formData, setFormData] = useState({
+    firstname: "",
+    lastname: "",
+    userpseudo: "",
+    password: "",
+    email: "",
+    birthdate: false,
+    receiveEmail: false,
+    isRobot: false,
+  });
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    console.log("Sign Up Details:", {
-      username,
-      password,
-      email,
-      birthdate,
-      receiveEmail,
-      isRobot,
-    });
+  const [error, setError] = useState(null); // Gestion des erreurs
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  useEffect(() => {
-    // Simuler une requête API pour récupérer les données du backend
-    fetch("/api/data")
-      .then((response) => response.json())
-      .then((result) => setData(result))
-      .catch((error) => console.log("Erreur :", error));
-  }, []);
+  const handleSignUp = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/api/users/signup", formData);
+      console.log("Inscription réussie :", response.data);
+      navigate("/login"); // Redirection après une inscription réussie
+    } catch (error) {
+      // console.error("Erreur lors de l'inscription", error);
+      setError("Erreur lors de l'inscription. Veuillez réessayer.");
+    }
+  };
 
   const styles = StyleSheet.create({
     container: {
@@ -39,7 +47,7 @@ const SignUp = () => {
       justifyContent: "center",
       padding: "20px",
       borderRadius: "5px",
-      backgroundColor: data ? "lightgreen" : "lightgrey",
+      backgroundColor: "lightgrey",
       width: "400px",
       margin: "0 auto",
       boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
@@ -89,10 +97,13 @@ const SignUp = () => {
       marginBottom: "10px",
     },
     text: {
-      color: data ? "darkgreen" : "darkgrey",
       fontSize: "20px",
       textAlign: "center",
       marginBottom: "20px",
+    },
+    errorText: {
+      color: "red",
+      marginBottom: "15px",
     },
     link: {
       color: "blue",
@@ -109,55 +120,53 @@ const SignUp = () => {
         <img src={logo} alt="Galaxia Logo" className={css(styles.logoImage)} />
       </div>
       <h2 className={css(styles.text)}>Create an Account</h2>
+      {error && <p className={css(styles.errorText)}>{error}</p>}
       <form className={css(styles.form)} onSubmit={handleSignUp}>
         <input
           type="text"
+          name="username"
           placeholder="Select a Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={formData.Username}
+          onChange={handleChange}
           className={css(styles.input)}
           required
         />
         <input
           type="password"
+          name="password"
           placeholder="Create a Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={formData.password}
+          onChange={handleChange}
           className={css(styles.input)}
           required
         />
         <input
           type="email"
+          name="email"
           placeholder="Your email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className={css(styles.input)}
-          required
-        />
-        <input
-          type="date"
-          value={birthdate}
-          onChange={(e) => setBirthdate(e.target.value)}
+          value={formData.email}
+          onChange={handleChange}
           className={css(styles.input)}
           required
         />
         <p>
-          You must be 13+ to create an account. Under 18? Get parent/guardian
-          permission.
+          You must be 13+ to create an account. Under 18? Get parent/guardian permission.
         </p>
         <label className={css(styles.checkboxLabel)}>
           <input
             type="checkbox"
-            checked={receiveEmail}
-            onChange={() => setReceiveEmail(!receiveEmail)}
+            name="receiveEmail"
+            checked={formData.receiveEmail}
+            onChange={handleChange}
           />
           Receive Newgrounds Email?
         </label>
         <label className={css(styles.checkboxLabel)}>
           <input
             type="checkbox"
-            checked={isRobot}
-            onChange={() => setIsRobot(!isRobot)}
+            name="isRobot"
+            checked={formData.isRobot}
+            onChange={handleChange}
             required
           />
           I am not a robot

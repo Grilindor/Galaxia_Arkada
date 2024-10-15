@@ -173,7 +173,7 @@ function Home() {
         </nav>
         <UserActions>
           <button onClick={() => navigate("/login")}>Login</button>
-          <button onClick={() => navigate("/Sign_Up")}>Sign Up</button>
+          <button onClick={() => navigate("/api/users/signup")}>Sign Up</button>
           <select>
             <option>Langue</option>
           </select>
