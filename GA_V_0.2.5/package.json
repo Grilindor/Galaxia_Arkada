@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "![logo]([logo.png](https://github.com/Grilindor/Galaxia_Arkada/blob/main/frontend/public/images/logo.png))",
   "scripts": {
-    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "nodemon backend/server.js",
+    "dev": "concurrently \"npm run dev:Backend\" \"npm run dev:frontend\"",
+    "dev:Backend": "nodemon --inspect Backend/server.js",
     "dev:frontend": "npm start --prefix frontend"
   },
   "keywords": [],
