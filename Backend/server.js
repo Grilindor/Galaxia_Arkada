@@ -10,7 +10,7 @@ app.get('/home', (req, res) => {
 });
 
 app.get('/game', (req, res) => {
-  res.send('Hello World! marc il va dormir ce .......!');
+  res.send('Hello World!');
 });
 
 app.get('/login', (req, res) => {

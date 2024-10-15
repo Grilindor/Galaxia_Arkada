@@ -55,6 +55,26 @@ const UserActions = styled.div`
   }
 `;
 
+const ThemeToggleLabel = styled.label`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 10px;
+  input {
+    display: none;
+  }
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+  .swap-off {
+    display: ${({ theme }) => (theme === "light" ? "block" : "none")};
+  }
+  .swap-on {
+    display: ${({ theme }) => (theme === "dark" ? "block" : "none")};
+  }
+`;
+
 const Banner = styled.div`
   height: 200px;
   background-color: #ddd;
@@ -130,33 +150,38 @@ const gameData = [
   {
     id: 1,
     name: "Jeu 1",
-    image: "URL_IMAGE_JEU_1", // Remplacez par l'URL de l'image
+    image: "URL_IMAGE_JEU_1",
     rating: "4.5",
   },
   {
     id: 2,
     name: "Jeu 2",
-    image: "URL_IMAGE_JEU_2", // Remplacez par l'URL de l'image
+    image: "URL_IMAGE_JEU_2",
     rating: "4.0",
   },
   {
     id: 3,
     name: "Jeu 3",
-    image: "URL_IMAGE_JEU_3", // Remplacez par l'URL de l'image
+    image: "URL_IMAGE_JEU_3",
     rating: "5.0",
   },
-  // Ajoutez d'autres jeux ici...
 ];
 
 function Home() {
   const [theme, setTheme] = useState("light");
+  const navigate = useNavigate();
+  const isLoggedIn = localStorage.getItem("token") !== null;
+
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
     document.documentElement.setAttribute("data-theme", newTheme);
   };
 
-  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
     <AppContainer className={`App ${theme}`}>
@@ -172,24 +197,48 @@ function Home() {
           <NavButton onClick={() => navigate("/user")}>User</NavButton>
         </nav>
         <UserActions>
-          <button onClick={() => navigate("/login")}>Login</button>
-          <button onClick={() => navigate("/Sign_Up")}>Sign Up</button>
+          {!isLoggedIn ? (
+            <>
+              <button onClick={() => navigate("/login")}>Login</button>
+              <button onClick={() => navigate("/Sign_Up")}>Sign Up</button>
+            </>
+          ) : (
+            <button onClick={handleLogout}>Déconnexion</button>
+          )}
           <select>
             <option>Langue</option>
           </select>
-          <label className="swap swap-rotate">
+          <ThemeToggleLabel theme={theme}>
             <input type="checkbox" onChange={toggleTheme} />
             <svg
               className="swap-off"
               xmlns="http://www.w3.org/2000/svg"
+              fill="none"
               viewBox="0 0 24 24"
-            ></svg>
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 2v2m0 16v2m10-10h-2m-16 0H2m15.364-7.364l-1.414 1.414M6.343 17.657l-1.414 1.414m12.728 0l1.414-1.414M6.343 6.343l1.414 1.414M12 8a4 4 0 100 8 4 4 0 000-8z"
+              />
+            </svg>
             <svg
               className="swap-on"
               xmlns="http://www.w3.org/2000/svg"
+              fill="none"
               viewBox="0 0 24 24"
-            ></svg>
-          </label>
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"
+              />
+            </svg>
+          </ThemeToggleLabel>
         </UserActions>
       </Header>
       <Banner>

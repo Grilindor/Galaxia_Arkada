@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
@@ -89,6 +89,28 @@ const FooterContainer = styled.div`
 // Composant principal
 function User() {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    // Vérifie si l'utilisateur est connecté
+    const userToken = localStorage.getItem("token");
+    const userInfo = JSON.parse(localStorage.getItem("user")); // On suppose que les infos utilisateur sont dans le localStorage
+
+    if (!userToken) {
+      // Redirige vers la page de login si l'utilisateur n'est pas connecté
+      navigate("/login");
+    } else {
+      // Sinon, on charge les informations de l'utilisateur
+      setUserData(userInfo);
+    }
+  }, [navigate]);
+
+  const handleLogout = () => {
+    // Supprime le token et les infos utilisateur
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login"); // Redirige vers la page de login après déconnexion
+  };
 
   // Exemple de nombre d'amis, à remplacer par votre logique
   const amis = 5;
@@ -100,7 +122,7 @@ function User() {
         <Button onClick={() => navigate("/home")}>Magasin</Button>
         <Button onClick={() => navigate("/Bibliothèque")}>Bibliothèque</Button>
         <Button onClick={() => navigate("/user")}>User</Button>
-        <Button>Déconnexion</Button>
+        <Button onClick={handleLogout}>Déconnexion</Button>
       </ButtonContainer>
 
       <ProfileSectionContainer>
