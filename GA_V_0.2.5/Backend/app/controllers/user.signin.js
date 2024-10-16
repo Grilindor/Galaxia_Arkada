@@ -1,12 +1,24 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
-require('dotenv').config();
+require('dotenv').config({ path: './Backend/.env' });
 const User = db.user;
 const Token = db.token;
 
+const result = require('dotenv').config();
+if (result.error) {
+  console.error("Erreur de chargement du fichier .env", result.error);
+}
+
+
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
+
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).send({ message: "Email and password are required!" });
+  };
 
   try {
     const user = await User.findOne({ where: { email } });
