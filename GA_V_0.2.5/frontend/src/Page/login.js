@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios"; // Ajoute l'import pour axios
 import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
 
@@ -103,32 +104,52 @@ const ThemeToggle = styled.label`
 `;
 
 const Login = () => {
-  const [username, setUsername] = useState("");
+  const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
-  const [theme, setTheme] = useState("light");
-
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    document.documentElement.setAttribute("data-theme", newTheme);
-  };
+  const [errorMessage, setErrorMessage] = useState(""); // Pour afficher les erreurs si besoin
 
   const homenavigate = useNavigate();
   const handleHomeClick = () => {
     homenavigate("/home");
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Username:", username);
-    console.log("Password:", password);
+
+    console.log("Tentative de connexion avec email:", email, "et mot de passe:", password);
+
+    try {
+      // Requête POST vers l'API de login
+      const response = await axios.post("/api/users/signin", {
+        email,
+        password,
+      });
+
+      console.log("Réponse du serveur:", response.data); // Affiche la réponse complète du serveur
+
+      // Si la connexion réussit, tu peux stocker le token (par exemple dans sessionStorage)
+      sessionStorage.setItem("token", response.data.token);
+
+      console.log("Token stocké dans sessionStorage:", response.data.token); // Confirme que le token a été stocké
+
+      // Redirection après le succès du login
+      homenavigate("/home");
+    } catch (error) {
+      // Gère les erreurs de login
+      if (error.response) {
+        console.error("Erreur côté serveur:", error.response.data); // Affiche les détails de l'erreur du serveur
+        setErrorMessage(error.response.data.message);
+      } else {
+        console.error("Erreur inattendue:", error); // Affiche toute autre erreur inattendue
+        setErrorMessage("Une erreur est survenue");
+      }
+    }
   };
 
   return (
     <LoginContainer>
       <ThemeToggle className="swap swap-rotate">
-        <input type="checkbox" onChange={toggleTheme} />
-        {/* Icônes Soleil et Lune */}
+
       </ThemeToggle>
 
       <Form onSubmit={handleLogin}>
@@ -136,12 +157,16 @@ const Login = () => {
           <LoginLogo src={logo} alt="Logo Galaxia" onClick={handleHomeClick} />
         </LogoContainer>
         <LoginTitle>Login</LoginTitle>
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Affichage des erreurs */}
         <InputContainer>
           <Input
             type="text"
             placeholder="Username or Email"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => {
+              setemail(e.target.value);
+              console.log("Changement de l'email:", e.target.value); // Affiche l'email saisi en temps réel
+            }}
           />
         </InputContainer>
         <InputContainer>
@@ -149,7 +174,10 @@ const Login = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              console.log("Changement du mot de passe:", e.target.value); // Affiche le mot de passe saisi en temps réel
+            }}
           />
         </InputContainer>
         <SubmitButton type="submit">Login</SubmitButton>
