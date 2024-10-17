@@ -127,15 +127,17 @@ const Login = () => {
 
       console.log("Réponse du serveur:", response.data); // Affiche la réponse complète du serveur
 
-      // Si la connexion réussit, tu peux stocker le token (par exemple dans sessionStorage)
-      sessionStorage.setItem("token", response.data.token);
+      // Stocker le token dans sessionStorage
+      sessionStorage.setItem("token", response.data.accessToken); // Correction ici
+      console.log("Token stocké dans sessionStorage:", response.data.accessToken); // Confirmation du token
 
-      console.log("Token stocké dans sessionStorage:", response.data.token); // Confirme que le token a été stocké
+      // Stocker les informations de l'utilisateur si nécessaire
+      sessionStorage.setItem("user", JSON.stringify(response.data.user));
 
       // Redirection après le succès du login
       homenavigate("/home");
     } catch (error) {
-      // Gère les erreurs de login
+      // Gérer les erreurs de login
       if (error.response) {
         console.error("Erreur côté serveur:", error.response.data); // Affiche les détails de l'erreur du serveur
         setErrorMessage(error.response.data.message);

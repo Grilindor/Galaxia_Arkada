@@ -1,61 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
-
 // Création des composants stylisés
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 10px;
-  background-color: #f4f4f4;
+  background-color: #F4F4F4;
   border-bottom: 2px solid #ddd;
 `;
-
 const LogoImage = styled.img`
   width: 80px;
   margin-right: 20px;
 `;
-
 const Button = styled.button`
-  background-color: #3498db;
+  background-color: #3498DB;
   color: white;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 5px;
-
   &:hover {
-    background-color: #2980b9;
+    background-color: #2980B9;
   }
 `;
-
 const ProfileActionButton = styled(Button)`
   margin: 10px; // Ajoute un espacement entre les boutons
 `;
-
 const ProfileSectionContainer = styled.div`
   display: flex;
   justify-content: space-between;
   margin: 20px;
 `;
-
 const ProfileDetailsContainer = styled.div`
   flex: 2;
   margin-right: 20px;
   padding: 10px;
-  background-color: #f0f0f0;
+  background-color: #F0F0F0;
   border-radius: 8px;
 `;
-
 const ProfileImage = styled.img`
   width: 100px;
   height: 100px;
   border-radius: 50%;
   margin: 10px;
 `;
-
 const InputField = styled.input`
   margin: 5px;
   padding: 5px;
@@ -63,14 +54,12 @@ const InputField = styled.input`
   border-radius: 4px;
   width: 80%;
 `;
-
 const OnlineFriendsContainer = styled.div`
   flex: 1;
   padding: 10px;
-  background-color: #e9ecef;
+  background-color: #E9ECEF;
   border-radius: 8px;
   text-align: center;
-
   img {
     margin: 5px;
     width: 50px;
@@ -78,21 +67,36 @@ const OnlineFriendsContainer = styled.div`
     border-radius: 50%;
   }
 `;
-
 const FooterContainer = styled.div`
   text-align: center; // Centre le texte horizontalement
   margin-top: 20px; // Ajoute un peu d'espace au-dessus du pied de page
   padding: 10px;
-  background-color: #f4f4f4; // Optionnel : ajoute une couleur de fond pour le pied de page
+  background-color: #F4F4F4; // Optionnel : ajoute une couleur de fond pour le pied de page
 `;
-
 // Composant principal
 function User() {
   const navigate = useNavigate();
-
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    // Vérifie si l'utilisateur est connecté
+    const userToken = sessionStorage.getItem("token");
+    const userInfo = JSON.parse(sessionStorage.getItem("user")); // On suppose que les infos utilisateur sont dans le localStorage
+    if (!userToken) {
+      // Redirige vers la page de login si l'utilisateur n'est pas connecté
+      navigate("/login");
+    } else {
+      // Sinon, on charge les informations de l'utilisateur
+      setUserData(userInfo);
+    }
+  }, [navigate]);
+  const handleLogout = () => {
+    // Supprime le token et les infos utilisateur
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
+    navigate("/login"); // Redirige vers la page de login après déconnexion
+  };
   // Exemple de nombre d'amis, à remplacer par votre logique
   const amis = 5;
-
   return (
     <div>
       <ButtonContainer>
@@ -100,9 +104,8 @@ function User() {
         <Button onClick={() => navigate("/home")}>Magasin</Button>
         <Button onClick={() => navigate("/Bibliothèque")}>Bibliothèque</Button>
         <Button onClick={() => navigate("/user")}>User</Button>
-        <Button>Déconnexion</Button>
+        <Button onClick={handleLogout}>Déconnexion</Button>
       </ButtonContainer>
-
       <ProfileSectionContainer>
         <ProfileDetailsContainer>
           <ProfileImage src="URL_DU_PROFIL" alt="Profil" />
@@ -120,7 +123,6 @@ function User() {
           <h2>Email</h2>
           <InputField type="email" />
         </ProfileDetailsContainer>
-
         <OnlineFriendsContainer>
           <h2>En ligne</h2>
           <img src="URL_IMAGE_1" alt="Ami 1" />
@@ -131,12 +133,10 @@ function User() {
           <h2>Contacts ({amis} amis)</h2>
         </OnlineFriendsContainer>
       </ProfileSectionContainer>
-
       <FooterContainer>
         <p>© 2024 Votre Société</p>
       </FooterContainer>
     </div>
   );
 }
-
 export default User;
