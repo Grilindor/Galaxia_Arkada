@@ -132,7 +132,7 @@ const Login = () => {
       console.log("Token stocké dans sessionStorage:", response.data.accessToken); // Confirmation du token
 
       // Stocker les informations de l'utilisateur si nécessaire
-      sessionStorage.setItem("user", JSON.stringify(response.data.user));
+      // sessionStorage.setItem("user", JSON.stringify(response.data.user));
 
       // Redirection après le succès du login
       homenavigate("/home");
@@ -163,7 +163,7 @@ const Login = () => {
         <InputContainer>
           <Input
             type="text"
-            placeholder="Username or Email"
+            placeholder="Email"
             value={email}
             onChange={(e) => {
               setemail(e.target.value);
@@ -186,7 +186,7 @@ const Login = () => {
         <FormLinks>
           <Link href="/forgot_password">Forgot your password?</Link>
           <Divider>|</Divider>
-          <Link href="/sign_up">No account? Sign up</Link>
+          <Link href="/api/users/signup">No account? Sign up</Link>
         </FormLinks>
       </Form>
     </LoginContainer>

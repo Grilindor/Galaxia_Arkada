@@ -16,8 +16,8 @@ module.exports = function(app) {
   // Voir tous les utilisateurs avec pagination
   app.get("/api/users", [authJwt.verifyToken, checkUserExistsByEmail], controller.getAllUsers);
 
-  // Voir un utilisateur par ID
-  app.get("/api/users/:id", [authJwt.verifyToken, checkUserExistsByEmail], controller.getUser);
+  // Voir un utilisateur par son jwt
+  app.get("/api/user/Profile", [authJwt.verifyToken], controller.getUserProfile);
 
   // Créer un utilisateur
   app.post("/api/users/signup", [checkUserExistsByEmail], controller.createUser);

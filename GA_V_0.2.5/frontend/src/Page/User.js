@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
+import axios from "axios";
+
 // Création des composants stylisés
 const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
   padding: 10px;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   border-bottom: 2px solid #ddd;
 `;
 const LogoImage = styled.img`
@@ -16,14 +18,14 @@ const LogoImage = styled.img`
   margin-right: 20px;
 `;
 const Button = styled.button`
-  background-color: #3498DB;
+  background-color: #3498db;
   color: white;
   border: none;
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 5px;
   &:hover {
-    background-color: #2980B9;
+    background-color: #2980b9;
   }
 `;
 const ProfileActionButton = styled(Button)`
@@ -38,7 +40,7 @@ const ProfileDetailsContainer = styled.div`
   flex: 2;
   margin-right: 20px;
   padding: 10px;
-  background-color: #F0F0F0;
+  background-color: #f0f0f0;
   border-radius: 8px;
 `;
 const ProfileImage = styled.img`
@@ -57,7 +59,7 @@ const InputField = styled.input`
 const OnlineFriendsContainer = styled.div`
   flex: 1;
   padding: 10px;
-  background-color: #E9ECEF;
+  background-color: #e9ecef;
   border-radius: 8px;
   text-align: center;
   img {
@@ -71,32 +73,56 @@ const FooterContainer = styled.div`
   text-align: center; // Centre le texte horizontalement
   margin-top: 20px; // Ajoute un peu d'espace au-dessus du pied de page
   padding: 10px;
-  background-color: #F4F4F4; // Optionnel : ajoute une couleur de fond pour le pied de page
+  background-color: #f4f4f4; // Optionnel : ajoute une couleur de fond pour le pied de page
 `;
+
 // Composant principal
 function User() {
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
+
   useEffect(() => {
+    console.log("Composant User monté"); // Vérifier quand le composant est monté
+
     // Vérifie si l'utilisateur est connecté
     const userToken = sessionStorage.getItem("token");
-    const userInfo = JSON.parse(sessionStorage.getItem("user")); // On suppose que les infos utilisateur sont dans le localStorage
+    console.log("Token récupéré depuis sessionStorage :", userToken); // Affiche le token récupéré
+
     if (!userToken) {
+      console.warn("Aucun token trouvé. Redirection vers la page de login.");
       // Redirige vers la page de login si l'utilisateur n'est pas connecté
       navigate("/login");
     } else {
-      // Sinon, on charge les informations de l'utilisateur
-      setUserData(userInfo);
+      console.log("Token trouvé. Récupération des informations utilisateur...");
+
+      // Récupère les informations de l'utilisateur depuis le backend
+      axios
+        .get("http://localhost:3000/api/user/Profile", {
+          headers: {
+            Authorization: `Bearer ${userToken}`, // On utilise le token pour l'authentification
+          },
+        })
+        .then((response) => {
+          console.log("Réponse du backend :", response); // Affiche la réponse complète du backend
+          setUserData(response.data); // Mettre à jour les informations utilisateur
+          console.log("Données utilisateur mises à jour :", response.data); // Vérifie si les infos utilisateur sont bien mises à jour
+        })
+        .catch((error) => {
+          console.error("Erreur lors de la récupération des informations utilisateur :", error);
+          navigate("/login"); // Rediriger l'utilisateur vers la page de connexion en cas d'erreur
+        });
     }
   }, [navigate]);
+
   const handleLogout = () => {
+    console.log("Déconnexion en cours...");
     // Supprime le token et les infos utilisateur
     sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
-    navigate("/login"); // Redirige vers la page de login après déconnexion
+    console.log("Token supprimé de sessionStorage.");
+    // Redirige vers la page de login après déconnexion
+    navigate("/login");
   };
-  // Exemple de nombre d'amis, à remplacer par votre logique
-  const amis = 5;
+
   return (
     <div>
       <ButtonContainer>
@@ -106,31 +132,20 @@ function User() {
         <Button onClick={() => navigate("/user")}>User</Button>
         <Button onClick={handleLogout}>Déconnexion</Button>
       </ButtonContainer>
+
       <ProfileSectionContainer>
         <ProfileDetailsContainer>
-          <ProfileImage src="URL_DU_PROFIL" alt="Profil" />
-          <h2>Nom Du Profil</h2>
-          <h6>Information sur le profil</h6>
-          <ProfileActionButton>Modifier le profil</ProfileActionButton>
-          <ProfileActionButton>Supprimer le profil</ProfileActionButton>
-          <h6>Autres informations</h6>
-          <h2>Nom</h2>
-          <InputField type="text" />
-          <h2>Prénom</h2>
-          <InputField type="text" />
-          <h2>Mot de passe</h2>
-          <InputField type="password" />
-          <h2>Email</h2>
-          <InputField type="email" />
+          <ProfileImage
+            src={userData?.profileImage || "URL_DU_PROFIL"}
+            alt="Profil"
+          />
+          <h2>{userData?.name || "Nom Du Profil"}</h2>
+          <h6>{userData?.info || "Information sur le profil"}</h6>
+          {/* Autres champs de profil */}
         </ProfileDetailsContainer>
         <OnlineFriendsContainer>
           <h2>En ligne</h2>
-          <img src="URL_IMAGE_1" alt="Ami 1" />
-          <img src="URL_IMAGE_2" alt="Ami 2" />
-          <img src="URL_IMAGE_3" alt="Ami 3" />
-          <h2>Jeux</h2>
-          <h2>Capture d'écran</h2>
-          <h2>Contacts ({amis} amis)</h2>
+          {/* Liste des amis en ligne */}
         </OnlineFriendsContainer>
       </ProfileSectionContainer>
       <FooterContainer>
@@ -139,4 +154,5 @@ function User() {
     </div>
   );
 }
+
 export default User;
