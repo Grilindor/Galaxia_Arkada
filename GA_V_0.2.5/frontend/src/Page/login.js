@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import axios from "axios"; // Ajoute l'import pour axios
+import { useAuth } from "./AuthContext"; // Importer useAuth pour accéder à la fonction login
 import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
 
@@ -71,7 +71,6 @@ const SubmitButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-bottom: 20px;
-
   &:hover {
     background-color: #333;
   }
@@ -85,7 +84,6 @@ const FormLinks = styled.div`
 const Link = styled.a`
   color: black;
   text-decoration: none;
-
   &:hover {
     text-decoration: underline;
   }
@@ -104,71 +102,47 @@ const ThemeToggle = styled.label`
 `;
 
 const Login = () => {
-  const [email, setemail] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(""); // Pour afficher les erreurs si besoin
-
+  const [errorMessage, setErrorMessage] = useState("");
+  const { login, error } = useAuth(); // Utilisation du AuthContext pour gérer la connexion
   const homenavigate = useNavigate();
+
   const handleHomeClick = () => {
     homenavigate("/home");
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     console.log("Tentative de connexion avec email:", email, "et mot de passe:", password);
 
     try {
-      // Requête POST vers l'API de login
-      const response = await axios.post("/api/users/signin", {
-        email,
-        password,
-      });
-
-      console.log("Réponse du serveur:", response.data); // Affiche la réponse complète du serveur
-
-      // Stocker le token dans sessionStorage
-      sessionStorage.setItem("token", response.data.accessToken); // Correction ici
-      console.log("Token stocké dans sessionStorage:", response.data.accessToken); // Confirmation du token
-
-      // Stocker les informations de l'utilisateur si nécessaire
-      // sessionStorage.setItem("user", JSON.stringify(response.data.user));
-
-      // Redirection après le succès du login
+      await login(email, password); // Appel de la fonction login du AuthContext
       homenavigate("/home");
-    } catch (error) {
-      // Gérer les erreurs de login
-      if (error.response) {
-        console.error("Erreur côté serveur:", error.response.data); // Affiche les détails de l'erreur du serveur
-        setErrorMessage(error.response.data.message);
-      } else {
-        console.error("Erreur inattendue:", error); // Affiche toute autre erreur inattendue
-        setErrorMessage("Une erreur est survenue");
-      }
+    } catch (err) {
+      setErrorMessage(err.message || "Une erreur est survenue");
     }
   };
 
   return (
     <LoginContainer>
-      <ThemeToggle className="swap swap-rotate">
-
-      </ThemeToggle>
-
+      <ThemeToggle className="swap swap-rotate"></ThemeToggle>
       <Form onSubmit={handleLogin}>
         <LogoContainer>
           <LoginLogo src={logo} alt="Logo Galaxia" onClick={handleHomeClick} />
         </LogoContainer>
         <LoginTitle>Login</LoginTitle>
-        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>} {/* Affichage des erreurs */}
+        {/* Affichage des erreurs */}
+        {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        {/* Champs du formulaire */}
         <InputContainer>
           <Input
             type="text"
             placeholder="Email"
             value={email}
-            onChange={(e) => {
-              setemail(e.target.value);
-              console.log("Changement de l'email:", e.target.value); // Affiche l'email saisi en temps réel
-            }}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </InputContainer>
         <InputContainer>
@@ -176,10 +150,7 @@ const Login = () => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              console.log("Changement du mot de passe:", e.target.value); // Affiche le mot de passe saisi en temps réel
-            }}
+            onChange={(e) => setPassword(e.target.value)}
           />
         </InputContainer>
         <SubmitButton type="submit">Login</SubmitButton>
