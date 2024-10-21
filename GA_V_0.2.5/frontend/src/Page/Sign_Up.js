@@ -18,7 +18,6 @@ const SignUp = () => {
 
   const [error, setError] = useState(null); // Gestion des erreurs
   const navigate = useNavigate();
-
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -30,11 +29,13 @@ const SignUp = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/users/signup", formData);
+      const response = await axios.post(
+        "http://localhost:3000/api/users/signup",
+        formData
+      );
       console.log("Inscription réussie :", response.data);
       navigate("/login"); // Redirection après une inscription réussie
     } catch (error) {
-      // console.error("Erreur lors de l'inscription", error);
       setError("Erreur lors de l'inscription. Veuillez réessayer.");
     }
   };
@@ -113,7 +114,6 @@ const SignUp = () => {
       },
     },
   });
-
   return (
     <div className={css(styles.container)}>
       <div className={css(styles.logo)}>
@@ -122,15 +122,37 @@ const SignUp = () => {
       <h2 className={css(styles.text)}>Create an Account</h2>
       {error && <p className={css(styles.errorText)}>{error}</p>}
       <form className={css(styles.form)} onSubmit={handleSignUp}>
+        {/* Champ pour le prénom */}
         <input
           type="text"
-          name="username"
-          placeholder="Select a Username"
-          value={formData.Username}
+          name="firstname"
+          placeholder="Your First Name"
+          value={formData.firstname}
           onChange={handleChange}
           className={css(styles.input)}
           required
         />
+        {/* Champ pour le nom de famille */}
+        <input
+          type="text"
+          name="lastname"
+          placeholder="Your Last Name"
+          value={formData.lastname}
+          onChange={handleChange}
+          className={css(styles.input)}
+          required
+        />
+        {/* Champ pour le pseudo */}
+        <input
+          type="text"
+          name="userpseudo"
+          placeholder="Select a Username"
+          value={formData.userpseudo}
+          onChange={handleChange}
+          className={css(styles.input)}
+          required
+        />
+        {/* Champ pour le mot de passe */}
         <input
           type="password"
           name="password"
@@ -140,6 +162,7 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
+        {/* Champ pour l'email */}
         <input
           type="email"
           name="email"
@@ -150,7 +173,8 @@ const SignUp = () => {
           required
         />
         <p>
-          You must be 13+ to create an account. Under 18? Get parent/guardian permission.
+          You must be 13+ to create an account. Under 18? Get parent/guardian
+          permission.
         </p>
         <label className={css(styles.checkboxLabel)}>
           <input
@@ -191,5 +215,4 @@ const SignUp = () => {
     </div>
   );
 };
-
 export default SignUp;
