@@ -20,6 +20,7 @@ function AppRoutes() {
 
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/home" />} /> met ça dans ton app.js
       {/* Rendre la page d'accueil accessible à tous */}
       <Route path="/home" element={<Home />} />
       <Route path="/login" element={<Login />} />
