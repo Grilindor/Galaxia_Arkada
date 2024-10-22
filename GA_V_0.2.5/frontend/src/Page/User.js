@@ -1,106 +1,41 @@
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
 import axios from "axios";
-// Création des composants stylisés
-const ButtonContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding: 10px;
-  background-color: #F4F4F4;
-  border-bottom: 2px solid #ddd;
-`;
-const LogoImage = styled.img`
-  width: 80px;
-  margin-right: 20px;
-`;
-const Button = styled.button`
-  background-color: #3498DB;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-  &:hover {
-    background-color: #2980B9;
-  }
-`;
-const ProfileActionButton = styled(Button)`
-  margin: 10px; // Ajoute un espacement entre les boutons
-`;
-const ProfileSectionContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin: 20px;
-`;
-const ProfileDetailsContainer = styled.div`
-  flex: 2;
-  margin-right: 20px;
-  padding: 10px;
-  background-color: #F0F0F0;
-  border-radius: 8px;
-`;
-const ProfileImage = styled.img`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  margin: 10px;
-`;
-const InputField = styled.input`
-  margin: 5px;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 80%;
-`;
-const OnlineFriendsContainer = styled.div`
-  flex: 1;
-  padding: 10px;
-  background-color: #E9ECEF;
-  border-radius: 8px;
-  text-align: center;
-  img {
-    margin: 5px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-  }
-`;
-const FooterContainer = styled.div`
-  text-align: center; // Centre le texte horizontalement
-  margin-top: 20px; // Ajoute un peu d'espace au-dessus du pied de page
-  padding: 10px;
-  background-color: #F4F4F4; // Optionnel : ajoute une couleur de fond pour le pied de page
-`;
-// Composant principal
+import { useAuth } from "./AuthContext";
+import {
+  MainContainer,
+  ButtonContainer,
+  LogoImage,
+  Button,
+  ProfileActionButton,
+  ProfileSectionContainer,
+  ProfileDetailsContainer,
+  ProfileImage,
+  InputField,
+  OnlineFriendsContainer,
+  FooterContainer,
+} from "../styles/User_SC";
+
 function User() {
+  const { user, fetchUserData, logout } = useAuth();
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
   useEffect(() => {
     const userToken = sessionStorage.getItem("token");
     if (!userToken) {
       navigate("/login");
       return;
     }
-    axios
-      .get("http://localhost:3000/api/user/Profile", {
-        headers: { Authorization: `Bearer ${userToken}` },
-      })
-      .then((response) => {
-        setUserData(response.data);
-      })
-      .catch((error) => {
-        if (error.response && error.response.status === 401) {
-          navigate("/login");
-        }
-      });
-  }, [navigate]);
+    // Si l'utilisateur n'est pas encore défini, appelez fetchUserData
+    if (!user) {
+      fetchUserData();
+    }
+  }, [user, fetchUserData, navigate]);
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
+    logout();
     navigate("/login");
   };
+  const handleModifieProfile = () => {};
   const handleDeleteProfile = async () => {
     const token = sessionStorage.getItem("token");
     if (!token) return;
@@ -108,26 +43,33 @@ function User() {
       await axios.delete("http://localhost:3000/api/users/delet", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      sessionStorage.removeItem("token");
-      navigate("/login");
+      handleLogout();
     } catch (error) {
       console.error("Erreur lors de la suppression du profil :", error);
     }
   };
+  if (!user) {
+    return <div>Chargement...</div>;
+  }
   return (
     <div>
       <ButtonContainer>
-        <img src={logo} alt="Logo" />
-        <button onClick={() => navigate("/home")}>Magasin</button>
-        <button onClick={() => navigate("/Bibliothèque")}>Bibliothèque</button>
-        <button onClick={() => navigate("/user")}>User</button>
-        <button onClick={handleLogout}>Déconnexion</button>
+        <LogoImage src={logo} alt="Logo" />
+        <Button onClick={() => navigate("/home")}>Magasin</Button>
+        <Button onClick={() => navigate("/Bibliothèque")}>Bibliothèque</Button>
+        <Button onClick={() => navigate("/user")}>User</Button>
+        <Button onClick={handleLogout}>Déconnexion</Button>
       </ButtonContainer>
       <ProfileSectionContainer>
         <ProfileDetailsContainer>
-          <ProfileImage src={ProfileImage} alt="Profil" />
-          <h2>{userData?.userpseudo || "Nom Du Profil"}</h2>
-          <ProfileActionButton>Modifier le profil</ProfileActionButton>
+          <ProfileImage
+            src={user?.profileImage || "path/to/default/image.png"}
+            alt="Profil"
+          />
+          <h2>{user?.userpseudo || "Nom Du Profil"}</h2>
+          <ProfileActionButton onClick={() => handleModifieProfile({})}>
+            Modifier le profil
+          </ProfileActionButton>
           <ProfileActionButton onClick={handleDeleteProfile}>
             Supprimer le profil
           </ProfileActionButton>
@@ -137,6 +79,14 @@ function User() {
           <h2>En ligne</h2>
           {/* Liste des amis en ligne */}
         </OnlineFriendsContainer>
+        <h2>Nom</h2>
+        <InputField type="text" />
+        <h2>Prénom</h2>
+        <InputField type="text" />
+        <h2>Mot de passe</h2>
+        <InputField type="password" />
+        <h2>Email</h2>
+        <InputField type="email" />
       </ProfileSectionContainer>
       <FooterContainer>
         <p>© 2024 Votre Société</p>
