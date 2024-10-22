@@ -26,15 +26,40 @@ exports.getAllUsers = async (req, res) => {
 };
 
 // Voir un utilisateur par ID
-exports.getUser = async (req, res) => {
-  const id = req.params.id;
+exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findOne({ where: { id } });
+    console.log("Requête reçue pour récupérer le profil de l'utilisateur."); // Log de début
+
+    // Vérifier si l'ID de l'utilisateur est bien extrait du token
+    if (!req.userId) {
+      console.error("Erreur : Aucun ID utilisateur trouvé dans le token.");
+      return res.status(400).send({ message: "Invalid Token." });
+    }
+
+    console.log("ID de l'utilisateur extrait du token :", req.userId); // Affichage de l'ID utilisateur
+
+    // Récupérer toutes les informations de l'utilisateur via son ID extrait du token (req.userId)
+    const user = await User.findByPk(req.userId);
+
+    // Vérifier si l'utilisateur a été trouvé dans la base de données
     if (!user) {
+      console.error(
+        "Erreur : Utilisateur non trouvé dans la base de données avec cet ID :",
+        req.userId
+      );
       return res.status(404).send({ message: "User Not Found." });
     }
+
+    console.log("Utilisateur trouvé :", user); // Afficher les informations utilisateur trouvées
+
+    // Renvoyer toutes les informations de l'utilisateur
     res.status(200).send(user);
+    console.log("Informations de l'utilisateur renvoyées avec succès.");
   } catch (err) {
+    console.error(
+      "Erreur lors de la récupération des informations de l'utilisateur :",
+      err.message
+    ); // Log de l'erreur
     res.status(500).send({ message: err.message });
   }
 };
