@@ -2,14 +2,19 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import logo from "../image/logo_1.png";
+import background from "../image/image_fond_home.webp";
 //import logoImportGame from "../image/logoimportgame.jpg";
 //import pub from "../image/devmax.png";
 //import evenement from "../image/test_ev.png";
 
 // Composants stylisés
 const AppContainer = styled.div`
-  background-color: var(--bg-color);
+  background-image: url(${background});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   color: var(--text-color);
+  min-height: 100vh;
 `;
 
 const Header = styled.header`

@@ -3,20 +3,24 @@ import styled from "styled-components";
 import { useAuth } from "./AuthContext"; // Importer useAuth pour accéder à la fonction login
 import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
+import background from "../image/image_fond_home.webp";
 
 // Styles avec styled-components
+
 const LoginContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  width: 100vw; /* Assure que le conteneur prend toute la largeur */
   padding: 20px;
   background-color: var(--background-color);
-  background-image: url("../image/testdefond.jpg");
+  background-image: url(${background});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  color: var(--text-color);
   background-attachment: fixed;
 `;
 
@@ -125,6 +129,7 @@ const Login = () => {
   };
 
   return (
+    <>
     <LoginContainer>
       <ThemeToggle className="swap swap-rotate"></ThemeToggle>
       <Form onSubmit={handleLogin}>
@@ -161,6 +166,7 @@ const Login = () => {
         </FormLinks>
       </Form>
     </LoginContainer>
+    </>
   );
 };
 
