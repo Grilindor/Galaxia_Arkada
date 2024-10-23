@@ -1,5 +1,6 @@
 import styled from "styled-components";
 export const MainContainer = styled.div`
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -50,11 +51,14 @@ export const ProfileSectionContainer = styled.div`
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 `;
 export const ProfileDetailsContainer = styled.div`
+  display: flex;
+  flex-direction: column; /* Organise les éléments verticalement */
+  align-items: flex-start; /* Aligne les éléments à gauche */
   background-color: #F0F0F0;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  text-align: left; /* Assure que le texte est à gauche */
 `;
 export const ProfileImage = styled.img`
   width: 100px;
