@@ -21,7 +21,7 @@ function Game() {
   const navigate = useNavigate();
 
   const handlePlayClick = () => {
-    window.open("https://simmer.io/@ayana53/the-beggar-king", "_blank"); // Ouvre le jeu dans un nouvel onglet
+    window.open("http://localhost:3000/thebeggarking/", "_blank"); // Ouvre le jeu dans un nouvel onglet
   };
 
   const handleInstallClick = () => {

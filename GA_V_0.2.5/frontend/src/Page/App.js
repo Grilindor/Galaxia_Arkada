@@ -14,6 +14,7 @@ import Bibliothèque from "./Bibliothèque";
 import Forgotpassword from "./ForgotPassword";
 import Game from "./Game";
 import GameSubmissionForm from "./GameSubmissionForm";
+import UnityGame from "./thebeggarking";
 
 function AppRoutes() {
   const { user } = useAuth(); // Vérifiez si l'utilisateur est connecté
@@ -23,6 +24,7 @@ function AppRoutes() {
       <Route path="/" element={<Navigate to="/home" />} />
       {/* Rendre la page d'accueil accessible à tous */}
       <Route path="/home" element={<Home />} />
+      <Route path="/thebeggarking" element={<UnityGame />} />
       <Route path="/login" element={<Login />} />
       <Route
         path="/user"

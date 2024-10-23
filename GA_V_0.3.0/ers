@@ -1,0 +1,20 @@
+                                   Table "public.users"
+   Column   |           Type           | Collation | Nullable |          Default          
+------------+--------------------------+-----------+----------+---------------------------
+ id         | uuid                     |           | not null | 
+ firstname  | character varying(255)   |           | not null | 
+ lastname   | character varying(255)   |           | not null | 
+ userpseudo | character varying(255)   |           | not null | 
+ email      | character varying(255)   |           | not null | 
+ password   | character varying(255)   |           | not null | 
+ role       | character varying(255)   |           |          | 'user'::character varying
+ createdAt  | timestamp with time zone |           | not null | 
+ updatedAt  | timestamp with time zone |           | not null | 
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (id)
+    "users_email_key" UNIQUE CONSTRAINT, btree (email)
+    "users_userpseudo_key" UNIQUE CONSTRAINT, btree (userpseudo)
+Referenced by:
+    TABLE "tokens" CONSTRAINT "tokens_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+    TABLE "user_roles" CONSTRAINT "user_roles_userId_fkey" FOREIGN KEY ("userId") REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE
+
