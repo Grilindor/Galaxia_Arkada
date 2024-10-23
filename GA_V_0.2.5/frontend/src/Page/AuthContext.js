@@ -61,6 +61,26 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const update = async (updatedUserData) => {
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      console.log("Aucun token trouvé, utilisateur non connecté.");
+      return;
+    }
+    try {
+      const response = await axios.put("http://localhost:3000/api/users/update", updatedUserData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = response.data;
+      console.log("Mise à jour des infos utilisateur réussie :", data);
+      setUser(data); // Définir l'utilisateur après mise à jour
+    } catch (err) {
+      console.error("Erreur lors de la mise à jour des informations utilisateur", err);
+    }
+  };
+
   // Fonction pour gérer le logout
   const logout = () => {
     console.log("Déconnexion de l'utilisateur :", user);
@@ -69,7 +89,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, error, fetchUserData }}>
+    <AuthContext.Provider value={{ user, login, logout, error, fetchUserData, update }}>
       {children}
     </AuthContext.Provider>
   );
