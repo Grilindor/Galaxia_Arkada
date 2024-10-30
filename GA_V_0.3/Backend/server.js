@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
 require("./app/routes/user.routes")(app);
-// require("./app/routes/game.routes")(app);
+require("./app/routes/game.routes")(app);
 
 // Middleware pour logger les erreurs
 app.use((err, req, res, next) => {
