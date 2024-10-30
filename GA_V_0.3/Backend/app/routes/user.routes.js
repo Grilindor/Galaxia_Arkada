@@ -14,7 +14,7 @@ module.exports = function(app) {
   });
 
   // Voir tous les utilisateurs avec pagination
-  app.get("/api/users", [authJwt.verifyToken, checkUserExistsByEmail], controller.getAllUsers);
+  // app.get("/api/users", [authJwt.verifyToken], controller.getAllUsers); A D2PLACER POUR ADMIN
 
   // Voir un utilisateur par son jwt
   app.get("/api/user/Profile", [authJwt.verifyToken], controller.getUserProfile);
