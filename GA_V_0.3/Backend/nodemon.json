@@ -1,5 +1,6 @@
 {
 	"watch": ["server.js"],
+	"ignore": ["uploads", "database"],
 	"ext": "js,json",
 	"exec": "node server.js"
   }

@@ -1,167 +1,133 @@
 import React, { useState } from "react";
 import axios from "axios";
+import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
 import {
   Container,
   Title,
   Input,
   Textarea,
+  Select,
   Button,
-  TagList,
-  TagCheckbox,
-  TagLabel
+  Logo,
 } from "../styles/GameSubmissionForm_SC";
 
-const GameSubmission = ({ tags }) => {
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    zipFile: null, // Fichier zip, non obligatoire
-    developerName: "",
-    platform: "",
-    gameEngine: "",
-    selectedTags: [], // Les tags sélectionnés
-    category: "", // Pour la catégorie
-  });
-  const [error, setError] = useState(null);
+// Composant de formulaire de soumission de jeu
+const GameSubmissionForm = () => {
+  // État pour les données du formulaire
+  const [file, setFile] = useState(null);
+  const [name, setName] = useState("");
+  const [developerName, setDeveloperName] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [downloadLink, setDownloadLink] = useState("");
+
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (name === "zipFile") return; // Ignorer les fichiers ici
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+  // Gère le changement de fichier pour l'image
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
   };
 
-  // Fonction de gestion du fichier zip
-  const handleFileChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      zipFile: e.target.files[0],
-    }));
-  };
+  /// Gère la soumission du formulaire
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleTagChange = (tagId) => {
-    setFormData((prevData) => {
-      const selectedTags = prevData.selectedTags.includes(tagId)
-        ? prevData.selectedTags.filter((id) => id !== tagId)
-        : [...prevData.selectedTags, tagId];
-      return { ...prevData, selectedTags };
-    });
-  };
+    const formData = new FormData();
+    formData.append("gameFile", file);
+    formData.append("name", name);
+    formData.append("developerName", developerName);
+    formData.append("description", description);
+    formData.append("category", category);
+    formData.append("platform", platform);
+    formData.append("downloadLink", downloadLink);
 
-  const handleGameSubmission = async (e) => {
-    e.preventDefault();
-    const formDataToSend = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === "zipFile" && value) {
-        formDataToSend.append("zipFile", value);
-      } else {
-        formDataToSend.append(key, value);
-      }
-    });
     try {
-      const response = await axios.post("http://localhost:3000/api/games", formDataToSend, {
+      const response = await axios.post("/upload-game", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("Soumission réussie :", response.data);
-      navigate("/games");
+      alert("Game uploaded successfully!");
     } catch (error) {
-      setError("Erreur lors de la soumission du jeu. Veuillez réessayer.");
+      console.error("Error uploading game", error);
+      alert("Error uploading game");
     }
   };
 
   return (
     <Container>
-      <Title>Submit Your Game</Title>
-      {error && <p>{error}</p>}
-      <form onSubmit={handleGameSubmission}>
+      <Logo>
+        <img src={logo} alt="Logo" onClick={() => navigate("/home")} />
+      </Logo>
+      <Title>Soumettre un Jeu</Title>
+      <form onSubmit={handleSubmit}>
         <Input
           type="text"
-          name="name"
-          placeholder="Game Name"
-          value={formData.name}
-          onChange={handleChange}
+          name="title"
+          placeholder="Nom du jeu"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
         />
         <Textarea
           name="description"
-          placeholder="Game Description"
-          value={formData.description}
-          onChange={handleChange}
+          placeholder="Description du jeu"
+          rows="4"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           required
-        />
-        <Input
-          type="file"
-          name="zipFile"
-          onChange={handleFileChange} // Utilise handleFileChange pour les fichiers
         />
         <Input
           type="text"
           name="developerName"
-          placeholder="Developer Name"
-          value={formData.developerName}
-          onChange={handleChange}
+          placeholder="Nom du développeur"
+          value={developerName}
+          onChange={(e) => setDeveloperName(e.target.value)}
           required
         />
-        <Input
-          type="text"
-          name="platform"
-          placeholder="Platform"
-          value={formData.platform}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          type="text"
-          name="gameEngine"
-          placeholder="Game Engine"
-          value={formData.gameEngine}
-          onChange={handleChange}
-          required
-        />
-
-        {/* Menu déroulant pour les catégories, qui sont en fait des tags */}
-        <label htmlFor="category">Select Category:</label>
-        <select
+        <Select
           name="category"
-          value={formData.category}
-          onChange={handleChange}
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
           required
-          style={{ display: 'block', width: '100%', padding: '10px' }}
         >
-          <option value="">--Select Category--</option>
-          {tags.map((tag) => (
-            <option key={tag.id} value={tag.id}>
-              {tag.name}
-            </option>
-          ))}
-        </select>
-
-        <div>
-          <h4>Select Tags:</h4>
-          <TagList>
-            {tags.map((tag) => (
-              <TagLabel key={tag.id}>
-                <TagCheckbox
-                  type="checkbox"
-                  checked={formData.selectedTags.includes(tag.id)}
-                  onChange={() => handleTagChange(tag.id)}
-                />
-                {tag.name}
-              </TagLabel>
-            ))}
-          </TagList>
-        </div>
-
-        <Button type="submit">Submit Game</Button>
+          <option value="">Sélectionnez une catégorie</option>
+          <option value="action">Action</option>
+          <option value="aventure">Aventure</option>
+          <option value="puzzle">Puzzle</option>
+          {/* Ajoute d'autres catégories ici */}
+        </Select>
+        <Select
+          name="platform"
+          value={platform}
+          onChange={(e) => setPlatform(e.target.value)}
+          required
+        >
+          <option value="">Sélectionnez une plateforme</option>
+          <option value="web">Web</option>
+          <option value="pc">PC</option>
+          {/* Ajoute d'autres plateformes ici */}
+        </Select>
+        <Input
+          type="url"
+          name="downloadLink"
+          placeholder="Lien de téléchargement"
+          value={downloadLink}
+          onChange={(e) => setDownloadLink(e.target.value)}
+          required
+        />
+        <Input
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={handleFileChange}
+        />
+        <Button type="submit">Soumettre</Button>
       </form>
     </Container>
   );
 };
 
-export default GameSubmission;
+export default GameSubmissionForm;

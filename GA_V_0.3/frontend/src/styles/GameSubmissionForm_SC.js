@@ -1,126 +1,78 @@
 import styled from "styled-components";
 
+// Conteneur principal pour le formulaire
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
-  border-radius: 8px;
-  background-color: #f7f9fc;
-  width: 100%;
-  max-width: 450px;
-  margin: 0 auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  display: flex; // Utilise le flexbox pour l'alignement
+  flex-direction: column; // Aligne les éléments en colonne
+  align-items: center; // Centre les éléments horizontalement
+  justify-content: center; // Centre les éléments verticalement
+  padding: 40px; // Ajoute un espacement intérieur
+  border-radius: 5px; // Coins arrondis
+  background-color: lightgrey; // Couleur de fond
+  width: 450px; // Largeur du conteneur augmentée
+  margin: 0 auto; // Centre le conteneur horizontalement
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Ombre autour du conteneur
+  position: absolute; // Pour centrer verticalement
+  top: 50%; // Positionner à 50% de la hauteur
+  left: 50%; // Positionner à 50% de la largeur
+  transform: translate(-50%, -50%); // Centrer le conteneur
 `;
 
+// Titre du formulaire
 export const Title = styled.h1`
-  margin-bottom: 24px;
-  font-size: 24px;
-  color: #333;
-  text-align: center;
+  margin-bottom: 20px; // Espace en dessous du titre
+  font-size: 20px; // Taille de la police
+  text-align: center; // Centre le texte
 `;
 
+// Champ de saisie de texte
 export const Input = styled.input`
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 100%;
-  height: 40px;
-  transition: border-color 0.3s;
-
-  &:focus {
-    border-color: #007bff;
-    outline: none;
-  }
+  margin-bottom: 15px; // Espace en dessous de chaque champ
+  padding: 5px; // Espacement intérieur
+  border: 1px solid #ccc; // Bordure grise claire
+  border-radius: 4px; // Coins légèrement arrondis
+  font-size: 16px; // Taille de la police
+  width: 100%; // Prend toute la largeur du conteneur
+  height: 40px; // Hauteur uniforme pour les inputs
 `;
 
+// Champ de saisie de texte multilignes
 export const Textarea = styled.textarea`
-  margin-bottom: 15px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 100%;
-  height: 120px;
-  resize: none;
-  transition: border-color 0.3s;
-
-  &:focus {
-    border-color: #007bff;
-    outline: none;
-  }
+  margin-bottom: 15px; // Espace en dessous de chaque champ
+  padding: 5px; // Espacement intérieur
+  border: 1px solid #ccc; // Bordure grise claire
+  border-radius: 4px; // Coins légèrement arrondis
+  font-size: 16px; // Taille de la police
+  width: 100%; // Prend toute la largeur du conteneur
+  height: 100px; // Hauteur uniforme pour le textarea
+  resize: none; // Empêche le redimensionnement manuel
 `;
 
-export const Select = styled.div`
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 16px;
-  width: 100%;
-  cursor: pointer;
-  margin-bottom: 15px;
-  position: relative;
+// Champ de sélection pour les catégories et plateformes
+export const Select = styled.select`
+  margin-bottom: 15px; // Espace en dessous de chaque champ
+  padding: 10px; // Espacement intérieur
+  border: 1px solid #ccc; // Bordure grise claire
+  border-radius: 4px; // Coins légèrement arrondis
+  font-size: 16px; // Taille de la police
+  width: 103%; // Prend toute la largeur du conteneur
+  height: 50px; // Hauteur uniforme pour les selects
 `;
 
-export const DropdownContainer = styled.div`
-  position: relative;
-  margin-bottom: 15px;
-`;
-
-export const TagList = styled.div`
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  max-height: 150px;
-  overflow-y: auto;
-  border: 1px solid #ddd;
-  background-color: #f7f9fc;
-  z-index: 1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border-radius: 4px;
-`;
-
-export const TagLabel = styled.label`
-  display: flex;
-  align-items: center;
-  padding: 8px 10px;
-  cursor: pointer;
-  font-size: 14px;
-  &:hover {
-    background-color: #eef2f7;
-  }
-`;
-
-export const TagCheckbox = styled.input`
-  margin-right: 8px;
-`;
-
+// Bouton de soumission
 export const Button = styled.button`
-  padding: 12px;
-  font-size: 16px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
+  padding: 10px; // Espacement intérieur
+  font-size: 16px; // Taille de la police
+  background-color: black; // Couleur de fond noire
+  color: white; // Couleur du texte en blanc
+  border: none; // Pas de bordure
+  border-radius: 4px; // Coins légèrement arrondis
+  cursor: pointer; // Change le curseur en main sur hover
+  transition: background-color 0.3s ease; // Transition pour l'effet de survol
 
   &:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-  }
-
-  &:active {
-    background-color: #004080;
-    transform: translateY(1px);
+    // Style lorsque la souris survole le bouton
+    background-color: #333; // Couleur de fond plus foncée
   }
 `;
 
@@ -131,6 +83,6 @@ export const Logo = styled.div`
   img {
     width: 150px;
     height: auto;
-    cursor: pointer;
+    cursor: pointer; // Change le curseur pour indiquer qu'il est cliquable
   }
 `;
