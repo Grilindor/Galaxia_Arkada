@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
 import axios from "axios";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../context/AuthContext";
 import {
   ButtonContainer,
   LogoImage,

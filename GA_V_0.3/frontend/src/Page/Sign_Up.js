@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { StyleSheet, css } from "aphrodite";
+import { styles } from "../styles/Sign_Up_SC";
+import { css } from "aphrodite";
 import logo from "../image/logo_1.png";
 
 const SignUp = () => {
@@ -18,6 +19,7 @@ const SignUp = () => {
 
   const [error, setError] = useState(null); // Gestion des erreurs
   const navigate = useNavigate();
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prevData) => ({
@@ -40,80 +42,6 @@ const SignUp = () => {
     }
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "20px",
-      borderRadius: "5px",
-      backgroundColor: "lightgrey",
-      width: "400px",
-      margin: "0 auto",
-      boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-      position: "absolute", // Pour centrer verticalement
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-    },
-    logo: {
-      marginBottom: "20px",
-    },
-    logoImage: {
-      width: "100px", // Taille réduite de l'image
-      height: "auto", // Maintient le ratio de l'image
-    },
-    form: {
-      display: "flex",
-      flexDirection: "column",
-      width: "100%",
-    },
-    input: {
-      marginBottom: "15px",
-      padding: "10px",
-      border: "1px solid #ccc",
-      borderRadius: "4px",
-      fontSize: "16px",
-    },
-    button: {
-      padding: "10px",
-      fontSize: "16px",
-      backgroundColor: "black",
-      color: "white",
-      border: "none",
-      borderRadius: "4px",
-      cursor: "pointer",
-      transition: "background-color 0.3s ease",
-      marginBottom: "20px",
-    },
-    buttonHover: {
-      ":hover": {
-        backgroundColor: "#333",
-      },
-    },
-    checkboxLabel: {
-      display: "flex",
-      alignItems: "center",
-      marginBottom: "10px",
-    },
-    text: {
-      fontSize: "20px",
-      textAlign: "center",
-      marginBottom: "20px",
-    },
-    errorText: {
-      color: "red",
-      marginBottom: "15px",
-    },
-    link: {
-      color: "blue",
-      textDecoration: "none",
-      ":hover": {
-        textDecoration: "underline",
-      },
-    },
-  });
   return (
     <div className={css(styles.container)}>
       <div className={css(styles.logo)}>
@@ -152,6 +80,15 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
+        <input
+          type="email"
+          name="email"
+          placeholder="Your email address"
+          value={formData.email}
+          onChange={handleChange}
+          className={css(styles.input)}
+          required
+        />
         {/* Champ pour le mot de passe */}
         <input
           type="password"
@@ -163,15 +100,6 @@ const SignUp = () => {
           required
         />
         {/* Champ pour l'email */}
-        <input
-          type="email"
-          name="email"
-          placeholder="Your email address"
-          value={formData.email}
-          onChange={handleChange}
-          className={css(styles.input)}
-          required
-        />
         <p>
           You must be 13+ to create an account. Under 18? Get parent/guardian
           permission.
@@ -215,4 +143,5 @@ const SignUp = () => {
     </div>
   );
 };
+
 export default SignUp;

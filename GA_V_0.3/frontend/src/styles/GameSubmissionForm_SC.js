@@ -69,6 +69,40 @@ export const Select = styled.div`
   position: relative;
 `;
 
+export const DropdownContainer = styled.div`
+  position: relative;
+  margin-bottom: 15px;
+`;
+
+export const TagList = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  background-color: #f7f9fc;
+  z-index: 1;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+`;
+
+export const TagLabel = styled.label`
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  &:hover {
+    background-color: #eef2f7;
+  }
+`;
+
+export const TagCheckbox = styled.input`
+  margin-right: 8px;
+`;
+
 export const Button = styled.button`
   padding: 12px;
   font-size: 16px;
