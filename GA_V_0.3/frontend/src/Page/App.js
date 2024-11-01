@@ -5,7 +5,8 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider, useAuth } from "./AuthContext"; // Assurez-vous que le chemin est correct
+import { AuthProvider, useAuth } from "../context/AuthContext"; // Assurez-vous que le chemin est correct
+//import { GameProvider } from "../context/GameContext";
 import Login from "./login";
 import Home from "./Home";
 import User from "./User";
@@ -49,9 +50,11 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+
+        <Router>
+          <AppRoutes />
+        </Router>
+
     </AuthProvider>
   );
 }

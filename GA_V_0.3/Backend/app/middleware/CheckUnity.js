@@ -17,39 +17,42 @@ async function checkUnityZipFile(req, res, next) {
   }
 
   const tempZipPath = req.file.path;
-  const tempExtractPath = path.join(__dirname, '../temp', uuidv4()); // Dossier temporaire pour extraction
+  const tempExtractPath = path.join(__dirname, '../temp', uuidv4());
 
   try {
-    console.log("Décompression du fichier...");
+    console.log("Décompression du fichier:", tempZipPath);
     await fs.promises.mkdir(tempExtractPath, { recursive: true });
 
-    // Décompression du fichier
     await fs.createReadStream(tempZipPath)
       .pipe(unzipper.Extract({ path: tempExtractPath }))
       .promise();
 
-    console.log("Vérification du contenu...");
+    console.log("Vérification des fichiers extraits...");
     const extractedFiles = await fs.promises.readdir(tempExtractPath);
+    console.log("Fichiers trouvés:", extractedFiles);
+
     const isUnityProject = UNITY_FILES.every(file => extractedFiles.includes(file));
 
     if (!isUnityProject) {
-      console.log("Le fichier zip ne contient pas les fichiers Unity requis.");
+      console.log("Échec de la validation : fichiers Unity manquants.");
       await fs.promises.rm(tempExtractPath, { recursive: true, force: true });
       return res.status(400).json({ message: "Invalid Unity project structure" });
     }
 
     console.log("Validation réussie. Suppression des fichiers temporaires...");
     await fs.promises.rm(tempExtractPath, { recursive: true, force: true });
-    fs.unlinkSync(tempZipPath); // Supprime le zip temporaire
-    next(); // Passe au controller si tout est valide
+    fs.unlinkSync(tempZipPath); // Supprime le fichier zip temporaire
+
+    next();
 
   } catch (error) {
     console.error("Erreur lors de la vérification du fichier Unity:", error);
     await fs.promises.rm(tempExtractPath, { recursive: true, force: true });
-    fs.unlinkSync(tempZipPath); // Supprime le zip temporaire en cas d'erreur
+    fs.unlinkSync(tempZipPath); // Supprime le fichier zip en cas d'erreur
     return res.status(500).json({ message: "Internal Server Error" });
   }
 }
+
 
 module.exports = {
   upload,

@@ -2,6 +2,7 @@ const { Game, Tag } = require("../models");
 
 const createGame = async (req, res) => {
   const { name, developerName, category, platform, gameEngine, tags } = req.body;
+  console.log("body", req.body);
   try {
     // Crée le jeu sans les tags
     const game = await Game.create({
@@ -12,6 +13,8 @@ const createGame = async (req, res) => {
       platform,
       gameEngine,
     });
+
+    console.log(game);
 
     // Récupère les instances de tags sélectionnés dans la base
     const tagsToAssociate = await Tag.findAll({

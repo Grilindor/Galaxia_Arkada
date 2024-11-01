@@ -20,9 +20,6 @@ module.exports = function(app) {
   // Route pour soumettre un jeu, protégée et inclut les middlewares pour le fichier .zip
   router.post('/api/Game/submit', [
     authJwt.verifyToken,
-    checkUserExistsByID,
-    upload.single('zipFileName'),
-    checkUnityZipFile
   ], gameController.createGame);
 
   // Route pour obtenir les informations d'un jeu spécifique
