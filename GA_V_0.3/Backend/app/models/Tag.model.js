@@ -1,17 +1,19 @@
-const { v4: uuidv4 } = require('uuid');
-
-module.exports = (sequelize, Sequelize) => {
-  const Tag = sequelize.define("Tag", {
-    id: {
-      type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4,
-      primaryKey: true, // éviter les doublon
-    },
-    name: {
-      type: Sequelize.STRING,
-      allowNull: false,
-    },
+module.exports = (sequelize, DataTypes) => {
+  const Tag = sequelize.define('Tag', {
+      name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true, // Assure l'unicité du tag
+      }
   });
+
+  Tag.associate = (models) => {
+      Tag.belongsToMany(models.Game, {
+          through: 'GameTags', // Nom de la table intermédiaire
+          as: 'games',
+          foreignKey: 'tagId',
+      });
+  };
 
   return Tag;
 };

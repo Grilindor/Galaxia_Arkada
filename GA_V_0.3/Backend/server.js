@@ -1,90 +1,62 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const morgan = require("morgan");
 const db = require("./app/models");
+const initData = require("./app/utils/initData"); // Initialisation des tags
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Middleware CORS
 app.use(cors({
-  origin: 'http://localhost:3000',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ['x-access-token', 'Origin', 'Content-Type', 'Accept'],
   credentials: true,
 }));
+
+
+// Logger HTTP pour le développement
+app.use(morgan("dev"));
+
+// Middleware de parsing des requêtes
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Routes
-require("./app/routes/user.routes")(app);
-require("./app/routes/game.routes")(app);
+// Import des routes
+const userRoutes = require("./app/routes/user.routes");
+const gameRoutes = require("./app/routes/game.routes");
+//const tagRoutes = require("./app/routes/tag.routes");
 
-// Middleware pour logger les erreurs
+// Utilisation des routes
+app.use("/api/users", userRoutes);
+app.use("/api/games", gameRoutes);
+//app.use("/api/tags", tagRoutes);
+
+// Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error("Erreur:", err.stack);
-  res.status(500).send('Something broke!');
+  res.status(500).send("Une erreur est survenue !");
 });
 
-// Synchronisation de la base de données et initialisation des tags
+// Synchronisation de la base de données et initialisation des données
 db.sequelize.sync({ force: false })
   .then(async () => {
     console.log("Database synchronized.");
 
     // Initialisation des tags
-    const tags = [
-      "Action",
-      "Adventure",
-      "Casual",
-      "Co-op",
-      "Cyberpunk",
-      "Educational",
-      "Fantasy",
-      "Fighting",
-      "Hardcore",
-      "Historical",
-      "Horror",
-      "Kids",
-      "Mature",
-      "Multi-Player",
-      "Mystery",
-      "Open-World",
-      "Platformer",
-      "Post-Apocalyptic",
-      "Racing",
-      "RPG",
-      "Roguelike",
-      "Sandbox",
-      "Shooter",
-      "Single-Player",
-      "Simulation",
-      "Sports",
-      "Stealth",
-      "Survival",
-      "Puzzle",
-      "Western",
-      "Zombie",
-      "Pixel Art",
-      "2D",
-      "3D",
-      "First-Person",
-      "Third-Person",
-    ];
-
-    // Trier les tags par ordre alphabétique
-    tags.sort();
-
-    for (const tagName of tags) {
-      await db.tag.findOrCreate({ where: { name: tagName } }); // Utiliser db.tag
-    }
-    console.log("Tags initialized.");
+    await initData.initializeTags(db.tag);
+    console.log("Initialisation des données terminée.");
   })
-  .catch((err) => {
-    console.error("Failed to sync database: ", err);
+  .catch((error) => {
+    console.error("Erreur de synchronisation de la base de données :", error);
   });
 
 // Lancement du serveur
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-  console.log(`Server accessible at http://localhost:${PORT}`);
+  console.log(`Serveur en cours d'exécution sur le port ${PORT}`);
+  console.log(`Accédez à http://localhost:${PORT}`);
 });
 
 module.exports = app;

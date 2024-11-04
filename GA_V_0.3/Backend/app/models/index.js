@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const config = require("../config/db.config.js");
 
+// Configuration de la connexion Sequelize
 const sequelize = new Sequelize(
   config.DB,
   config.USER,
@@ -17,19 +18,21 @@ const sequelize = new Sequelize(
   }
 );
 
+// Initialisation de l'objet db
 const db = {};
-
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-// Charger les modèles
-db.user = require("./user.model.js")(sequelize, Sequelize);
-db.role = require("./role.model.js")(sequelize, Sequelize);
-db.token = require("./token.model.js")(sequelize, Sequelize);
-db.tag = require("./Tag.model.js")(sequelize, Sequelize);
-db.game = require("./game.model.js")(sequelize, Sequelize);
+// Importation des modèles
+db.user = require("./user.model.js")(sequelize, Sequelize.DataTypes);
+db.role = require("./role.model.js")(sequelize, Sequelize.DataTypes);
+db.token = require("./token.model.js")(sequelize, Sequelize.DataTypes);
+db.tag = require("./Tag.model.js")(sequelize, Sequelize.DataTypes);
+db.game = require("./game.model.js")(sequelize, Sequelize.DataTypes);
 
-// Relations entre modèles
+// Définition des relations
+
+// Many-to-Many entre User et Role
 db.role.belongsToMany(db.user, {
   through: "user_roles",
   foreignKey: "roleId",
@@ -41,18 +44,35 @@ db.user.belongsToMany(db.role, {
   otherKey: "roleId"
 });
 
-// Relation One-to-One entre User et Token
+// One-to-One entre User et Token
 db.user.hasOne(db.token, { foreignKey: "userId", onDelete: "CASCADE" });
 db.token.belongsTo(db.user, { foreignKey: "userId" });
 
-// Relation Many-to-Many entre User et Game
-db.user.belongsToMany(db.game, { through: "user_games", foreignKey: "userId" });
-db.game.belongsToMany(db.user, { through: "user_games", foreignKey: "gameId" });
+// Many-to-Many entre User et Game
+db.user.belongsToMany(db.game, {
+  through: "user_games",
+  foreignKey: "userId",
+  otherKey: "gameId"
+});
+db.game.belongsToMany(db.user, {
+  through: "user_games",
+  foreignKey: "gameId",
+  otherKey: "userId"
+});
 
-// Relation Many-to-Many entre Game et Tag
-db.game.belongsToMany(db.tag, { through: "game_tags", foreignKey: "gameId" });
-db.tag.belongsToMany(db.game, { through: "game_tags", foreignKey: "tagId" });
+// Many-to-Many entre Game et Tag
+db.game.belongsToMany(db.tag, {
+  through: "game_tags",
+  foreignKey: "gameId",
+  otherKey: "tagId"
+});
+db.tag.belongsToMany(db.game, {
+  through: "game_tags",
+  foreignKey: "tagId",
+  otherKey: "gameId"
+});
 
+// Définition des rôles disponibles
 db.ROLES = ["user", "admin", "moderator"];
 
 module.exports = db;

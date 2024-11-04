@@ -1,36 +1,25 @@
-const { Game, Tag } = require("../models");
+const { Game } = require('../models');
 
-const createGame = async (req, res) => {
-  const { name, developerName, category, platform, gameEngine, tags } = req.body;
-  console.log("body", req.body);
-  try {
-    // Crée le jeu sans les tags
-    const game = await Game.create({
-      zipFileSize,
-      developerName,
-      description,
-      category,
-      platform,
-      gameEngine,
-    });
+exports.submitGame = async (req, res) => {
+    try {
+        const { name, description, developer, gameEngine, platform } = req.body;
+        const tags = JSON.parse(req.body.tags); // Conversion de la chaîne JSON en tableau
+        const filePath = req.file.path;
 
-    console.log(game);
+        // Sauvegarde des informations dans la base de données
+        const game = await Game.create({
+            name,
+            description,
+            developer,
+            filePath,
+            gameEngine,
+            platform,
+            tags
+        });
 
-    // Récupère les instances de tags sélectionnés dans la base
-    const tagsToAssociate = await Tag.findAll({
-      where: { name: tags }, // `tags` est un tableau de noms de tags
-    });
-
-    // Associe les tags au jeu
-    await game.addTags(tagsToAssociate);
-
-    res.status(201).json({ message: "Jeu créé avec succès", game });
-  } catch (error) {
-    console.error("Erreur lors de la création du jeu :", error);
-    res.status(500).json({ message: "Erreur lors de la création du jeu" });
-  }
-};
-
-module.exports = {
-  createGame,
+        res.status(201).json({ message: 'Jeu soumis avec succès', game });
+    } catch (error) {
+        console.error("Erreur lors de la soumission du jeu:", error);
+        res.status(500).json({ message: 'Erreur lors de la soumission du jeu' });
+    }
 };
