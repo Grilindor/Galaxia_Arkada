@@ -61,6 +61,18 @@ db.game.belongsToMany(db.user, {
   otherKey: "userId"
 });
 
+// Many-to-Many entre Game et Tag
+db.game.belongsToMany(db.tag, {
+  through: "game_tags",
+  as: "tags",
+  foreignKey: "gameId",
+});
+db.tag.belongsToMany(db.game, {
+  through: "game_tags",
+  as: "games",
+  foreignKey: "tagId",
+});
+
 
 // Définition des rôles disponibles
 db.ROLES = ["user", "admin", "moderator"];

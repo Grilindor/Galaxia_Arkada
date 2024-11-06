@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors({
   origin: "http://localhost:3000",
   methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ['x-access-token', 'Origin', 'Content-Type', 'Accept'],
+  allowedHeaders: ['x-access-token', 'Origin', 'Content-Type', 'Accept', "Content-Type", "Authorization"],
   credentials: true,
 }));
 
@@ -27,12 +27,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Import des routes
 const userRoutes = require("./app/routes/user.routes");
 const gameRoutes = require("./app/routes/game.routes");
-//const tagRoutes = require("./app/routes/tag.routes");
+const tagRoutes = require("./app/routes/tag.routes");
 
 // Utilisation des routes
 app.use("/api/users", userRoutes);
 app.use("/api/games", gameRoutes);
-//app.use("/api/tags", tagRoutes);
+app.use("/api/tags", tagRoutes);
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {

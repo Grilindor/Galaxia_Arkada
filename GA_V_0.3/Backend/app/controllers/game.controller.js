@@ -1,6 +1,7 @@
 // controllers/game.controller.js
-const Game = require('../models/game.model');
-const Tag = require('../models/Tag.model');
+const db = require('../models'); // Importe `db` pour accéder aux modèles configurés
+const Game = db.game; // Accéder aux modèles via `db`
+const Tag = db.tag;
 
 const submitGameWithTags = async (req, res) => {
     try {

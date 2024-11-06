@@ -64,11 +64,11 @@ const TagDropdown = ({ options, selectedTags, setSelectedTags }) => {
   }, []);
 
   // Fonction pour sélectionner ou désélectionner un tag
-  const handleTagToggle = (tag) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter((t) => t !== tag));
+  const handleTagToggle = (tagName) => {
+    if (selectedTags.includes(tagName)) {
+      setSelectedTags(selectedTags.filter((t) => t !== tagName));
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setSelectedTags([...selectedTags, tagName]);
     }
   };
 
@@ -80,13 +80,13 @@ const TagDropdown = ({ options, selectedTags, setSelectedTags }) => {
       {isOpen && (
         <DropdownMenu>
           {options.map((tag) => (
-            <DropdownItem key={tag}>
+            <DropdownItem key={tag.id}>
               <Checkbox
                 type="checkbox"
-                checked={selectedTags.includes(tag)}
-                onChange={() => handleTagToggle(tag)}
+                checked={selectedTags.includes(tag.name)}
+                onChange={() => handleTagToggle(tag.name)}
               />
-              {tag}
+              {tag.name}
             </DropdownItem>
           ))}
         </DropdownMenu>
