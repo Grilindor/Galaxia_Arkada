@@ -16,35 +16,41 @@ import TagDropdown from './FuncTagDropdown';
 const GameSubmissionForm = () => {
   const [gameData, setGameData] = useState({
     name: "",
-    developerName: "",
+    developer: "",
     description: "",
     platform: "",
-    gameEngine: "",
-    tags: [],
+    gameEngine: ""
   });
   const [zipFileName, setZipFile] = useState(null);
-  const [availableTags, setAvailableTags] = useState([]);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [tagOptions, setTagOptions] = useState([]);
+
+  // Récupère les tags depuis le backend au chargement du composant
   useEffect(() => {
     const fetchTags = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/tags/all");
+        const response = await axios.get("http://localhost:5000/api/tags/all"); // Modifiez l'URL si nécessaire
+        setTagOptions(response.data); // On utilise seulement les noms.map(tag => tag.name)
         console.log(response.data);
-        setAvailableTags(response.data);
       } catch (error) {
-        console.error("Erreur lors de la récupération des tags:", error);
+        console.error("Erreur lors de la récupération des tags :", error);
       }
     };
+
     fetchTags();
   }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setGameData({ ...gameData, [name]: value });
   };
+
   const handleFileChange = (e) => {
     setZipFile(e.target.files[0]);
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = sessionStorage.getItem("token");
@@ -52,17 +58,19 @@ const GameSubmissionForm = () => {
       setError("Vous devez être connecté pour soumettre un jeu.");
       return;
     }
+
     const formData = new FormData();
     formData.append("name", gameData.name);
-    formData.append("developerName", gameData.developerName);
+    formData.append("developer", gameData.developer);
     formData.append("description", gameData.description);
     formData.append("platform", gameData.platform);
     formData.append("gameEngine", gameData.gameEngine);
-    gameData.tags.forEach((tag) => formData.append("tags", tag));
+    selectedTags.forEach((tag) => formData.append("tags", tag));
     formData.append("zipFile", zipFileName);
+
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/Game/submit",
+        "http://localhost:5000/api/games/submitWithTags",
         formData,
         {
           headers: {
@@ -82,13 +90,14 @@ const GameSubmissionForm = () => {
       );
     }
   };
+
   return (
     <Container>
       <Logo>
         <img src={logo} alt="Logo" onClick={() => navigate("/home")} />
       </Logo>
       <Title>Soumettre un Jeu</Title>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form onSubmit={handleSubmit}>
         <Input
           type="text"
           name="name"
@@ -99,9 +108,9 @@ const GameSubmissionForm = () => {
         />
         <Input
           type="text"
-          name="developerName"
+          name="developer"
           placeholder="Nom du développeur"
-          value={gameData.developerName}
+          value={gameData.developer}
           onChange={handleChange}
           required
         />
@@ -132,26 +141,11 @@ const GameSubmissionForm = () => {
           <option value="Unity">Unity</option>
           <option value="Unreal">Unreal</option>
         </Select>
-        <Select
-          name="tags"
-          multiple
-          value={gameData.tags}
-          onChange={(e) => {
-            const selectedTags = Array.from(
-              e.target.selectedOptions,
-              (option) => option.value
-            );
-            setGameData({ ...gameData, tags: selectedTags });
-          }}
-          required
-        >
-          <option value="">Sélectionnez des tags</option>
-          {availableTags.map((tag) => (
-            <option key={tag.id} value={tag.id}>
-              {tag.name}
-            </option>
-          ))}
-        </Select>
+        <TagDropdown
+          options={tagOptions}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
+        />
         <Input
           type="file"
           name="zipFile"
@@ -165,4 +159,5 @@ const GameSubmissionForm = () => {
     </Container>
   );
 };
+
 export default GameSubmissionForm;
