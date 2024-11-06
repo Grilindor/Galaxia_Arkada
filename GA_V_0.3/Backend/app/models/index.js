@@ -32,6 +32,7 @@ db.game = require("./game.model.js")(sequelize, Sequelize.DataTypes);
 
 // Définition des relations
 
+
 // Many-to-Many entre User et Role
 db.role.belongsToMany(db.user, {
   through: "user_roles",
@@ -60,17 +61,6 @@ db.game.belongsToMany(db.user, {
   otherKey: "userId"
 });
 
-// Many-to-Many entre Game et Tag
-db.game.belongsToMany(db.tag, {
-  through: "game_tags",
-  foreignKey: "gameId",
-  otherKey: "tagId"
-});
-db.tag.belongsToMany(db.game, {
-  through: "game_tags",
-  foreignKey: "tagId",
-  otherKey: "gameId"
-});
 
 // Définition des rôles disponibles
 db.ROLES = ["user", "admin", "moderator"];

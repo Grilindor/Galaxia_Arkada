@@ -1,25 +1,40 @@
-const { Game } = require('../models');
+// controllers/game.controller.js
+const Game = require('../models/game.model');
+const Tag = require('../models/Tag.model');
 
-exports.submitGame = async (req, res) => {
+const submitGameWithTags = async (req, res) => {
     try {
-        const { name, description, developer, gameEngine, platform } = req.body;
-        const tags = JSON.parse(req.body.tags); // Conversion de la chaîne JSON en tableau
-        const filePath = req.file.path;
+        // 1. Créer le jeu avec les informations reçues
+        const gameData = {
+            name: req.body.name,
+            description: req.body.description,
+            developer: req.body.developer,
+            filePath: req.file.path, // chemin du fichier .zip
+            gameEngine: req.body.gameEngine,
+            platform: req.body.platform,
+        };
 
-        // Sauvegarde des informations dans la base de données
-        const game = await Game.create({
-            name,
-            description,
-            developer,
-            filePath,
-            gameEngine,
-            platform,
-            tags
-        });
+        // Création du jeu
+        const game = await Game.create(gameData);
 
-        res.status(201).json({ message: 'Jeu soumis avec succès', game });
+        // 2. Gérer les tags
+        // Récupérer les tags envoyés sous forme de JSON dans le corps de la requête
+        const tagsData = JSON.parse(req.body.tags); // Assurez-vous que c'est bien en JSON
+
+        // Vérifier ou créer chaque tag et les récupérer
+        const tags = await Promise.all(tagsData.map(async tagName => {
+            const [tag, created] = await Tag.findOrCreate({ where: { name: tagName } });
+            return tag;
+        }));
+
+        // 3. Associer les tags au jeu
+        await game.setTags(tags); // Sequelize gère automatiquement les associations via la table de liaison
+
+        res.status(201).json({ message: 'Game created successfully with tags', game });
     } catch (error) {
-        console.error("Erreur lors de la soumission du jeu:", error);
-        res.status(500).json({ message: 'Erreur lors de la soumission du jeu' });
+        console.error(error);
+        res.status(500).json({ message: 'Error creating game with tags', error });
     }
 };
+
+module.exports = { submitGameWithTags };
