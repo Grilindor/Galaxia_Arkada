@@ -1,0 +1,5 @@
+node_modules
+.env
+app/config/
+__tests__/
+temp
