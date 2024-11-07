@@ -4,106 +4,20 @@ import { useAuth } from "./AuthContext"; // Importer useAuth pour accéder à la
 import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
 import background from "../image/image_fond_home.webp";
-
-// Styles avec styled-components
-
-const LoginContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  width: 100vw; /* Assure que le conteneur prend toute la largeur */
-  padding: 20px;
-  background-color: var(--background-color);
-  background-image: url(${background});
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: var(--text-color);
-  background-attachment: fixed;
-`;
-
-const Form = styled.form`
-  display: flex;
-  flex-direction: column;
-  width: 650px;
-  background-color: rgb(111, 107, 107);
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-`;
-
-const LogoContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-`;
-
-const LoginLogo = styled.img`
-  width: 80px;
-  cursor: pointer;
-`;
-
-const LoginTitle = styled.h2`
-  text-align: center;
-  font-size: 24px;
-  margin-bottom: 20px;
-`;
-
-const InputContainer = styled.div`
-  margin-bottom: 15px;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-  box-sizing: border-box;
-`;
-
-const SubmitButton = styled.button`
-  padding: 10px;
-  font-size: 16px;
-  background-color: black;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-bottom: 20px;
-  &:hover {
-    background-color: #333;
-  }
-`;
-
-const FormLinks = styled.div`
-  text-align: center;
-  font-size: 14px;
-`;
-
-const Link = styled.a`
-  color: black;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const Divider = styled.span`
-  margin: 0 10px;
-  color: #666;
-`;
-
-const ThemeToggle = styled.label`
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  cursor: pointer;
-`;
+import {
+  LoginContainer,
+  Form,
+  LogoContainer,
+  LoginLogo,
+  LoginTitle,
+  InputContainer,
+  Input,
+  SubmitButton,
+  FormLinks,
+  Link,
+  Divider,
+  ThemeToggle
+} from "../styles/login_SC";
 
 const Login = () => {
   const [email, setEmail] = useState("");

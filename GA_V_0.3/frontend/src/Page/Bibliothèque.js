@@ -1,91 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 import logo from "../image/logo_1.png";
-
-// Création des composants stylisés
-const Container = styled.div`
-  display: flex;
-`;
-
-const Sidebar = styled.div`
-  width: 200px;
-  background-color: #f4f4f4;
-  padding: 20px;
-  border-right: 2px solid #ddd;
-`;
-
-const ContentArea = styled.div`
-  flex: 1;
-  padding: 20px;
-`;
-
-const GamesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-`;
-
-const StyledImage = styled.img`
-  width: 100px;
-  height: auto;
-  border-radius: 10px;
-`;
-
-const Nav = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f4f4f4;
-  padding: 10px 20px;
-  border-bottom: 2px solid #ddd;
-`;
-
-const Button = styled.button`
-  background-color: #3498db;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #2980b9;
-  }
-`;
-
-const Game = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
-  padding: 15px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 20px;
-`;
-
-const GameImage = styled.div`
-  width: 100px;
-  height: 100px;
-  background-color: #ddd;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
-  cursor: pointer;
-`;
-
-const GameInfo = styled.div`
-  text-align: center;
-`;
-
-const NavButton = styled.button`
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-`;
+import {
+  Container,
+  Sidebar,
+  ContentArea,
+  GamesGrid,
+  StyledImage,
+  Nav,
+  Button,
+  Game,
+  GameImage,
+  GameInfo,
+  NavButton,
+} from "../styles/Bibliothèque_SC";
 
 function Bibliothèque() {
   const navigate = useNavigate();
@@ -139,6 +67,11 @@ function Bibliothèque() {
       <ContentArea>
         <Nav>
           <StyledImage src={logo} alt="Logo" />
+          <h1
+            style={{ marginLeft: "10px", fontSize: "1.5em", color: "orange" }}
+          >
+            Galaxia Arkada
+          </h1>
           {isAuthenticated && (
             <>
               <Button onClick={() => navigate("/home")}>Magasin</Button>

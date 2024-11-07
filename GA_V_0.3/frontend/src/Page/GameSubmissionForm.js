@@ -1,124 +1,106 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState, useEffect } from "react";
 import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
+import {
+  Container,
+  Title,
+  Input,
+  Textarea,
+  Select,
+  Button,
+  Logo,
+} from "../styles/GameSubmissionForm_SC";
+import axios from "axios";
+import TagDropdown from "./FuncTagDropdown";
 
-// Conteneur principal pour le formulaire
-const Container = styled.div`
-  display: flex; // Utilise le flexbox pour l'alignement
-  flex-direction: column; // Aligne les éléments en colonne
-  align-items: center; // Centre les éléments horizontalement
-  justify-content: center; // Centre les éléments verticalement
-  padding: 40px; // Ajoute un espacement intérieur
-  border-radius: 5px; // Coins arrondis
-  background-color: lightgrey; // Couleur de fond
-  width: 450px; // Largeur du conteneur augmentée
-  margin: 0 auto; // Centre le conteneur horizontalement
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Ombre autour du conteneur
-  position: absolute; // Pour centrer verticalement
-  top: 50%; // Positionner à 50% de la hauteur
-  left: 50%; // Positionner à 50% de la largeur
-  transform: translate(-50%, -50%); // Centrer le conteneur
-`;
-
-// Titre du formulaire
-const Title = styled.h1`
-  margin-bottom: 20px; // Espace en dessous du titre
-  font-size: 20px; // Taille de la police
-  text-align: center; // Centre le texte
-`;
-
-// Champ de saisie de texte
-const Input = styled.input`
-  margin-bottom: 15px; // Espace en dessous de chaque champ
-  padding: 5px; // Espacement intérieur
-  border: 1px solid #ccc; // Bordure grise claire
-  border-radius: 4px; // Coins légèrement arrondis
-  font-size: 16px; // Taille de la police
-  width: 100%; // Prend toute la largeur du conteneur
-  height: 40px; // Hauteur uniforme pour les inputs
-`;
-
-// Champ de saisie de texte multilignes
-const Textarea = styled.textarea`
-  margin-bottom: 15px; // Espace en dessous de chaque champ
-  padding: 5px; // Espacement intérieur
-  border: 1px solid #ccc; // Bordure grise claire
-  border-radius: 4px; // Coins légèrement arrondis
-  font-size: 16px; // Taille de la police
-  width: 100%; // Prend toute la largeur du conteneur
-  height: 100px; // Hauteur uniforme pour le textarea
-  resize: none; // Empêche le redimensionnement manuel
-`;
-
-// Champ de sélection pour les catégories et plateformes
-const Select = styled.select`
-  margin-bottom: 15px; // Espace en dessous de chaque champ
-  padding: 10px; // Espacement intérieur
-  border: 1px solid #ccc; // Bordure grise claire
-  border-radius: 4px; // Coins légèrement arrondis
-  font-size: 16px; // Taille de la police
-  width: 103%; // Prend toute la largeur du conteneur
-  height: 50px; // Hauteur uniforme pour les selects
-`;
-
-// Bouton de soumission
-const Button = styled.button`
-  padding: 10px; // Espacement intérieur
-  font-size: 16px; // Taille de la police
-  background-color: black; // Couleur de fond noire
-  color: white; // Couleur du texte en blanc
-  border: none; // Pas de bordure
-  border-radius: 4px; // Coins légèrement arrondis
-  cursor: pointer; // Change le curseur en main sur hover
-  transition: background-color 0.3s ease; // Transition pour l'effet de survol
-
-  &:hover {
-    // Style lorsque la souris survole le bouton
-    background-color: #333; // Couleur de fond plus foncée
-  }
-`;
-
-const Logo = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  margin-left: 10px;
-  img {
-    width: 150px;
-    height: auto;
-    cursor: pointer; // Change le curseur pour indiquer qu'il est cliquable
-  }
-`;
-// Composant de formulaire de soumission de jeu
 const GameSubmissionForm = () => {
-  // État pour les données du formulaire
   const [gameData, setGameData] = useState({
-    title: "",
+    name: "",
+    developer: "",
     description: "",
-    category: "",
     platform: "",
-    downloadLink: "",
-    image: null,
+    gameEngine: "",
   });
+  const [zipFileName, setZipFile] = useState(null);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [tagOptions, setTagOptions] = useState([]);
 
-  // Met à jour l'état lorsque l'utilisateur saisit des données
+  // Récupère les tags depuis le backend au chargement du composant
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/tags/all"); // Modifiez l'URL si nécessaire
+        setTagOptions(response.data); // On utilise seulement les noms.map(tag => tag.name)
+        console.log(response.data);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des tags :", error);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setGameData({ ...gameData, [name]: value });
   };
 
-  // Gère le changement de fichier pour l'image
   const handleFileChange = (e) => {
-    setGameData({ ...gameData, image: e.target.files[0] });
+    setZipFile(e.target.files[0]);
   };
 
-  // Gère la soumission du formulaire
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(gameData); // Affiche les données dans la console (vous pouvez envoyer ces données à votre backend)
-  };
+    const token = sessionStorage.getItem("token");
+    if (!token) {
+      setError("Vous devez être connecté pour soumettre un jeu.");
+      return;
+    }
 
-  const navigate = useNavigate();
+    const formData = new FormData();
+    formData.append("name", gameData.name);
+    formData.append("developer", gameData.developer);
+    formData.append("description", gameData.description);
+    formData.append("platform", gameData.platform);
+    formData.append("gameEngine", gameData.gameEngine);
+    selectedTags.forEach((tag) => formData.append("tags[]", tag)); // modif recent ici "tags" en "tags[]""
+    formData.append("zipFile", zipFileName);
+
+    // Log pour vérifier les données envoyées
+    console.log("Submitting form data:", {
+      name: gameData.name,
+      developer: gameData.developer,
+      description: gameData.description,
+      platform: gameData.platform,
+      gameEngine: gameData.gameEngine,
+      tags: selectedTags,
+      zipFile: zipFileName,
+    });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/games/submitWithTags",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status === 201) {
+        navigate("/home");
+      }
+    } catch (error) {
+      setError(
+        error.response
+          ? error.response.data.message
+          : "Erreur lors de la soumission du jeu"
+      );
+    }
+  };
 
   return (
     <Container>
@@ -129,9 +111,17 @@ const GameSubmissionForm = () => {
       <form onSubmit={handleSubmit}>
         <Input
           type="text"
-          name="title"
+          name="name"
           placeholder="Nom du jeu"
-          value={gameData.title}
+          value={gameData.name}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          type="text"
+          name="developer"
+          placeholder="Nom du développeur"
+          value={gameData.developer}
           onChange={handleChange}
           required
         />
@@ -144,18 +134,6 @@ const GameSubmissionForm = () => {
           required
         />
         <Select
-          name="category"
-          value={gameData.category}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Sélectionnez une catégorie</option>
-          <option value="action">Action</option>
-          <option value="aventure">Aventure</option>
-          <option value="puzzle">Puzzle</option>
-          {/* Ajoutez d'autres catégories ici */}
-        </Select>
-        <Select
           name="platform"
           value={gameData.platform}
           onChange={handleChange}
@@ -163,22 +141,30 @@ const GameSubmissionForm = () => {
         >
           <option value="">Sélectionnez une plateforme</option>
           <option value="web">Web</option>
-          {/* Ajoutez d'autres plateformes ici */}
         </Select>
-        <Input
-          type="url"
-          name="downloadLink"
-          placeholder="Lien de téléchargement"
-          value={gameData.downloadLink}
+        <Select
+          name="gameEngine"
+          value={gameData.gameEngine}
           onChange={handleChange}
           required
+        >
+          <option value="">Sélectionnez un moteur de jeu</option>
+          <option value="Unity">Unity</option>
+          <option value="Unreal">Unreal</option>
+        </Select>
+        <TagDropdown
+          options={tagOptions}
+          selectedTags={selectedTags}
+          setSelectedTags={setSelectedTags}
         />
         <Input
           type="file"
-          name="image"
-          accept="image/*"
+          name="zipFile"
+          accept=".zip"
           onChange={handleFileChange}
+          required
         />
+        {error && <p style={{ color: "red" }}>{error}</p>}
         <Button type="submit">Soumettre</Button>
       </form>
     </Container>

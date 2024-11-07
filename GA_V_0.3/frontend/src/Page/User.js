@@ -48,7 +48,6 @@ function User() {
     navigate("/login");
   };
 
-
   const handleModifieProfile = () => {
     setIsEditing(!isEditing); // Affiche ou masque le formulaire
   };
@@ -94,6 +93,9 @@ function User() {
     <div>
       <ButtonContainer>
         <LogoImage src={logo} alt="Logo" />
+        <h1 style={{ marginLeft: "5px", fontSize: "1.5em", color: "orange" }}>
+          Galaxia Arkada
+        </h1>
         <Button onClick={() => navigate("/home")}>Magasin</Button>
         <Button onClick={() => navigate("/Bibliothèque")}>Bibliothèque</Button>
         <Button onClick={() => navigate("/user")}>User</Button>
@@ -101,85 +103,97 @@ function User() {
       </ButtonContainer>
 
       <ProfileSectionContainer>
-      <ProfileDetailsContainer>
-  <ProfileImage
-    src={imageUser}
-    alt="Profil"
-  />
-  <h1>Profil</h1>
-  <div style={{ display: 'flex', flexDirection: 'row', width: '100%' }}>
-    <div style={{ flex: 1 }}>
-      <h2>Pseudo:</h2>
-      <p>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{user?.userpseudo || "Nom Du Profil"}
-      </p>
-      <h2>Prénom:</h2>
-      <p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{user?.firstname || "Prénom"}</p>
-      <h2>Nom: </h2>
-      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{user?.lastname || "Nom"}</p>
-      <h2>Email: </h2>
-      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{user?.email || "Email"}</p>
-      <h2>Password: </h2>
-      <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"#######"}</p>
-    </div>
+        <ProfileDetailsContainer>
+          <ProfileImage src={imageUser} alt="Profil" />
+          <h1>Profil</h1>
+          <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+            <div style={{ flex: 1 }}>
+              <h2>Pseudo:</h2>
+              <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {user?.userpseudo || "Nom Du Profil"}
+              </p>
+              <h2>Prénom:</h2>
+              <p>
+                {" "}
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                {user?.firstname || "Prénom"}
+              </p>
+              <h2>Nom: </h2>
+              <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{user?.lastname || "Nom"}
+              </p>
+              <h2>Email: </h2>
+              <p>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{user?.email || "Email"}
+              </p>
+              <h2>Password: </h2>
+              <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{"#######"}</p>
+            </div>
 
-    {isEditing && (
-      <div style={{ flex: 1, paddingLeft: '20px' }}>
-        <h2 style={{ marginBottom: '10px' }}>Pseudo</h2>
-        <InputField
-          type="text"
-          name="userpseudo"
-          value={formData.userpseudo}
-          onChange={handleInputChange}
-          style={{ padding: '5px', marginBottom: '5px' }}
-        />
-        <h2 style={{ marginBottom: '10px' }}>Prénom</h2>
-        <InputField
-          type="text"
-          name="firstname"
-          value={formData.firstname}
-          onChange={handleInputChange}
-          style={{ padding: '5px', marginBottom: '5px' }}
-        />
-        <h2 style={{ marginBottom: '10px' }}>Nom</h2>
-        <InputField
-          type="text"
-          name="lastname"
-          value={formData.lastname}
-          onChange={handleInputChange}
-          style={{ padding: '5px', marginBottom: '5px' }}
-        />
-        <h2 style={{ marginBottom: '10px' }}>Email</h2>
-        <InputField
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleInputChange}
-          style={{ padding: '5px', marginBottom: '5px' }}
-        />
-        <h2 style={{ marginBottom: '10px' }}>Password</h2>
-        <InputField
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleInputChange}
-          style={{ padding: '5px', marginBottom: '5px' }}
-        />
-        <Button onClick={handleFormSubmit}>Valider</Button>
-      </div>
-    )}
-  </div>
+            {isEditing && (
+              <div style={{ flex: 1, paddingLeft: "20px" }}>
+                <h2 style={{ marginBottom: "10px" }}>Pseudo</h2>
+                <InputField
+                  type="text"
+                  name="userpseudo"
+                  value={formData.userpseudo}
+                  onChange={handleInputChange}
+                  style={{ padding: "5px", marginBottom: "5px" }}
+                />
+                <h2 style={{ marginBottom: "10px" }}>Prénom</h2>
+                <InputField
+                  type="text"
+                  name="firstname"
+                  value={formData.firstname}
+                  onChange={handleInputChange}
+                  style={{ padding: "5px", marginBottom: "5px" }}
+                />
+                <h2 style={{ marginBottom: "10px" }}>Nom</h2>
+                <InputField
+                  type="text"
+                  name="lastname"
+                  value={formData.lastname}
+                  onChange={handleInputChange}
+                  style={{ padding: "5px", marginBottom: "5px" }}
+                />
+                <h2 style={{ marginBottom: "10px" }}>Email</h2>
+                <InputField
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  style={{ padding: "5px", marginBottom: "5px" }}
+                />
+                <h2 style={{ marginBottom: "10px" }}>Password</h2>
+                <InputField
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  style={{ padding: "5px", marginBottom: "5px" }}
+                />
+                <Button onClick={handleFormSubmit}>Valider</Button>
+              </div>
+            )}
+          </div>
 
-  <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', marginTop: '10px' }}>
-    <ProfileActionButton onClick={handleModifieProfile}>
-      {isEditing ? "Annuler" : "Modifier le profil"}
-    </ProfileActionButton>
-    <ProfileActionButton onClick={handleDeleteProfile}>
-      Supprimer le profil
-    </ProfileActionButton>
-  </div>
-</ProfileDetailsContainer>
-
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: "10px",
+              marginTop: "10px",
+            }}
+          >
+            <ProfileActionButton onClick={handleModifieProfile}>
+              {isEditing ? "Annuler" : "Modifier le profil"}
+            </ProfileActionButton>
+            <ProfileActionButton onClick={handleDeleteProfile}>
+              Supprimer le profil
+            </ProfileActionButton>
+          </div>
+        </ProfileDetailsContainer>
 
         <OnlineFriendsContainer>
           <h2>En ligne</h2>
@@ -188,7 +202,7 @@ function User() {
       </ProfileSectionContainer>
 
       <FooterContainer>
-        <p>© 2024 Votre Société</p>
+        <p>© 2024 Galaxia Arkada</p>
       </FooterContainer>
     </div>
   );
