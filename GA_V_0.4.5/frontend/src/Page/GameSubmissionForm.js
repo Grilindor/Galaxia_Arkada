@@ -11,7 +11,7 @@ import {
   Logo,
 } from "../styles/GameSubmissionForm_SC";
 import axios from "axios";
-import TagDropdown from './FuncTagDropdown';
+import TagDropdown from "./FuncTagDropdown";
 
 const GameSubmissionForm = () => {
   const [gameData, setGameData] = useState({
@@ -19,7 +19,7 @@ const GameSubmissionForm = () => {
     developer: "",
     description: "",
     platform: "",
-    gameEngine: ""
+    gameEngine: "",
   });
   const [zipFileName, setZipFile] = useState(null);
   const [error, setError] = useState(null);
@@ -76,8 +76,8 @@ const GameSubmissionForm = () => {
       platform: gameData.platform,
       gameEngine: gameData.gameEngine,
       tags: selectedTags,
-      zipFile: zipFileName
-  });
+      zipFile: zipFileName,
+    });
 
     try {
       const response = await axios.post(

@@ -1,6 +1,18 @@
 import { StyleSheet } from "aphrodite";
+import imagedefond from "../image/espace.webp";
 
 export const styles = StyleSheet.create({
+  body: {
+    margin: 0,
+    padding: 0,
+    height: "100vh",
+    backgroundImage: `url(${imagedefond})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    backgroundAttachment: "fixed", // L'image reste fixe lors du défilement
+  },
+
   container: {
     display: "flex",
     flexDirection: "column",
@@ -9,6 +21,9 @@ export const styles = StyleSheet.create({
     padding: "20px",
     borderRadius: "5px",
     backgroundColor: "lightgrey",
+    backgroundImage: `url(${imagedefond})`, // ajout de l'image de fond
+    backgroundSize: "cover",
+    backgroundPosition: "center",
     width: "400px",
     margin: "0 auto",
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",

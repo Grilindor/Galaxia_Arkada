@@ -76,7 +76,7 @@ function Game() {
       </UpdateContactsContainer>
 
       <Footer>
-        <p>© 2024 Votre Société</p>
+        <p>© 2024 Galaxia Arkada</p>
       </Footer>
     </div>
   );

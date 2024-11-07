@@ -1,6 +1,6 @@
 import styled from "styled-components";
+import imagedefond from "../image/espace.webp";
 
-// Conteneur principal pour le formulaire
 export const Container = styled.div`
   display: flex; // Utilise le flexbox pour l'alignement
   flex-direction: column; // Aligne les éléments en colonne
@@ -16,6 +16,12 @@ export const Container = styled.div`
   top: 50%; // Positionner à 50% de la hauteur
   left: 50%; // Positionner à 50% de la largeur
   transform: translate(-50%, -50%); // Centrer le conteneur
+  background-image: url(${imagedefond});
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 // Titre du formulaire

@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
-import logoImportGame from "../image/logoimportgame.jpg";
-import pub from "../image/pub_Dev_Max.png";
-import evenement from "../image/test_ev.png";
 import {
   AppContainer,
   Header,
@@ -21,6 +18,10 @@ import {
   Footer,
   gameData,
 } from "../styles/Home_SC";
+//import logoImportGame from "../image/logoimportgame.jpg";
+import pub from "../image/pub_Dev_Max.png";
+import evenement from "../image/flo-dans-le-game-jeu-video.jpg";
+import banderole from "../image/banderole.png";
 
 function Home() {
   const [theme, setTheme] = useState("light");
@@ -44,6 +45,11 @@ function Home() {
       <Header>
         <Logo>
           <img src={logo} alt="Logo" />
+          <h1
+            style={{ marginLeft: "10px", fontSize: "1.5em", color: "orange" }}
+          >
+            Galaxia Arkada
+          </h1>
         </Logo>
         <nav>
           <NavButton onClick={() => navigate("/home")}>Magasin</NavButton>
@@ -64,8 +70,7 @@ function Home() {
             <button onClick={handleLogout}>Déconnexion</button>
           )}
           <ImportGameButton onClick={() => navigate("/GameSubmissionForm")}>
-            <img src={logoImportGame} alt="Download icon" />
-            <span>Import Game</span>
+            <span>Soumettre un Jeu</span>
           </ImportGameButton>
           <select>
             <option>Langue</option>
@@ -105,11 +110,26 @@ function Home() {
       </Header>
       <Banner>
         <banner-content>
-          <img
-            src={evenement}
-            alt="Publicité"
-            style={{ width: "20%", height: "auto", borderRadius: "5px" }}
-          />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+              width: "100%",
+            }}
+          >
+            <img
+              src={banderole}
+              alt="Publicité"
+              style={{
+                width: "26%",
+                height: "100%",
+                objectFit: "cover",
+                borderRadius: "5px",
+              }}
+            />
+          </div>
         </banner-content>
       </Banner>
       <Filters>
@@ -120,7 +140,7 @@ function Home() {
           <option>Prix</option>
         </select>
         <select>
-          <option>Game Langue</option>
+          <option>Langage des jeux</option>
         </select>
         <select>
           <option>Note</option>
@@ -145,7 +165,11 @@ function Home() {
                 className="game-image"
                 onClick={() => navigate("/game")}
               >
-                <img src={game.image} alt={game.name} />
+                <img
+                  src={game.image}
+                  alt={game.name}
+                  style={{ width: "100%", height: "auto", borderRadius: "5px" }}
+                />
               </NavButton>
               <h3>{game.name}</h3>
               <p>Note : {game.rating}</p>
@@ -153,11 +177,20 @@ function Home() {
           ))}
         </GamesList>
         <Sidebar>
-          <div className="event">Événement</div>
+          <img
+            src={evenement}
+            alt="Publicité"
+            style={{ width: "100%", height: "auto", borderRadius: "5px" }}
+          />
+          <img
+            src={evenement}
+            alt="Publicité"
+            style={{ width: "100%", height: "auto", borderRadius: "5px" }}
+          />
         </Sidebar>
       </MainContent>
       <Footer>
-        <p>© 2023 Mon site. Tous droits réservés.</p>
+        <p>© 2024 Galaxia Arkada</p>
       </Footer>
     </AppContainer>
   );

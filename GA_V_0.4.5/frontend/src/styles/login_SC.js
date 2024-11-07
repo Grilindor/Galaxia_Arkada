@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import imagedefond from "../image/espace.webp";
 
 // Styles avec styled-components
 export const LoginContainer = styled.div`
@@ -9,7 +10,7 @@ export const LoginContainer = styled.div`
   height: 100vh;
   padding: 20px;
   background-color: var(--background-color);
-  background-image: url("../image/testdefond.jpg");
+  background-image: url(${imagedefond});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

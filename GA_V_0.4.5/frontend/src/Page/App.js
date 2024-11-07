@@ -6,7 +6,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import { AuthProvider, useAuth } from "../context/AuthContext"; // Assurez-vous que le chemin est correct
-//import { GameProvider } from "../context/GameContext";
 import Login from "./login";
 import Home from "./Home";
 import User from "./User";
@@ -15,15 +14,17 @@ import Bibliothèque from "./Bibliothèque";
 import Forgotpassword from "./ForgotPassword";
 import Game from "./Game";
 import GameSubmissionForm from "./GameSubmissionForm";
+import UnityGame from "./thebeggarking";
 
 function AppRoutes() {
   const { user } = useAuth(); // Vérifiez si l'utilisateur est connecté
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/home" />} /> met ça dans ton app.js
+      <Route path="/" element={<Navigate to="/home" />} />
       {/* Rendre la page d'accueil accessible à tous */}
       <Route path="/home" element={<Home />} />
+      <Route path="/thebeggarking" element={<UnityGame />} />
       <Route path="/login" element={<Login />} />
       <Route
         path="/user"
@@ -50,11 +51,9 @@ function AppRoutes() {
 function App() {
   return (
     <AuthProvider>
-
-        <Router>
-          <AppRoutes />
-        </Router>
-
+      <Router>
+        <AppRoutes />
+      </Router>
     </AuthProvider>
   );
 }

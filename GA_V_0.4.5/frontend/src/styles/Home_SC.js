@@ -1,9 +1,19 @@
 import styled from "styled-components";
+import background from "../image/espace.webp";
+import jeux1 from "../image/thebeggarking.png";
+import jeux2 from "../image/plafrom.webp";
+import jeux3 from "../image/liondiff.webp";
+import banderole from "../image/banderole.png";
 
-// Composants stylisés
 export const AppContainer = styled.div`
   background-color: var(--bg-color);
   color: var(--text-color);
+  background-image: url(${background});
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Header = styled.header`
@@ -66,7 +76,7 @@ export const ImportGameButton = styled.button`
   img {
     width: 24px;
     height: 24px;
-    margin-right: 10px; /* Espace entre l'image et le texte */
+    margin-right: 10px;
   }
 
   &:hover {
@@ -95,9 +105,10 @@ export const ThemeToggleLabel = styled.label`
 `;
 
 export const Banner = styled.div`
-  height: 200px;
+  height: auto;
   background-color: #ddd;
   display: flex;
+  background-image: url(${banderole});
   justify-content: center;
   align-items: center;
 `;
@@ -122,12 +133,13 @@ export const MainContent = styled.div`
 
 export const Sidebar = styled.div`
   width: 20%;
+  height: 5%;
   background-color: #f0f0f0;
   .ad,
   .event {
-    margin: 20px;
+    margin: 10px;
     background-color: #ccc;
-    padding: 20px;
+    padding: 10px;
     text-align: center;
   }
 `;
@@ -149,9 +161,6 @@ export const Game = styled.div`
   text-align: center;
   margin-bottom: 30px;
   .game-image {
-    background-color: #ccc;
-    height: 170px;
-    margin-bottom: 10px;
   }
 `;
 
@@ -164,24 +173,23 @@ export const Footer = styled.footer`
   width: 100%;
 `;
 
-// Liste des jeux (exemple)
 export const gameData = [
   {
     id: 1,
-    name: "Jeu 1",
-    image: "URL_IMAGE_JEU_1",
+    name: "the beggar king",
+    image: jeux1,
     rating: "4.5",
   },
   {
     id: 2,
-    name: "Jeu 2",
-    image: "URL_IMAGE_JEU_2",
+    name: "Neon Strider",
+    image: jeux2,
     rating: "4.0",
   },
   {
     id: 3,
-    name: "Jeu 3",
-    image: "URL_IMAGE_JEU_3",
+    name: "Lynox le Gardien",
+    image: jeux3,
     rating: "5.0",
   },
 ];

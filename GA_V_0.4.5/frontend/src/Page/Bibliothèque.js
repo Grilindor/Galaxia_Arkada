@@ -67,6 +67,11 @@ function Bibliothèque() {
       <ContentArea>
         <Nav>
           <StyledImage src={logo} alt="Logo" />
+          <h1
+            style={{ marginLeft: "10px", fontSize: "1.5em", color: "orange" }}
+          >
+            Galaxia Arkada
+          </h1>
           {isAuthenticated && (
             <>
               <Button onClick={() => navigate("/home")}>Magasin</Button>

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import styled from "styled-components";
+import { useAuth } from "../context/AuthContext"; // Importer useAuth pour accéder à la fonction login
 import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
+import background from "../image/image_fond_home.webp";
 import {
   LoginContainer,
   Form,
@@ -30,12 +32,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(
-      "Tentative de connexion avec email:",
-      email,
-      "et mot de passe:",
-      password
-    );
+    console.log("Tentative de connexion avec email:", email, "et mot de passe:", password);
 
     try {
       await login(email, password); // Appel de la fonction login du AuthContext
@@ -46,6 +43,7 @@ const Login = () => {
   };
 
   return (
+    <>
     <LoginContainer>
       <ThemeToggle className="swap swap-rotate"></ThemeToggle>
       <Form onSubmit={handleLogin}>
@@ -82,6 +80,7 @@ const Login = () => {
         </FormLinks>
       </Form>
     </LoginContainer>
+    </>
   );
 };
 
