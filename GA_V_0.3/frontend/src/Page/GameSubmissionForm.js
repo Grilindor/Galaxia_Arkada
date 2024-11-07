@@ -65,8 +65,19 @@ const GameSubmissionForm = () => {
     formData.append("description", gameData.description);
     formData.append("platform", gameData.platform);
     formData.append("gameEngine", gameData.gameEngine);
-    selectedTags.forEach((tag) => formData.append("tags", tag));
+    selectedTags.forEach((tag) => formData.append("tags[]", tag)); // modif recent ici "tags" en "tags[]""
     formData.append("zipFile", zipFileName);
+
+    // Log pour vérifier les données envoyées
+    console.log("Submitting form data:", {
+      name: gameData.name,
+      developer: gameData.developer,
+      description: gameData.description,
+      platform: gameData.platform,
+      gameEngine: gameData.gameEngine,
+      tags: selectedTags,
+      zipFile: zipFileName
+  });
 
     try {
       const response = await axios.post(
@@ -80,7 +91,7 @@ const GameSubmissionForm = () => {
         }
       );
       if (response.status === 201) {
-        navigate("/games");
+        navigate("/home");
       }
     } catch (error) {
       setError(

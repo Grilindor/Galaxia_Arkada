@@ -29,6 +29,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         }
+    }, {
+        hooks: {
+            afterCreate: (game, options) => {
+                console.log("Game created successfully:", game.dataValues);
+            }
+        }
     });
 
     Game.associate = (models) => {
@@ -40,4 +46,4 @@ module.exports = (sequelize, DataTypes) => {
     };
 
     return Game;
-  };
+};
