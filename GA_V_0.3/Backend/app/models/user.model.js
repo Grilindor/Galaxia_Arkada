@@ -1,10 +1,10 @@
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define("user", {
     id: {
       type: Sequelize.UUID,
-      defaultValue: Sequelize.UUIDV4, // Utilise UUIDV4 par défaut
+      defaultValue: Sequelize.UUIDV4,
       primaryKey: true,
     },
     firstname: {

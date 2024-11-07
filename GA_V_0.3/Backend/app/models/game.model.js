@@ -11,13 +11,17 @@ module.exports = (sequelize, Sequelize) => {
     name: {
       type: Sequelize.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true, // Assure que le nom n'est pas vide
+        len: [1, 255], // Limite la longueur à 255 caractères
+      },
     },
     zipFileName: {
       type: Sequelize.STRING,
       allowNull: true, // Nom ou chemin du fichier .zip
     },
     zipFileSize: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.BIGINT, // Utilise BIGINT pour de plus grands fichiers
       allowNull: true, // Taille du fichier .zip en octets
     },
     developerName: {
@@ -27,14 +31,17 @@ module.exports = (sequelize, Sequelize) => {
     description: {
       type: Sequelize.TEXT,
       allowNull: true,
+      validate: {
+        len: [0, 5000], // Limite la longueur de la description à 5000 caractères
+      },
     },
     platform: {
       type: Sequelize.STRING,
-      allowNull: false, // Plateforme est obligatoire dans le formulaire
+      allowNull: false,
     },
     gameEngine: {
-      type: Sequelize.STRING, // Moteur de jeu utilisé (Unity, Unreal, etc.)
-      allowNull: false, // Obligatoire pour indiquer avec quel moteur le jeu a été développé
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     submittedAt: {
       type: Sequelize.DATE,

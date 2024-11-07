@@ -43,7 +43,10 @@ exports.getUserProfile = async (req, res) => {
 
     // Vérifier si l'utilisateur a été trouvé dans la base de données
     if (!user) {
-      console.error("Erreur : Utilisateur non trouvé dans la base de données avec cet ID :", req.userId);
+      console.error(
+        "Erreur : Utilisateur non trouvé dans la base de données avec cet ID :",
+        req.userId
+      );
       return res.status(404).send({ message: "User Not Found." });
     }
 
@@ -52,13 +55,14 @@ exports.getUserProfile = async (req, res) => {
     // Renvoyer toutes les informations de l'utilisateur
     res.status(200).send(user);
     console.log("Informations de l'utilisateur renvoyées avec succès.");
-
   } catch (err) {
-    console.error("Erreur lors de la récupération des informations de l'utilisateur :", err.message); // Log de l'erreur
+    console.error(
+      "Erreur lors de la récupération des informations de l'utilisateur :",
+      err.message
+    ); // Log de l'erreur
     res.status(500).send({ message: err.message });
   }
 };
-
 
 // Créer un utilisateur avec le rôle
 exports.createUser = async (req, res) => {
@@ -69,8 +73,8 @@ exports.createUser = async (req, res) => {
       lastname,
       userpseudo,
       email,
-      password: await bcrypt.hash(password, saltRounds), // Hash le mot de passe avant de le stocker
-      role: role || "user", // Valeur par défaut "user"
+      password: await bcrypt.hash(password, saltRounds),
+      role: role || "user",
     });
     res.status(201).send(user);
   } catch (err) {

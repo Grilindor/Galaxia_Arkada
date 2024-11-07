@@ -4,12 +4,13 @@ const authJwt = require("../middleware/authJwt");
 const { checkUserExistsByID } = require("../middleware/checkUserExists");
 const gameController = require("../controllers/game.controller");
 const { checkUnityZipFile, upload } = require("../middleware/CheckUnity");
+const db = require("../models");
 
 module.exports = function (app) {
   app.use(function (req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
+      "x-access-token, Origin, Content-Type, Accept, Authorization"
     );
     next();
   });
@@ -27,7 +28,7 @@ module.exports = function (app) {
     [
       authJwt.verifyToken,
       checkUserExistsByID,
-      upload.single("zipFileName"),
+      upload.single("zipFile"), // Correspond à 'zipFile' dans le formulaire
       checkUnityZipFile,
     ],
     gameController.createGame
