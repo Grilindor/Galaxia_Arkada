@@ -1,0 +1,24 @@
+module.exports = (sequelize, DataTypes) => {
+    const Tag = sequelize.define('Tag', {
+        id: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+        },
+    });
+
+    Tag.associate = (models) => {
+        Tag.belongsToMany(models.Game, {
+            through: 'game_tags',
+            as: 'games',
+            foreignKey: 'tagId',
+        });
+    };
+
+    return Tag;
+  };
