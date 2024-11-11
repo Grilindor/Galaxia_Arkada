@@ -16,13 +16,13 @@ Each game hosted on the platform highlights the cutting-edge work being done in 
 
 ## The Team
 
-Marc CORNABAS - Back-end Developer
+Marc CORNABAS - Backend Developer
 Role:Marc Cornabas is responsible for developing and maintaining the server-side logic of applications.
 He manages databases, designs and implements APIs, and ensures efficient communication between the backend and frontend.
-Additionally, Marc handles security, optimizes performance, and collaborates with front-end developers to deliver robust and scalable web applications
+Additionally, Marc handles security, optimizes performance, and collaborates with frontend developers to deliver robust and scalable web applications
 
-Antonin PAILLASSE - Front-end Developer
-Role: Antonin is responsible for developing and maintaining the front-end of web applications.
+Antonin PAILLASSE - Frontend Developer
+Role: Antonin is responsible for developing and maintaining the frontend of web applications.
 He transforms design concepts into responsive, user-friendly interfaces using HTML, CSS, and JavaScript frameworks like React.js.
 He collaborates with Marc CORNABAS back-end developers to ensure seamless integration, optimizes performance, and maintains high code quality.
 His work directly impacts the user experience, ensuring the platform is both visually appealing and functionally robust.
@@ -31,8 +31,9 @@ His work directly impacts the user experience, ensuring the platform is both vis
 
 After the development phase, we each wrote a blog post to reflect on the Galaxia_Arkada.
 
-- Antonin article : [Galaxia_Arkada](https://www.linkedin.com/pulse/galaxia-arkada-antonin-paillasse-yzr2c/?trackingId=S%2FZNGp4rT5CtDVyDBM5Ajw%3D%3D)
-- Marc article : [Galaxia_Arkada](https://www.linkedin.com/pulse/galaxia-arkada-marc-cornabas-kebee/?trackingId=kJLV6JI6TCm4e1BtTcSPxQ%3D%3D)
+- Antonin article : [Galaxia_Arkada](https://www.linkedin.com/pulse/galaxia-arkada-antonin-paillasse-yzr2c/?trackingId=S%2FZNGp4rT5CtDVyDBM5Ajw%3D%3D) -
+  A deep dive into the frontend development of Galaxia Arkada.
+- Marc article : [Galaxia_Arkada](https://www.linkedin.com/pulse/galaxia-arkada-marc-cornabas-kebee/?trackingId=kJLV6JI6TCm4e1BtTcSPxQ%3D%3D) - Insights into backend development and server-side logic.
 
 # Architecture
 
@@ -220,7 +221,7 @@ Experience **Galaxia Arkada** firsthand by visiting the live version of the plat
 
 Here's a quick preview of what you'll see when you log in to the platform:
 
-![Galaxia Arkada Screenshot](http://example.com/screenshot.png)
+![Galaxia Arkada Screenshot](GA_V_0.4.5/frontend/src/image/image.png)
 
 Feel free to take a tour and start creating, testing, and sharing games with the world!
 
