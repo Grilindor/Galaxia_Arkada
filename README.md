@@ -46,9 +46,7 @@ npm run dev
 
 ## Tutorial
 
-<p align="center">
-  <iframe width="560" height="315" src="https://youtu.be/nogf0xbyUx8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-</p>
+[Watch the Video on YouTube](https://youtu.be/nogf0xbyUx8)
 
 ## Known bugs
 
@@ -216,7 +214,7 @@ Experience **Galaxia Arkada** firsthand by visiting the live version of the plat
 - The platform offers a rich experience for developers and gamers alike.
 
 **Check out the live version of Galaxia Arkada**:  
-[Link to the deployed version](http://www.galaxiaarkada.com)
+[Watch the Video on YouTube](https://youtu.be/nogf0xbyUx8)
 
 ### Screenshot Preview:
 
