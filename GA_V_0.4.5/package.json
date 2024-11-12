@@ -20,7 +20,9 @@
     "react-hook-form": "^7.53.1",
     "react-unity-webgl": "^9.6.0",
     "sequelize": "^6.37.4",
-    "unzipper": "^0.12.3"
+    "unzipper": "^0.12.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5"
   },
   "devDependencies": {
     "concurrently": "^9.0.1",
