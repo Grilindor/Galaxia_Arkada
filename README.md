@@ -4,15 +4,10 @@
 <p align="center"><b>Galaxia_Arkada</b></p>
 
 ## Introduction
+Galaxia Arkada is an innovative online game hosting platform developed by two students from Holberton School. Built to showcase a range of creative and engaging games, the platform serves as a launchpad for projects by students specializing in AR/VR technologies. Galaxia Arkada aims to foster a vibrant, interactive community where users can explore unique and experimental game designs, combining entertainment with the latest in immersive technology.
 
-Galaxia Arkada is an online game hosting web application created by two students from Holberton School.
-The platform is designed to feature a selection of small games, each developed by Holberton School students specializing in AR/VR.
-The aim is to provide a fun, interactive environment where users can enjoy and explore innovative game designs.
-
-## The Projet and The Context
-
-Galaxia Arkada serves as a platform for showcasing the creativity and technical skills of Holberton School students.
-Each game hosted on the platform highlights the cutting-edge work being done in the AR/VR specialization, providing a seamless integration of these technologies into an engaging user experience.
+## Project Goals and Context
+Galaxia Arkada exists as a bridge between creativity and technology, allowing Holberton School students to share their skills and innovations with a global audience. By focusing on AR/VR, the platform not only provides an immersive experience for players but also creates a showcase of technical achievements. Each game on Galaxia Arkada demonstrates the capabilities of the AR/VR specialization, seamlessly blending cutting-edge technology with compelling storytelling and gameplay to create a unique, engaging user experience.
 
 ## The Team
 
@@ -51,9 +46,11 @@ npm run dev
 
 ## Known bugs
 
-- **Problème** : Description du bug connu.
-- **Impact** : Expliquez qui est affecté et comment.
-- **Solution temporaire** : Si applicable, fournissez une solution ou une solution de contournement.
+- **Problem**: Issues with loading Unity games in certain browsers.
+
+- **Impact**: Users with older versions of Safari or Firefox may experience slow loading times or loading failures for games.
+
+- **Temporary Solution**: Recommend users to use Google Chrome or update their browser for better compatibility.
 
 ## Overview
 
