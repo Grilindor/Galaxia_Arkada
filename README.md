@@ -4,9 +4,11 @@
 <p align="center"><b>Galaxia_Arkada</b></p>
 
 ## Introduction
+
 Galaxia Arkada is an innovative online game hosting platform developed by two students from Holberton School. Built to showcase a range of creative and engaging games, the platform serves as a launchpad for projects by students specializing in AR/VR technologies. Galaxia Arkada aims to foster a vibrant, interactive community where users can explore unique and experimental game designs, combining entertainment with the latest in immersive technology.
 
 ## Project Goals and Context
+
 Galaxia Arkada exists as a bridge between creativity and technology, allowing Holberton School students to share their skills and innovations with a global audience. By focusing on AR/VR, the platform not only provides an immersive experience for players but also creates a showcase of technical achievements. Each game on Galaxia Arkada demonstrates the capabilities of the AR/VR specialization, seamlessly blending cutting-edge technology with compelling storytelling and gameplay to create a unique, engaging user experience.
 
 ## The Team
@@ -34,11 +36,55 @@ After the development phase, we each wrote a blog post to reflect on the Galaxia
 
 ![Architecture](GA_V_0.4.5/frontend/public/images/Architecture1.png)
 
-## Run Galaxia_Arkada
+# Installation
 
+Before you can run the application, you need to install the required dependencies for both the **frontend** and the **backend**.
+
+### Prerequisites
+
+- **Node.js** (version 14 or higher) is required. You can download it from [here](https://nodejs.org/).
+- **npm** (which is usually installed with Node.js)
+
+### Installation Steps
+
+1. **Clone the repository**:
+
+   Open your terminal and clone this project to your local machine:
+
+   ```bash
+   git clone <repository_url>
+   cd <repository_name>
+   ```
+
+2. **Install frontend dependencies:**:
+   Go to the frontend directory and install the necessary dependencies using npm:
+   ```bash
+   cd frontend
+   npm install
+   ```
+3. **Install racine dependencies**:
+
+```bash
+   cd ../Ga_V_0.4.5
+npm install
 ```
-npm run dev
+
+4. **Database Setup**:
+
+- Make sure that PostgreSQL is installed and running on your machine.
+
+- Create a database (if not already created):
+
+```bash
+createdb galaxia_arkada
 ```
+
+5. **Run the application**:
+   Now, go back to the racine directory and run the following command to start the React development server:
+   ```bash
+   cd ../GA_V_0.4.5
+   npm run dev
+   ```
 
 ## Tutorial
 
@@ -211,7 +257,7 @@ Experience **Galaxia Arkada** firsthand by visiting the live version of the plat
 - Explore other features, like game categories, leaderboards, or specific user-created game events.
 - The platform offers a rich experience for developers and gamers alike.
 
-**Check out the live version of Galaxia Arkada**:  
+**Check out the live version of Galaxia Arkada**:
 [Watch the Video on YouTube](https://youtu.be/nogf0xbyUx8)
 
 ### Screenshot Preview:
