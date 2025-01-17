@@ -9,13 +9,21 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware CORS
-app.use(cors({
-  origin: "http://localhost:3000",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ['x-access-token', 'Origin', 'Content-Type', 'Accept', "Content-Type", "Authorization"],
-  credentials: true,
-}));
-
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: [
+      "x-access-token",
+      "Origin",
+      "Content-Type",
+      "Accept",
+      "Content-Type",
+      "Authorization",
+    ],
+    credentials: true,
+  })
+);
 
 // Logger HTTP pour le développement
 app.use(morgan("dev"));
@@ -41,7 +49,8 @@ app.use((err, req, res, next) => {
 });
 
 // Synchronisation de la base de données et initialisation des données
-db.sequelize.sync({ force: false })
+db.sequelize
+  .sync({ force: false })
   .then(async () => {
     console.log("Database synchronized.");
 
