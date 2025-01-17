@@ -5,7 +5,7 @@ import {
   Routes,
   Navigate,
 } from "react-router-dom";
-import { AuthProvider, useAuth } from "../context/AuthContext"; // Assurez-vous que le chemin est correct
+import { AuthProvider, useAuth } from "../context/AuthContext";
 import Login from "./login";
 import Home from "./Home";
 import User from "./User";
@@ -15,7 +15,9 @@ import Forgotpassword from "./ForgotPassword";
 import Game from "./Game";
 import GameSubmissionForm from "./GameSubmissionForm";
 import UnityGame from "./thebeggarking";
-
+import ProtectedRoute from "./ProtectedRoute";
+import AdminPage from "./Admin";
+import AdminPagestats from "./Admin_stats";
 function AppRoutes() {
   const { user } = useAuth(); // Vérifiez si l'utilisateur est connecté
 
@@ -42,8 +44,21 @@ function AppRoutes() {
       />
       <Route
         path="/GameSubmissionForm"
-        element={user ? <GameSubmissionForm /> : <Navigate to="/login" />}
+        element={
+          <ProtectedRoute allowedRoles={["admin", "devo"]}>
+            <GameSubmissionForm />
+          </ProtectedRoute>
+        }
       />
+      <Route path="/adminPage" element={<AdminPage />} />
+      <Route path="/adminPage/stats" element={<AdminPagestats />} />
+      <Route path="/adminPage/users" element={<AdminPagestats />} />
+      <Route path="/adminPage/game_submissions" element={<AdminPagestats />} />
+      <Route path="/adminPage/produit" element={<AdminPagestats />} />
+      <Route path="/adminPage/logs" element={<AdminPagestats />} />
+      <Route path="/adminPage/setting" element={<AdminPagestats />} />
+      <Route path="/adminPage/profile" element={<AdminPagestats />} />
+      <Route path="/adminPage/notifications" element={<AdminPagestats />} />
     </Routes>
   );
 }

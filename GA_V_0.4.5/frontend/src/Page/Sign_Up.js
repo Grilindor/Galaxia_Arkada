@@ -12,12 +12,12 @@ const SignUp = () => {
     userpseudo: "",
     password: "",
     email: "",
-    birthdate: false,
     receiveEmail: false,
     isRobot: false,
+    isDevRequest: false,
   });
 
-  const [error, setError] = useState(null); // Gestion des erreurs
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -36,7 +36,7 @@ const SignUp = () => {
         formData
       );
       console.log("Inscription réussie :", response.data);
-      navigate("/login"); // Redirection après une inscription réussie
+      navigate("/login");
     } catch (error) {
       setError("Erreur lors de l'inscription. Veuillez réessayer.");
     }
@@ -50,7 +50,6 @@ const SignUp = () => {
       <h2 className={css(styles.text)}>Create an Account</h2>
       {error && <p className={css(styles.errorText)}>{error}</p>}
       <form className={css(styles.form)} onSubmit={handleSignUp}>
-        {/* Champ pour le prénom */}
         <input
           type="text"
           name="firstname"
@@ -60,7 +59,6 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
-        {/* Champ pour le nom de famille */}
         <input
           type="text"
           name="lastname"
@@ -70,7 +68,6 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
-        {/* Champ pour le pseudo */}
         <input
           type="text"
           name="userpseudo"
@@ -89,7 +86,6 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
-        {/* Champ pour le mot de passe */}
         <input
           type="password"
           name="password"
@@ -99,7 +95,6 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
-        {/* Champ pour l'email */}
         <p>
           You must be 13+ to create an account. Under 18? Get parent/guardian
           permission.
@@ -124,8 +119,13 @@ const SignUp = () => {
           I am not a robot
         </label>
         <label className={css(styles.checkboxLabel)}>
-          <input type="checkbox" required />
-          Do you agree to our Terms of Use?
+          <input
+            type="checkbox"
+            name="isDevRequest"
+            checked={formData.isDevRequest}
+            onChange={handleChange}
+          />
+          I want to become a developer to submit games
         </label>
         <button
           type="submit"

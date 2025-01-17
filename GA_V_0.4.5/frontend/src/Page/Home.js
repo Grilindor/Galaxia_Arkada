@@ -74,6 +74,8 @@ function Home() {
           </ImportGameButton>
           <select>
             <option>Langue</option>
+            <option>français</option>
+            <option>anglais</option>
           </select>
           <ThemeToggleLabel theme={theme}>
             <input type="checkbox" onChange={toggleTheme} />
@@ -134,19 +136,29 @@ function Home() {
       </Banner>
       <Filters>
         <select>
+          <option>Genre </option>
+          <option>Genre du jeux</option>
           <option>Genre</option>
         </select>
         <select>
           <option>Prix</option>
+          <option>Prix par ordre croissant</option>
+          <option>Prix par ordre decroissant</option>
         </select>
         <select>
-          <option>Langage des jeux</option>
+          <option>Langage des jeux </option>
+          <option>Langage des jeux français</option>
+          <option>Langage des jeux anglais</option>
         </select>
         <select>
           <option>Note</option>
+          <option>Note par ordre croissant</option>
+          <option>Note par ordre decroissant</option>
         </select>
         <select>
           <option>Date de sortie</option>
+          <option>Date de sortie par ordre croissant</option>
+          <option>Date de sortie par ordre decroissant</option>
         </select>
         <input type="text" placeholder="Recherche..." />
       </Filters>
