@@ -13,6 +13,7 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.findAndCountAll({
       limit,
       offset,
+      order: [["createdAt", "DESC"]],
     });
     res.status(200).json({
       totalUsers: users.count,
@@ -43,7 +44,10 @@ exports.getUserProfile = async (req, res) => {
 
     // Vérifier si l'utilisateur a été trouvé dans la base de données
     if (!user) {
-      console.error("Erreur : Utilisateur non trouvé dans la base de données avec cet ID :", req.userId);
+      console.error(
+        "Erreur : Utilisateur non trouvé dans la base de données avec cet ID :",
+        req.userId
+      );
       return res.status(404).send({ message: "User Not Found." });
     }
 
@@ -52,13 +56,14 @@ exports.getUserProfile = async (req, res) => {
     // Renvoyer toutes les informations de l'utilisateur
     res.status(200).send(user);
     console.log("Informations de l'utilisateur renvoyées avec succès.");
-
   } catch (err) {
-    console.error("Erreur lors de la récupération des informations de l'utilisateur :", err.message); // Log de l'erreur
+    console.error(
+      "Erreur lors de la récupération des informations de l'utilisateur :",
+      err.message
+    ); // Log de l'erreur
     res.status(500).send({ message: err.message });
   }
 };
-
 
 // Créer un utilisateur avec le rôle
 exports.createUser = async (req, res) => {
@@ -99,6 +104,7 @@ exports.updateUser = async (req, res) => {
     await user.update(updateData);
     res.status(200).send(user);
   } catch (err) {
+    // console.error("Erreur lors de la mise à jour de l'utilisateur :", err.message);
     res.status(500).send({ message: err.message });
   }
 };
@@ -114,6 +120,7 @@ exports.deleteUser = async (req, res) => {
     await user.destroy();
     res.status(200).send({ message: "User was deleted successfully!" });
   } catch (err) {
+    // console.error("Erreur lors de la suppression de l'utilisateur :", err.message);
     res.status(500).send({ message: err.message });
   }
 };
