@@ -12,12 +12,12 @@ const SignUp = () => {
     userpseudo: "",
     password: "",
     email: "",
+    birthdate: false,
     receiveEmail: false,
     isRobot: false,
-    isDevRequest: false,
   });
 
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // Gestion des erreurs
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -30,13 +30,21 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    const emailrules = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailrules.test(formData.email)) {
+      setError(
+        "Veuillez entrer une adresse email valide avec un '@' et un '.'"
+      );
+      return;
+    }
     try {
       const response = await axios.post(
         "http://localhost:3000/api/users/signup",
         formData
       );
       console.log("Inscription réussie :", response.data);
-      navigate("/login");
+      navigate("/login"); // Redirection après une inscription réussie
     } catch (error) {
       setError("Erreur lors de l'inscription. Veuillez réessayer.");
     }
@@ -50,6 +58,7 @@ const SignUp = () => {
       <h2 className={css(styles.text)}>Create an Account</h2>
       {error && <p className={css(styles.errorText)}>{error}</p>}
       <form className={css(styles.form)} onSubmit={handleSignUp}>
+        {/* Champ pour le prénom */}
         <input
           type="text"
           name="firstname"
@@ -59,6 +68,7 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
+        {/* Champ pour le nom de famille */}
         <input
           type="text"
           name="lastname"
@@ -68,6 +78,7 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
+        {/* Champ pour le pseudo */}
         <input
           type="text"
           name="userpseudo"
@@ -86,6 +97,7 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
+        {/* Champ pour le mot de passe */}
         <input
           type="password"
           name="password"
@@ -95,6 +107,7 @@ const SignUp = () => {
           className={css(styles.input)}
           required
         />
+        {/* Champ pour l'email */}
         <p>
           You must be 13+ to create an account. Under 18? Get parent/guardian
           permission.
@@ -119,13 +132,8 @@ const SignUp = () => {
           I am not a robot
         </label>
         <label className={css(styles.checkboxLabel)}>
-          <input
-            type="checkbox"
-            name="isDevRequest"
-            checked={formData.isDevRequest}
-            onChange={handleChange}
-          />
-          I want to become a developer to submit games
+          <input type="checkbox" required />
+          Do you agree to our Terms of Use?
         </label>
         <button
           type="submit"
