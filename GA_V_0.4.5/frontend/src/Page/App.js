@@ -16,8 +16,15 @@ import Game from "./Game";
 import GameSubmissionForm from "./GameSubmissionForm";
 import UnityGame from "./thebeggarking";
 import ProtectedRoute from "./ProtectedRoute";
-import AdminPage from "./Admin";
-import AdminPagestats from "./Admin_stats";
+import AdminPage from "../Admin_page/Admin";
+import AdminPagestats from "../Admin_page/Admin_stats";
+import AdminPageuser from "../Admin_page/Admin_users";
+import AdminPagegamesubmissions from "../Admin_page/Admin_game_submissions";
+import AdminPageproduits from "../Admin_page/Admin_products";
+import AdminPagelogs from "../Admin_page/Admin_logs";
+import AdminPagesettings from "../Admin_page/Admin_settings";
+import AdminPageprofile from "../Admin_page/Admin_profile";
+import AdminPagenotifications from "../Admin_page/Admin_notifications";
 function AppRoutes() {
   const { user } = useAuth(); // Vérifiez si l'utilisateur est connecté
 
@@ -52,13 +59,19 @@ function AppRoutes() {
       />
       <Route path="/adminPage" element={<AdminPage />} />
       <Route path="/adminPage/stats" element={<AdminPagestats />} />
-      <Route path="/adminPage/users" element={<AdminPagestats />} />
-      <Route path="/adminPage/game_submissions" element={<AdminPagestats />} />
-      <Route path="/adminPage/produit" element={<AdminPagestats />} />
-      <Route path="/adminPage/logs" element={<AdminPagestats />} />
-      <Route path="/adminPage/setting" element={<AdminPagestats />} />
-      <Route path="/adminPage/profile" element={<AdminPagestats />} />
-      <Route path="/adminPage/notifications" element={<AdminPagestats />} />
+      <Route path="/adminPage/user" element={<AdminPageuser />} />
+      <Route
+        path="/adminPage/Game_submissions"
+        element={<AdminPagegamesubmissions />}
+      />
+      <Route path="/adminPage/produits" element={<AdminPageproduits />} />
+      <Route path="/adminPage/logs" element={<AdminPagelogs />} />
+      <Route path="/adminPage/Settings" element={<AdminPagesettings />} />
+      <Route path="/adminPage/Profile" element={<AdminPageprofile />} />
+      <Route
+        path="/adminPage/notifications"
+        element={<AdminPagenotifications />}
+      />
     </Routes>
   );
 }
