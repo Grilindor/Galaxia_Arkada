@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import styled from "styled-components";
 import { useAuth } from "../context/AuthContext"; // Importer useAuth pour accéder à la fonction login
 import logo from "../image/logo_1.png";
 import { useNavigate } from "react-router-dom";
-import background from "../image/image_fond_home.webp";
 import {
   LoginContainer,
   Form,
@@ -18,10 +16,12 @@ import {
   Divider,
   ThemeToggle,
 } from "../styles/login_SC";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [captchaToken, setCaptchaToken] = useState(null); // Stocke le token CAPTCHA
   const [errorMessage, setErrorMessage] = useState("");
   const { login, error } = useAuth();
   const homenavigate = useNavigate();
@@ -32,19 +32,29 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(
-      "Tentative de connexion avec email:",
+    console.log("Tentative de connexion avec :", {
       email,
-      "et mot de passe:",
-      password
-    );
+      password,
+      captchaToken,
+    });
+
+    if (!captchaToken) {
+      setErrorMessage("Veuillez compléter le CAPTCHA avant de continuer.");
+      return;
+    }
 
     try {
-      await login(email, password);
+      await login(email, password, captchaToken); // Transmet le token CAPTCHA au backend
       homenavigate("/home");
     } catch (err) {
+      console.error("Erreur de connexion :", err.response?.data || err.message);
       setErrorMessage(err.message || "Une erreur est survenue");
     }
+  };
+
+  const handleCaptchaChange = (token) => {
+    console.log("CAPTCHA validé avec le token :", token);
+    setCaptchaToken(token); // Met à jour le token CAPTCHA
   };
 
   return (
@@ -81,6 +91,10 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </InputContainer>
+          <ReCAPTCHA
+            sitekey="6Le6o74qAAAAAOsugL7ZgFMAgHmS9bFGxSZsXA_1" // clé publique
+            onChange={handleCaptchaChange}
+          />
           <SubmitButton type="submit">Login</SubmitButton>
           <FormLinks>
             <Link href="/forgot_password">Forgot your password?</Link>
