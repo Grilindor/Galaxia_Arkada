@@ -1,10 +1,9 @@
-const axios = require("axios");
+const axios = require('axios');
 
-const validateCaptcha = async (req, res, next) => {
-  const { recaptchaToken } = req.body;
-
-  if (!recaptchaToken) {
-    return res.status(400).send({ message: "Captcha token est requis." });
+const captchaValidator = async (req, res, next) => {
+  const { captchaToken } = req.body;
+  if (!captchaToken) {
+    return res.status(400).json({ message: 'CAPTCHA requis.' });
   }
 
   try {
@@ -14,21 +13,19 @@ const validateCaptcha = async (req, res, next) => {
       {
         params: {
           secret: process.env.RECAPTCHA_SECRET_KEY,
-          response: recaptchaToken,
+          response: captchaToken,
         },
       }
     );
 
-    if (!response.data.success) {
-      return res.status(403).send({ message: "Captcha invalide." });
+    if (response.data.success) {
+      next(); // CAPTCHA valide, passe au middleware suivant
+    } else {
+      res.status(400).json({ message: 'Captcha invalide.' });
     }
-
-    next();
-  } catch (err) {
-    console.error("Erreur de validation du Captcha :", err.message);
-    console.log("Réponse de reCAPTCHA :", response.data);
-    res.status(500).send({ message: "Erreur serveur pendant la validation du Captcha." });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur de validation CAPTCHA.' });
   }
 };
 
-module.exports = { validateCaptcha };
+module.exports = captchaValidator;

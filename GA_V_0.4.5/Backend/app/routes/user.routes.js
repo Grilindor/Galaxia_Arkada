@@ -5,6 +5,9 @@ const controller = require("../controllers/user.controller");
 const { checkUserExistsByEmail, checkUserExistsByID } = require("../middleware/checkUserExists");
 const signin = require("../controllers/user.signin");
 const { signOut } = require('../controllers/user.signout');
+const { loginLimiter } = require("../middleware/loginLimiter");
+const captchaValidator = require('../middleware/captchaValidator');
+
 
 // Voir un utilisateur par son jwt
 router.get("/Profile", [authJwt.verifyToken], controller.getUserProfile);
@@ -13,7 +16,7 @@ router.get("/Profile", [authJwt.verifyToken], controller.getUserProfile);
 router.post("/signup", [checkUserExistsByEmail], controller.createUser);
 
 // Connexion d'un utilisateur
-router.post("/signin", signin.signIn);
+router.post("/signin", captchaValidator, loginLimiter, signin.signIn );
 
 // Mettre à jour un utilisateur par ID
 router.put("/update", [authJwt.verifyToken], (req, res, next) => {

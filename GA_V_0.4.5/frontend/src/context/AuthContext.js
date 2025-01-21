@@ -8,17 +8,17 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState("");
 
   // Fonction pour gérer le login
-  const login = async (email, password) => {
-    console.log("Tentative de connexion avec", { email, password });
-    if (!email || !password) {
-      console.error("Email ou mot de passe manquant.");
-      setError("Veuillez entrer un email et un mot de passe.");
+  const login = async (email, password, captchaToken) => {
+    console.log("Tentative de connexion avec", { email, password, captchaToken });
+    if (!email || !password || !captchaToken) {
+      console.error("Email, mot de passe ou CAPTCHA manquant.");
+      setError("Veuillez remplir tous les champs et valider le CAPTCHA.");
       return;
     }
     try {
       const response = await axios.post(
         "http://localhost:3000/api/users/signin",
-        { email, password }
+        { email, password, recaptchaToken: captchaToken }
       );
       console.log("Réponse du serveur :", response);
       const data = response.data;
