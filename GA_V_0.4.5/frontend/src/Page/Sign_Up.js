@@ -30,6 +30,12 @@ const SignUp = () => {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
+
+    const emailrules = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/i;
+    if (!emailrules.test(formData.email)) {
+      setError("Veuillez entrer une adresse email valide avec un '@' et un '.'");
+      return;
+    }
     try {
       const response = await axios.post(
         "http://localhost:3000/api/users/signup",
