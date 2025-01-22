@@ -7,10 +7,6 @@ import {
   SidebarItem,
   MainContent,
   SectionTitle,
-  Section,
-  Card,
-  CardTitle,
-  CardDescription,
   Logo,
 } from "../styles/Admin_SC";
 import logo from "../image/logo_1.png";
