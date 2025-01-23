@@ -1,0 +1,28 @@
+name: Run Tests
+
+on:
+  push:
+    branches:
+      - version2  # Exécute les tests sur chaque push vers la branche 'main'
+  pull_request:  # Exécute les tests sur chaque pull request
+    branches:
+      - version2
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Utilise une machine virtuelle Ubuntu
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # Clone le dépôt
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18  # Version de Node.js à utiliser
+
+    - name: Install dependencies
+      run: npm install  # Installe les dépendances depuis package.json
+
+    - name: Run Tests
+      run: npm test  # Lance les tests définis dans le script "test" de package.json
