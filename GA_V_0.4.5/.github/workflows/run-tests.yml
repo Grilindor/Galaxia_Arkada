@@ -3,9 +3,11 @@ name: Run Tests # Nom du workflow
 on:
   push:
     branches:
+      - main
       - version2 # Exécute les tests sur chaque push vers 'version2'
   pull_request:
     branches:
+      - main
       - version2 # Exécute les tests sur chaque pull request vers 'version2'
 
 jobs:
