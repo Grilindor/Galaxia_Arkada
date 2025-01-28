@@ -8,7 +8,7 @@ const captchaValidator = async (req, res, next) => {
 
   try {
     const response = await axios.post(
-      `https://www.google.com/recaptcha/api/siteverify`,
+      "https://www.google.com/recaptcha/api/siteverify",
       null,
       {
         params: {
@@ -17,12 +17,15 @@ const captchaValidator = async (req, res, next) => {
         },
       }
     );
+    //console.log("Réponse CAPTCHA :", response.data);
 
     if (response.data.success) {
-      next(); // CAPTCHA valide, passe au middleware suivant
+      next(); // CAPTCHA valide
     } else {
+      console.error("CAPTCHA invalide :", response.data["error-codes"]);
       res.status(400).json({ message: "Captcha invalide." });
     }
+
   } catch (error) {
     res.status(500).json({ message: "Erreur de validation CAPTCHA." });
   }

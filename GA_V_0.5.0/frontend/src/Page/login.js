@@ -92,7 +92,7 @@ const Login = () => {
             />
           </InputContainer>
           <ReCAPTCHA
-            sitekey="6Le6o74qAAAAAOsugL7ZgFMAgHmS9bFGxSZsXA_1" // clé publique
+            sitekey="6LcTtrsqAAAAANMbwMpLlxqxQKck1-GlRDIlEylX" // clé publique
             onChange={handleCaptchaChange}
           />
           <SubmitButton type="submit">Login</SubmitButton>

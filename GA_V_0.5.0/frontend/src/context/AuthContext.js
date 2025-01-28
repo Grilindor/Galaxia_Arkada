@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/users/signin",
-        { email, password, recaptchaToken: captchaToken }
+        { email, password, captchaToken }
       );
       console.log("Réponse du serveur :", response);
       const data = response.data;
