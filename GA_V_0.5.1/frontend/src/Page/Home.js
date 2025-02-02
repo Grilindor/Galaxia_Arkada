@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
 import {
@@ -25,8 +26,23 @@ import banderole from "../image/banderole.png";
 
 function Home() {
   const [theme, setTheme] = useState("light");
+  const [games, setGames] = useState([]); // Stocker les jeux récupérés
   const navigate = useNavigate();
   const isLoggedIn = sessionStorage.getItem("token") !== null;
+
+  // Charger les jeux depuis la base de données
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/games/all"); // URL backend
+        setGames(response.data); // Mettez à jour l'état avec les jeux
+      } catch (error) {
+        console.error("Error fetching games:", error);
+      }
+    };
+
+    fetchGames();
+  }, []); // Exécuté une seule fois au chargement de la page
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -171,20 +187,21 @@ function Home() {
           />
         </Sidebar>
         <GamesList>
-          {gameData.map((game) => (
+          {games.map((game) => (
             <Game key={game.id}>
               <NavButton
                 className="game-image"
-                onClick={() => navigate("/game")}
+                onClick={() => navigate(`/game/${game.id}`)} // Naviguer vers la page du jeu
               >
                 <img
-                  src={game.image}
+                  src={`/temp/${game.filePath}`} // Lien vers le fichier temporaire compressé
                   alt={game.name}
                   style={{ width: "100%", height: "auto", borderRadius: "5px" }}
                 />
               </NavButton>
               <h3>{game.name}</h3>
-              <p>Note : {game.rating}</p>
+              <p>{game.description}</p>
+              <p>Tags: {game.tags.map((tag) => tag.name).join(", ")}</p>
             </Game>
           ))}
         </GamesList>
