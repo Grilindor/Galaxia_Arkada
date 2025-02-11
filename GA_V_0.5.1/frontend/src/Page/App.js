@@ -14,7 +14,7 @@ import Bibliothèque from "./Bibliothèque";
 import Forgotpassword from "./ForgotPassword";
 import Game from "./Game";
 import GameSubmissionForm from "./GameSubmissionForm";
-import UnityGame from "./thebeggarking";
+import UnityGame from "./UnityGame";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminPage from "../Admin_page/Admin";
 import AdminPagestats from "../Admin_page/Admin_stats";
@@ -46,13 +46,17 @@ function AppRoutes() {
       />
       <Route path="/forgot_password" element={<Forgotpassword />} />
       <Route
-        path="/game"
+        path="/game/:id"
         element={user ? <Game /> : <Navigate to="/login" />}
+      />
+      <Route
+        path="/play/:id"
+        element={user ? <UnityGame /> : <Navigate to="/login" />}
       />
       <Route
         path="/GameSubmissionForm"
         element={
-          <ProtectedRoute allowedRoles={["admin", "devo"]}>
+          <ProtectedRoute allowedRoles={["admin", "devo", "user"]}> {/*enlever le user*/}
             <GameSubmissionForm />
           </ProtectedRoute>
         }

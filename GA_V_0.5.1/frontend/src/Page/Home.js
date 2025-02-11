@@ -191,20 +191,23 @@ function Home() {
             <Game key={game.id}>
               <NavButton
                 className="game-image"
-                onClick={() => navigate(`/game/${game.id}`)} // Naviguer vers la page du jeu
+                onClick={() => navigate(`/game/${game.id}`)} // Accès au jeu
               >
                 <img
-                  src={`/temp/${game.filePath}`} // Lien vers le fichier temporaire compressé
+                  src={`http://localhost:3000/${game.imagePath}`} // Correction ici
                   alt={game.name}
                   style={{ width: "100%", height: "auto", borderRadius: "5px" }}
                 />
               </NavButton>
               <h3>{game.name}</h3>
               <p>{game.description}</p>
-              <p>Tags: {game.tags.map((tag) => tag.name).join(", ")}</p>
+              <p>
+                <strong>Tags :</strong> {game.tags.map((tag) => tag.name).join(", ")}
+              </p>
             </Game>
           ))}
         </GamesList>
+
         <Sidebar>
           <img
             src={evenement}

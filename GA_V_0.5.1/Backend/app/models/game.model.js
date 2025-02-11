@@ -28,7 +28,11 @@ module.exports = (sequelize, DataTypes) => {
         platform: {
             type: DataTypes.STRING,
             allowNull: false,
-        }
+        },
+        imagePath: {
+            type: DataTypes.STRING, // a revérifier??
+            allowNull: true, // Pour permettre l'upload facultatif
+        },
     }, {
         hooks: {
             afterCreate: (game, options) => {

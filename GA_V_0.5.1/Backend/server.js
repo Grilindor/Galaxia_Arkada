@@ -4,6 +4,9 @@ const cors = require("cors");
 const morgan = require("morgan");
 const db = require("./app/models");
 const initData = require("./app/utils/initData"); // Initialisation des tags
+const path = require("path");
+const fs = require("fs");
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -37,10 +40,17 @@ const userRoutes = require("./app/routes/user.routes");
 const gameRoutes = require("./app/routes/game.routes");
 const tagRoutes = require("./app/routes/tag.routes");
 
+const extractedGamesDir = path.join(__dirname, "../Extracted_Games");
+
+if (!fs.existsSync(extractedGamesDir)) {
+  fs.mkdirSync(extractedGamesDir);
+}
+
 // Utilisation des routes
 app.use("/api/users", userRoutes);
 app.use("/api/games", gameRoutes);
 app.use("/api/tags", tagRoutes);
+app.use('/Game_Images', express.static('Game_Images'));
 
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
@@ -50,7 +60,7 @@ app.use((err, req, res, next) => {
 
 // Synchronisation de la base de données et initialisation des données
 db.sequelize
-  .sync({ force: false })
+  .sync({ force : false })
   .then(async () => {
     console.log("Database synchronized.");
 

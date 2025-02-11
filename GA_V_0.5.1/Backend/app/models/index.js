@@ -35,17 +35,6 @@ db.rolePermission = require("./role_permission.model.js")(
 
 // Définition des relations
 
-// Many-to-Many entre User et Role
-db.role.belongsToMany(db.user, {
-  through: "user_roles",
-  foreignKey: "roleId",
-  otherKey: "userId",
-});
-db.user.belongsToMany(db.role, {
-  through: "user_roles",
-  foreignKey: "userId",
-  otherKey: "roleId",
-});
 
 // One-to-One entre User et Token
 db.user.hasOne(db.token, { foreignKey: "userId", onDelete: "CASCADE" });
@@ -73,6 +62,18 @@ db.tag.belongsToMany(db.game, {
   through: "game_tags",
   as: "games",
   foreignKey: "tagId",
+});
+
+// Many-to-Many entre User et Role
+db.role.belongsToMany(db.user, {
+  through: "user_roles",
+  foreignKey: "roleId",
+  otherKey: "userId",
+});
+db.user.belongsToMany(db.role, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId",
 });
 
 // Many-to-Many entre Role et Permission

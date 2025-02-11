@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../image/logo_1.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 import {
   ButtonContainer,
   LogoImage,
@@ -18,14 +19,39 @@ import {
 } from "../styles/Game_SC";
 
 function Game() {
+  const { id } = useParams();
   const navigate = useNavigate();
+  const [game, setGame] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false); // ✅ Empêche les requêtes multiples
+
+  useEffect(() => {
+    if (isLoaded) return; // ✅ Empêche un second appel
+
+    const fetchGameDetails = async () => {
+      try {
+        console.log(`🔹 Récupération des détails du jeu ${id}...`);
+        const response = await axios.get(`http://localhost:3000/api/games/${id}`);
+        setGame(response.data);
+        setIsLoaded(true); // ✅ Marque le jeu comme chargé
+        console.log("✅ Détails du jeu récupérés :", response.data);
+      } catch (error) {
+        console.error("❌ Erreur lors du chargement des détails du jeu :", error);
+      }
+    };
+
+    fetchGameDetails();
+  }, [id, isLoaded]); // ✅ Dépendances mises à jour
+
+  if (!game) {
+    return <p>Chargement...</p>;
+  }
 
   const handlePlayClick = () => {
-    window.open("http://localhost:3000/thebeggarking/", "_blank"); // Ouvre le jeu dans un nouvel onglet
+    navigate(`/play/${id}`);
   };
 
   const handleInstallClick = () => {
-    alert("Installer le jeu !"); // Remplace par la logique d'installation
+    alert("Installer le jeu !");
   };
 
   return (
@@ -39,25 +65,31 @@ function Game() {
       </ButtonContainer>
 
       <EventImageContainer>
-        <img src="URL_IMAGE_EVENT" alt="Événement du jeu" />
+        <img
+          src={`http://localhost:3000/${game.imagePath}`}
+          alt={game.name}
+          style={{ width: "30%", height: "50%", borderRadius: "5px" }}
+        />
       </EventImageContainer>
 
       <PlayButtonContainer>
         <PlayInstallButton onClick={handlePlayClick}>Play</PlayInstallButton>
-        <PlayInstallButton onClick={handleInstallClick}>
-          Installer
-        </PlayInstallButton>
+        <PlayInstallButton onClick={handleInstallClick}>Installer</PlayInstallButton>
       </PlayButtonContainer>
 
+      {/* ✅ Informations sur le jeu */}
       <GameInfoContainer>
         <GameSummary>
-          <h2>Résumé du jeu</h2>
-          <p>Texte de résumé du jeu ici...</p>
+          <h2>{game.name}</h2>
+          <p>{game.description}</p>
+          <p>
+            <strong>Tags :</strong> {game.tags.map((tag) => tag.name).join(", ")}
+          </p>
         </GameSummary>
 
         <GameDetails>
           <h2>Détails du jeu</h2>
-          <p>Texte des détails du jeu ici...</p>
+          <p>Date de sortie : {new Date(game.createdAt).toLocaleDateString("fr-FR")}</p>
         </GameDetails>
       </GameInfoContainer>
 
