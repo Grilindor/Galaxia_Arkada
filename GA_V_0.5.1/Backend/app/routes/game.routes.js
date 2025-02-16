@@ -68,53 +68,6 @@ router.get('/all', async (req, res) => {
 });
 
 
-/*
-router.get("/:id/play", async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    // 🔍 Récupérer les infos du jeu en DB
-    const game = await Game.findOne({ where: { id } });
-
-    if (!game) {
-      return res.status(404).json({ message: "Jeu non trouvé" });
-    }
-
-    // 🔗 Utiliser `game.filePath` au lieu de `id.zip`
-    const gamePath = path.join(__dirname, "../../", game.filePath);
-    const extractedPath = path.join(extractedGamesDir, id);
-
-    console.log("Requête reçue pour jouer au jeu:", id);
-    console.log("Chemin du fichier ZIP :", gamePath);
-    console.log("Chemin d'extraction :", extractedPath);
-
-    // Vérifier si le fichier ZIP existe
-    if (!fs.existsSync(gamePath)) {
-      console.error("Fichier ZIP introuvable :", gamePath);
-      return res.status(404).json({ error: "Jeu non trouvé" });
-    }
-
-    // Décompression si le jeu n'est pas déjà extrait
-    if (!fs.existsSync(extractedPath)) {
-      console.log("Extraction en cours...");
-      await extract(gamePath, { dir: extractedPath });
-    }
-
-    const gameJsonPath = path.join(extractedPath, "Build/game.json");
-    if (!fs.existsSync(gameJsonPath)) {
-      console.error("game.json introuvable dans le dossier extrait :", gameJsonPath);
-      return res.status(404).json({ error: "Fichier du jeu introuvable" });
-    }
-
-    // Servir les fichiers du jeu
-    return res.json({ url: `/games/${id}/Build/game.json` });
-
-  } catch (error) {
-    console.error("Erreur lors du lancement du jeu :", error);
-    return res.status(500).json({ error: "Erreur interne du serveur" });
-  }
-});
-*/
 
 router.get("/:id/download", async (req, res) => {
   const { id } = req.params;
