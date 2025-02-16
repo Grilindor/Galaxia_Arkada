@@ -1,52 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { Unity, useUnityContext } from "react-unity-webgl";
-import { useParams } from "react-router-dom";
+/* global createUnityInstance */
+import React, { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import JSZip from "jszip";
 
 function UnityGame() {
   const { id } = useParams();
-  const [gameFiles, setGameFiles] = useState(null);
-  const [gameRoot, setGameRoot] = useState("");
+  const navigate = useNavigate();
+  const [fileUrls, setFileUrls] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
-
-  console.log("🔹 Component UnityGame monté avec id :", id);
-
-  // 🔹 Initialisation de useUnityContext
-  const { unityProvider } = useUnityContext({
-    loaderUrl: "",
-    dataUrl: "",
-    frameworkUrl: "",
-    codeUrl: "",
-  });
+  const [gameName, setGameName] = useState(""); // Nom du jeu (dossier racine)
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    if (isLoaded) return; // Empêche un second téléchargement
+    const fetchGameDetails = async () => {
+      try {
+        console.log(`🔹 Récupération des détails du jeu ID: ${id}`);
+        const response = await axios.get(`http://localhost:3000/api/games/${id}`);
+        setGameName(response.data.name);
+        console.log(`✅ Nom du jeu récupéré : ${response.data.name}`);
+      } catch (error) {
+        console.error("❌ Erreur lors de la récupération du jeu :", error);
+      }
+    };
 
-    console.log("🔹 useEffect[ID] déclenché, téléchargement du jeu en cours...");
+    fetchGameDetails();
+  }, [id]);
+
+  useEffect(() => {
+    if (!gameName || isLoaded) return;
 
     const downloadAndExtractGame = async () => {
       try {
         console.log(`🔹 Téléchargement du fichier ZIP depuis /api/games/${id}/download`);
 
-        // 🔹 Télécharger le fichier ZIP
         const response = await axios.get(
           `http://localhost:3000/api/games/${id}/download`,
           { responseType: "arraybuffer" }
         );
 
-        console.log("✅ Fichier ZIP téléchargé avec succès, taille :", response.data.byteLength, "octets");
+        console.log("✅ ZIP téléchargé, taille :", response.data.byteLength, "octets");
 
-        // 🔹 Décompresser le fichier ZIP avec JSZip
         const zip = await JSZip.loadAsync(response.data);
-        console.log("✅ Fichier ZIP décompressé");
+        console.log("✅ ZIP décompressé");
 
-        const extractedFiles = {};
+        const urls = {};
         let rootFolder = "";
 
-        // 🔹 Parcourir les fichiers extraits
+        // Détecter le dossier racine
+        const filePaths = Object.keys(zip.files);
+        if (filePaths.length > 0) {
+          rootFolder = filePaths[0].split("/")[0];
+          console.log(`📌 Dossier racine détecté : ${rootFolder}`);
+        } else {
+          console.error("❌ Impossible de détecter le dossier racine !");
+          return;
+        }
+
+        // Extraction des fichiers
         await Promise.all(
-          Object.keys(zip.files).map(async (filePath) => {
+          filePaths.map(async (filePath) => {
             if (!zip.files[filePath].dir) {
               console.log(`📂 Extraction du fichier : ${filePath}`);
 
@@ -59,54 +72,111 @@ function UnityGame() {
 
               // 🔹 Enlever le préfixe du dossier racine pour uniformiser
               const newPath = filePath.replace(`${rootFolder}/`, "");
-              extractedFiles[newPath] = await zip.files[filePath].async("blob");
-              console.log(`📥 Fichier extrait : ${newPath}, taille : ${extractedFiles[newPath].size} octets`);
+              const blob = await zip.files[filePath].async("blob");
+              urls[newPath] = URL.createObjectURL(blob);
+
+              console.log(`📥 Fichier extrait : ${newPath}, taille : ${blob.size} octets`);
             }
           })
         );
 
-        console.log("✅ Extraction terminée, fichiers récupérés :", Object.keys(extractedFiles));
+        console.log("✅ Extraction terminée, fichiers récupérés :", Object.keys(urls));
 
-        // 🔹 Stocker les fichiers extraits et marquer comme chargé
-        setGameRoot(rootFolder);
-        setGameFiles(extractedFiles);
-        setIsLoaded(true); // Éviter un re-téléchargement
+        // Vérification des fichiers obligatoires
+        const missingFiles = [];
+        const requiredFiles = [
+          `Build/${rootFolder}.loader.js`,
+          `Build/${rootFolder}.framework.js`,
+          `Build/${rootFolder}.data`,
+          `Build/${rootFolder}.wasm`,
+        ];
+
+        requiredFiles.forEach((file) => {
+          if (!urls[file]) missingFiles.push(file);
+        });
+
+        if (missingFiles.length > 0) {
+          console.error("❌ Fichiers Unity WebGL manquants !");
+          console.log("🔗 Fichiers extraits :", Object.keys(urls));
+          console.log("❌ Manquants :", missingFiles);
+          return;
+        }
+
+        console.log("✅ Tous les fichiers Unity sont présents !");
+        setFileUrls(urls);
+        setIsLoaded(true);
       } catch (error) {
         console.error("❌ Erreur lors du téléchargement et de l'extraction du jeu :", error);
       }
     };
 
     downloadAndExtractGame();
-  }, [id, isLoaded]); // Ajout de isLoaded pour éviter un second appel
+  }, [id, gameName, isLoaded]);
 
   useEffect(() => {
-    if (gameFiles) {
-      console.log("🔹 useEffect[gameFiles] déclenché, configuration de Unity...");
+    if (!isLoaded || Object.keys(fileUrls).length === 0) return;
 
-      try {
-        unityProvider.loaderUrl = URL.createObjectURL(gameFiles["Build/" + gameRoot + ".loader.js"]);
-        unityProvider.dataUrl = URL.createObjectURL(gameFiles["Build/" + gameRoot + ".data"]);
-        unityProvider.frameworkUrl = URL.createObjectURL(gameFiles["Build/" + gameRoot + ".framework.js"]);
-        unityProvider.codeUrl = URL.createObjectURL(gameFiles["Build/" + gameRoot + ".wasm"]);
+    console.log("✅ Initialisation de Unity WebGL...");
 
-        console.log("✅ Unity chargé avec succès !");
-        console.log("🔹 loaderUrl :", unityProvider.loaderUrl);
-        console.log("🔹 dataUrl :", unityProvider.dataUrl);
-        console.log("🔹 frameworkUrl :", unityProvider.frameworkUrl);
-        console.log("🔹 codeUrl :", unityProvider.codeUrl);
-      } catch (error) {
-        console.error("❌ Erreur lors de la configuration de Unity :", error);
-      }
+    const loaderUrl = fileUrls[`Build/${gameName}.loader.js`];
+    const dataUrl = fileUrls[`Build/${gameName}.data`];
+    const frameworkUrl = fileUrls[`Build/${gameName}.framework.js`];
+    const codeUrl = fileUrls[`Build/${gameName}.wasm`];
+
+    if (!loaderUrl || !dataUrl || !frameworkUrl || !codeUrl) {
+      console.error("❌ Fichiers Unity WebGL manquants après extraction !");
+      console.log("🔗 URLs actuelles :", fileUrls);
+      return;
     }
-  }, [gameFiles, gameRoot, unityProvider]);
 
-  if (!gameFiles) {
+    console.log("📌 Fichiers Unity détectés :", {
+      loaderUrl,
+      dataUrl,
+      frameworkUrl,
+      codeUrl,
+    });
+
+    const script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      console.log("✅ Script Unity chargé :", loaderUrl);
+
+      if (typeof createUnityInstance !== "function") {
+        console.error("❌ createUnityInstance n'est pas encore disponible !");
+        return;
+      }
+
+      createUnityInstance(canvasRef.current, {
+        dataUrl,
+        frameworkUrl,
+        codeUrl,
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Test",
+        productName: "Game",
+        productVersion: "1.0",
+      })
+        .then(() => {
+          console.log("🎮 Unity instance créée avec succès !");
+          navigate(`/game/loader/${id}`);
+        })
+        .catch((error) => {
+          console.error("❌ Erreur lors de l'initialisation de Unity :", error);
+        });
+    };
+
+    document.body.appendChild(script);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [fileUrls, id, isLoaded, gameName, navigate]);
+
+  if (!isLoaded) {
     console.log("⏳ En attente du chargement du jeu...");
     return <p>Chargement du jeu...</p>;
   }
 
   console.log("🎮 Jeu chargé, affichage de Unity...");
-  return <Unity unityProvider={unityProvider} />;
+  return <canvas ref={canvasRef} id="unity-canvas" width="960" height="600" />;
 }
 
 export default UnityGame;
