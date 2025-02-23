@@ -60,16 +60,16 @@ app.use((err, req, res, next) => {
 
 // Synchronisation de la base de données et initialisation des données
 db.sequelize
-  .sync({ force : false })
+  .sync({ alter : true })
   .then(async () => {
-    console.log("Database synchronized.");
+    console.log("📦 Database synchronized.");
 
     // Initialisation des tags
     await initData.initializeTags(db.tag);
     console.log("Initialisation des données terminée.");
   })
   .catch((error) => {
-    console.error("Erreur de synchronisation de la base de données :", error);
+    console.error("⚠️ Erreur de synchronisation de la base de données :", error);
   });
 
 // Lancement du serveur

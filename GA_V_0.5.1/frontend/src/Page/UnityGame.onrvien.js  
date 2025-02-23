@@ -1,0 +1,174 @@
+/* global createUnityInstance */
+import React, { useEffect, useRef, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import JSZip from "jszip";
+
+function UnityGame() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [fileUrls, setFileUrls] = useState({});
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [gameName, setGameName] = useState("");
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const fetchGameDetails = async () => {
+      console.log("Fetching game details for ID:", id);
+      try {
+        const response = await axios.get(`http://localhost:3000/api/games/${id}`);
+        setGameName(response.data.name);
+        console.log("Game name retrieved:", response.data.name);
+      } catch (error) {
+        console.error("Erreur lors de la récupération du jeu :", error);
+      }
+    };
+
+    fetchGameDetails();
+  }, [id]);
+
+  useEffect(() => {
+    if (!gameName || isLoaded) return;
+
+    const downloadAndExtractGame = async () => {
+      console.log("Downloading and extracting game:", gameName);
+
+      try {
+        console.log("Fetching ZIP file...");
+        const response = await axios.get(
+          `http://localhost:3000/api/games/${id}/download`,
+          { responseType: "arraybuffer" }
+        );
+
+        console.log("ZIP file received. Extracting...");
+        const zip = await JSZip.loadAsync(response.data);
+        const urls = {};
+
+        // Récupération de tous les fichiers du ZIP
+        const filePaths = Object.keys(zip.files);
+        console.log("Files found in ZIP:", filePaths);
+
+        await Promise.all(
+          filePaths.map(async (filePath) => {
+            if (!zip.files[filePath].dir) {
+              const newPath = filePath.split("/").slice(1).join("/"); // Supprime le premier dossier
+              const blob = await zip.files[filePath].async("blob");
+              urls[newPath] = URL.createObjectURL(blob);
+              console.log(`File extracted: ${newPath}`);
+            }
+          })
+        );
+
+        // Définition des fichiers requis pour Unity WebGL
+        const requiredFiles = [
+          `Build/${gameName}.loader.js`,
+          `Build/${gameName}.framework.js`,
+          `Build/${gameName}.data`,
+          `Build/${gameName}.wasm`,
+        ];
+
+        // Vérification de la présence des fichiers
+        const missingFiles = requiredFiles.filter(file => !urls[file]);
+
+        if (missingFiles.length > 0) {
+          console.error("Fichiers Unity WebGL manquants :", missingFiles);
+          return;
+        }
+
+        console.log("Tous les fichiers Unity WebGL sont présents.");
+
+        // Mise à jour de l'état avec les fichiers récupérés
+        setFileUrls({
+          loaderUrl: urls[`Build/${gameName}.loader.js`],
+          dataUrl: urls[`Build/${gameName}.data`],
+          frameworkUrl: urls[`Build/${gameName}.framework.js`],
+          codeUrl: urls[`Build/${gameName}.wasm`],
+        });
+
+        setIsLoaded(true);
+        console.log("Game files successfully set.");
+      } catch (error) {
+        console.error("Erreur lors du téléchargement et de l'extraction :", error);
+      }
+    };
+
+    downloadAndExtractGame();
+  }, [id, gameName, isLoaded]);
+
+  useEffect(() => {
+    if (!isLoaded || !fileUrls || Object.keys(fileUrls).length === 0) return;
+
+    console.log("Initializing Unity...");
+    console.log("File URLs:", fileUrls);
+
+    const { loaderUrl, dataUrl, frameworkUrl, codeUrl } = fileUrls;
+    console.log("loaderUrl:", loaderUrl);
+    console.log("dataUrl:", dataUrl);
+    console.log("frameworkUrl:", frameworkUrl);
+    console.log("codeUrl:", codeUrl);
+
+    if (!loaderUrl || !dataUrl || !frameworkUrl || !codeUrl) {
+      console.error("Fichiers Unity WebGL manquants :");
+      if (!loaderUrl) console.error("- loaderUrl");
+      if (!dataUrl) console.error("- dataUrl");
+      if (!frameworkUrl) console.error("- frameworkUrl");
+      if (!codeUrl) console.error("- codeUrl");
+      return;
+    }
+
+    console.log("Creating Unity options...");
+    const unityOptions = {
+      dataUrl,
+      frameworkUrl,
+      codeUrl,
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "Test",
+      productName: gameName,
+      productVersion: "1.0",
+    };
+
+    console.log("Unity options:", unityOptions);
+
+    const script = document.createElement("script");
+    script.src = loaderUrl;
+    console.log("Adding Unity loader script:", loaderUrl);
+
+    script.onload = () => {
+      console.log("Unity loader script loaded.");
+
+      if (typeof createUnityInstance !== "function") {
+        console.error("createUnityInstance non disponible !");
+        return;
+      }
+
+      console.log("Creating Unity instance...");
+      createUnityInstance(canvasRef.current, unityOptions)
+        .then(() => {
+          console.log("Unity instance created successfully.");
+          navigate(`/game/loader/${id}`);
+        })
+        .catch((error) => {
+          console.error("Erreur lors de l'initialisation Unity :", error);
+        });
+    };
+
+    script.onerror = () => {
+      console.error("Erreur de chargement du script Unity :", loaderUrl);
+    };
+
+    document.body.appendChild(script);
+
+    return () => {
+      console.log("Removing Unity loader script...");
+      document.body.removeChild(script);
+    };
+  }, [fileUrls, id, isLoaded, gameName, navigate]);
+
+  return !isLoaded ? (
+    <p>Chargement du jeu...</p>
+  ) : (
+    <canvas ref={canvasRef} id="unity-canvas" width="960" height="600" />
+  );
+}
+
+export default UnityGame;

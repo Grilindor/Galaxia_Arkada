@@ -9,7 +9,7 @@ function UnityGame() {
   const navigate = useNavigate();
   const [fileUrls, setFileUrls] = useState({});
   const [isLoaded, setIsLoaded] = useState(false);
-  const [gameName, setGameName] = useState(""); // Nom du jeu (dossier racine)
+  const [gameName, setGameName] = useState("");
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -33,7 +33,6 @@ function UnityGame() {
     const downloadAndExtractGame = async () => {
       try {
         console.log(`🔹 Téléchargement du fichier ZIP depuis /api/games/${id}/download`);
-
         const response = await axios.get(
           `http://localhost:3000/api/games/${id}/download`,
           { responseType: "arraybuffer" }
@@ -47,7 +46,6 @@ function UnityGame() {
         const urls = {};
         let rootFolder = "";
 
-        // Détecter le dossier racine
         const filePaths = Object.keys(zip.files);
         if (filePaths.length > 0) {
           rootFolder = filePaths[0].split("/")[0];
@@ -57,24 +55,21 @@ function UnityGame() {
           return;
         }
 
-        // Extraction des fichiers
         await Promise.all(
           filePaths.map(async (filePath) => {
             if (!zip.files[filePath].dir) {
               console.log(`📂 Extraction du fichier : ${filePath}`);
+              const newPath = filePath.replace(`${rootFolder}/`, "");
+              const fileData = await zip.files[filePath].async("arraybuffer");
 
-              // 🔹 Détecter le dossier racine
-              const parts = filePath.split("/");
-              if (!rootFolder) {
-                rootFolder = parts[0]; // Prend le premier dossier rencontré
-                console.log("📌 Dossier racine détecté :", rootFolder);
+              let blob;
+              if (newPath.endsWith(".wasm")) {
+                blob = new Blob([fileData], { type: "application/wasm" });
+              } else {
+                blob = new Blob([fileData]);
               }
 
-              // 🔹 Enlever le préfixe du dossier racine pour uniformiser
-              const newPath = filePath.replace(`${rootFolder}/`, "");
-              const blob = await zip.files[filePath].async("blob");
               urls[newPath] = URL.createObjectURL(blob);
-
               console.log(`📥 Fichier extrait : ${newPath}, taille : ${blob.size} octets`);
             }
           })
@@ -82,8 +77,6 @@ function UnityGame() {
 
         console.log("✅ Extraction terminée, fichiers récupérés :", Object.keys(urls));
 
-        // Vérification des fichiers obligatoires
-        const missingFiles = [];
         const requiredFiles = [
           `Build/${rootFolder}.loader.js`,
           `Build/${rootFolder}.framework.js`,
@@ -91,14 +84,10 @@ function UnityGame() {
           `Build/${rootFolder}.wasm`,
         ];
 
-        requiredFiles.forEach((file) => {
-          if (!urls[file]) missingFiles.push(file);
-        });
+        const missingFiles = requiredFiles.filter((file) => !urls[file]);
 
         if (missingFiles.length > 0) {
-          console.error("❌ Fichiers Unity WebGL manquants !");
-          console.log("🔗 Fichiers extraits :", Object.keys(urls));
-          console.log("❌ Manquants :", missingFiles);
+          console.error("❌ Fichiers Unity WebGL manquants !", missingFiles);
           return;
         }
 
@@ -118,14 +107,13 @@ function UnityGame() {
 
     console.log("✅ Initialisation de Unity WebGL...");
 
-    const loaderUrl = fileUrls[`Build/${gameName}.loader.js`];
-    const dataUrl = fileUrls[`Build/${gameName}.data`];
-    const frameworkUrl = fileUrls[`Build/${gameName}.framework.js`];
-    const codeUrl = fileUrls[`Build/${gameName}.wasm`];
+    const loaderUrl = fileUrls[Object.keys(fileUrls).find(key => key.endsWith(".loader.js"))];
+    const dataUrl = fileUrls[Object.keys(fileUrls).find(key => key.endsWith(".data"))];
+    const frameworkUrl = fileUrls[Object.keys(fileUrls).find(key => key.endsWith(".framework.js"))];
+    const codeUrl = fileUrls[Object.keys(fileUrls).find(key => key.endsWith(".wasm"))];
 
     if (!loaderUrl || !dataUrl || !frameworkUrl || !codeUrl) {
       console.error("❌ Fichiers Unity WebGL manquants après extraction !");
-      console.log("🔗 URLs actuelles :", fileUrls);
       return;
     }
 

@@ -16,9 +16,6 @@ const Game = db.game;
 const Tag = db.tag;
 const extract = require("extract-zip");
 
-const gamesDirectory = path.join(__dirname, "../../Game_Files"); // Dossier où les jeux sont stockés
-const extractedGamesDir = path.join(__dirname, "../../Extracted_Games"); // Dossier pour extraction
-
 console.log('Game model:', Game);
 console.log('Tag model:', Tag);
 

@@ -1,6 +1,6 @@
 {
 	"watch": ["server.js"],
-	"ignore": ["uploads"],
+	"ignore": ["uploads", "Extracted_Games/*"],
 	"ext": "js,json",
 	"exec": "node server.js"
   }

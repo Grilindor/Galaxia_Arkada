@@ -21,6 +21,10 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
+        extractedPath: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         gameEngine: {
             type: DataTypes.STRING,
             allowNull: false,
@@ -30,8 +34,8 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         imagePath: {
-            type: DataTypes.STRING, // a revérifier??
-            allowNull: true, // Pour permettre l'upload facultatif
+            type: DataTypes.STRING,
+            allowNull: true, // Image facultative
         },
     }, {
         hooks: {

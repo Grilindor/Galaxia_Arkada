@@ -4,7 +4,7 @@
   "description": "![logo]([logo.png](https://github.com/Grilindor/Galaxia_Arkada/blob/main/frontend/public/images/logo.png))",
   "scripts": {
     "dev": "concurrently \"npm run dev:Backend\" \"npm run dev:frontend\"",
-    "dev:Backend": "nodemon --inspect Backend/server.js",
+    "dev:Backend": "nodemon --inspect --ignore Extracted_Games Backend/server.js",
     "dev:frontend": "npm start --prefix frontend"
   },
   "keywords": [],

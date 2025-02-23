@@ -57,6 +57,13 @@ const Login = () => {
     setCaptchaToken(token); // Met à jour le token CAPTCHA
   };
 
+  const handleResetCaptcha = () => {
+    setCaptchaToken(null);
+    if (window.grecaptcha) {
+      window.grecaptcha.reset(); // Réinitialise le widget CAPTCHA
+    }
+  };
+
   return (
     <>
       <LoginContainer>
