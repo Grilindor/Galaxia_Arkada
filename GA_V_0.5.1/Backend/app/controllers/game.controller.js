@@ -10,8 +10,8 @@ const submitGameWithTags = async (req, res) => {
     let gameImage = null;
 
     try {
-        console.log("\ud83d\udce5 Request Body:", req.body);
-        console.log("\ud83d\udcc2 Uploaded Files:", req.files);
+        console.log("📥 Request Body:", req.body);
+        console.log("📂 Uploaded Files:", req.files);
 
         zipFile = req.files.zipFile ? req.files.zipFile[0] : null;
         gameImage = req.files.gameImage ? req.files.gameImage[0].path : null;
@@ -21,6 +21,9 @@ const submitGameWithTags = async (req, res) => {
             return res.status(400).json({ message: "Seuls les fichiers PNG sont autorisés." });
         }
 
+        const extractedPath = zipFile ? `Extracted_Games/${path.basename(zipFile.originalname, ".zip")}` : null;
+        console.log("📂 Chemin d'extraction prévu:", extractedPath);
+
         const gameData = {
             name: req.body.name,
             description: req.body.description,
@@ -29,35 +32,36 @@ const submitGameWithTags = async (req, res) => {
             gameEngine: req.body.gameEngine,
             platform: req.body.platform,
             imagePath: gameImage,
+            extractedPath: extractedPath,
         };
 
-        console.log("\u2705 Game Data:", gameData);
+        console.log("✅ Game Data:", gameData);
         const game = await Game.create(gameData);
-        console.log("\u2705 Game Created:", game.dataValues);
+        console.log("✅ Game Created:", game.dataValues);
 
-        console.log("\ud83d\udd0d Extraction en cours...");
+        console.log("🔍 Extraction en cours...");
         try {
-            const extractedPath = await gameExtractAndSave(zipFile);
-            game.extractedPath = extractedPath;
+            const extractedPathFinal = await gameExtractAndSave(zipFile);
+            game.extractedPath = extractedPathFinal;
             await game.save();
-            console.log("\u2705 Jeu mis à jour avec le chemin extrait:", game.extractedPath);
+            console.log("✅ Jeu mis à jour avec le chemin extrait:", game.extractedPath);
         } catch (error) {
             await GameDelete(game.id);
-            return res.status(500).json({ message: "\u274c Échec de l'extraction du jeu", error: error.message });
+            return res.status(500).json({ message: "❌ Échec de l'extraction du jeu", error: error.message });
         }
 
         const tagsData = Array.isArray(req.body.tags) ? req.body.tags : [];
-        console.log("\ud83c\udf02 Tags reçus:", tagsData);
+        console.log("🎂 Tags reçus:", tagsData);
         const tags = await Promise.all(tagsData.map(async (tagName) => {
             const [tag, created] = await Tag.findOrCreate({ where: { name: tagName } });
             return tag;
         }));
 
         await game.setTags(tags);
-        console.log("\u2705 Tags associés au jeu:", tags.map(tag => tag.name));
+        console.log("✅ Tags associés au jeu:", tags.map(tag => tag.name));
         res.status(201).json({ message: 'Jeu créé avec succès avec ses tags', game });
     } catch (error) {
-        console.error("\u274c Erreur dans submitGameWithTags:", error);
+        console.error("❌ Erreur dans submitGameWithTags:", error);
         if (zipFile) fs.unlinkSync(zipFile.path);
         if (gameImage) fs.unlinkSync(gameImage);
         res.status(500).json({ message: 'Erreur lors de la création du jeu', error: error.message });
@@ -75,7 +79,7 @@ const gameExtractAndSave = async (zipFile) => {
         const gameExtractedPath = path.join(extractedFolderPath, originalName);
 
         if (fs.existsSync(gameExtractedPath)) throw new Error(`Un jeu avec le nom "${originalName}" existe déjà.`);
-        console.log(`\ud83d\udcc2 Début de l'extraction vers: ${gameExtractedPath}`);
+        console.log(`📂 Début de l'extraction vers: ${gameExtractedPath}`);
 
         await new Promise((resolve, reject) => {
             fs.createReadStream(zipFile.path)
@@ -86,7 +90,7 @@ const gameExtractAndSave = async (zipFile) => {
 
         return `Extracted_Games/${originalName}`;
     } catch (error) {
-        console.error("\u274c Erreur lors de l'extraction du jeu:", error);
+        console.error("❌ Erreur lors de l'extraction du jeu:", error);
         throw new Error("Échec de l'extraction du jeu.");
     }
 };
@@ -103,9 +107,9 @@ const GameDelete = async (gameId) => {
         }
 
         await game.destroy();
-        console.log("\u2705 Jeu supprimé avec succès:", gameId);
+        console.log("✅ Jeu supprimé avec succès:", gameId);
     } catch (error) {
-        console.error("\u274c Erreur lors de la suppression du jeu:", error);
+        console.error("❌ Erreur lors de la suppression du jeu:", error);
     }
 };
 

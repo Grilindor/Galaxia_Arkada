@@ -28,6 +28,36 @@ app.use(
   })
 );
 
+const helmet = require("helmet");
+const escapeHtml = (str) =>
+  str.replace(
+    /[&<>"']/g,
+    (match) =>
+      ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }[match])
+  );
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+      },
+    },
+    xssFilter: true,
+    noSniff: true,
+    frameguard: { action: "deny" },
+  })
+);
+
 // Logger HTTP pour le développement
 app.use(morgan("dev"));
 

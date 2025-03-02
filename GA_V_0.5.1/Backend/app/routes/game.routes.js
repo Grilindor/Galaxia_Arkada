@@ -4,10 +4,6 @@ const router = express.Router();
 const authJwt = require("../middleware/authJwt");
 const gameController = require("../controllers/game.controller");
 
-// Import des middlewares distincts
-const uploadZip = require("../middleware/uploadZipFile");   // Upload des fichiers .zip
-const uploadImage = require("../middleware/uploadGameImage"); // Upload des images .png
-
 const db = require('../models');
 const fs = require("fs");
 const path = require("path");
@@ -125,5 +121,23 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.delete("/:id", authJwt.verifyToken, async (req, res) => {
+  try {
+    const gameId = req.params.id;
+    await gameController.GameDelete(gameId);
+    res.status(200).json({ message: "Jeu supprimé avec succès" });
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la suppression du jeu", error: error.message });
+  }
+});
+
+router.get("/api/check-path", (req, res) => {
+  const requestedPath = path.join(__dirname, req.query.path);
+  if (fs.existsSync(requestedPath)) {
+      return res.status(200).send({ exists: true });
+  } else {
+      return res.status(404).send({ exists: false });
+  }
+});
 
 module.exports = router;

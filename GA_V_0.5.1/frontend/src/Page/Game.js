@@ -54,6 +54,26 @@ function Game() {
     alert("Installer le jeu !");
   };
 
+  const handleDeleteClick = async () => {
+    if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce jeu ?")) return;
+
+    const token = sessionStorage.getItem("token"); // Récupération du token
+
+    try {
+      await axios.delete(`http://localhost:5000/api/games/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      alert("Le jeu a été supprimé avec succès !");
+      navigate("/Home");
+    } catch (error) {
+      console.error("❌ Erreur lors de la suppression du jeu :", error);
+      alert("Erreur lors de la suppression du jeu.");
+    }
+  };
+
   return (
     <div>
       <ButtonContainer>
@@ -75,6 +95,9 @@ function Game() {
       <PlayButtonContainer>
         <PlayInstallButton onClick={handlePlayClick}>Play</PlayInstallButton>
         <PlayInstallButton onClick={handleInstallClick}>Installer</PlayInstallButton>
+        <PlayInstallButton onClick={handleDeleteClick} style={{ backgroundColor: "red" }}>
+          Supprimer
+        </PlayInstallButton>
       </PlayButtonContainer>
 
       {/* ✅ Informations sur le jeu */}
