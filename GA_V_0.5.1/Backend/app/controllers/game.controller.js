@@ -68,19 +68,24 @@ const submitGameWithTags = async (req, res) => {
     }
 };
 
-const gameExtractAndSave = async (zipFile) => {
+async function gameExtractAndSave(zipFile) {
     try {
+        // 1️⃣ Vérification du fichier .zip
         if (!zipFile) throw new Error("Aucun fichier .zip fourni.");
 
+        // 2️⃣ Définition du dossier d'extraction
         const extractedFolderPath = path.join(__dirname, "../../../Extracted_Games");
-        if (!fs.existsSync(extractedFolderPath)) fs.mkdirSync(extractedFolderPath, { recursive: true });
 
+        // 4️⃣ Détermination du chemin d'extraction (sans créer de dossier supplémentaire)
         const originalName = path.basename(zipFile.originalname, ".zip");
-        const gameExtractedPath = path.join(extractedFolderPath, originalName);
+        const gameExtractedPath = extractedFolderPath;
 
-        if (fs.existsSync(gameExtractedPath)) throw new Error(`Un jeu avec le nom "${originalName}" existe déjà.`);
+        // 5️⃣ Vérification si le jeu existe déjà
+        const gamePath = path.join(gameExtractedPath, originalName);
+        if (fs.existsSync(gamePath)) throw new Error(`Un jeu avec le nom "${originalName}" existe déjà.`);
+
+        // 6️⃣ Extraction du fichier .zip
         console.log(`📂 Début de l'extraction vers: ${gameExtractedPath}`);
-
         await new Promise((resolve, reject) => {
             fs.createReadStream(zipFile.path)
                 .pipe(unzipper.Extract({ path: gameExtractedPath }))
@@ -88,8 +93,10 @@ const gameExtractAndSave = async (zipFile) => {
                 .on("error", reject);
         });
 
+        // 7️⃣ Retour du chemin d'extraction
         return `Extracted_Games/${originalName}`;
     } catch (error) {
+        // 8️⃣ Gestion des erreurs
         console.error("❌ Erreur lors de l'extraction du jeu:", error);
         throw new Error("Échec de l'extraction du jeu.");
     }
