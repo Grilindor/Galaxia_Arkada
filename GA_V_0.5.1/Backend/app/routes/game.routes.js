@@ -140,4 +140,59 @@ router.get("/api/check-path", (req, res) => {
   }
 });
 
+router.get("/:id/files", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    console.log(`🔍 Recherche des fichiers du jeu avec l'ID : ${id}`);
+
+    const game = await Game.findOne({ where: { id } });
+    console.log("🔍 Données du jeu récupérées:", game);
+
+    if (!game) {
+      console.error("❌ Jeu non trouvé !");
+      return res.status(404).json({ message: "Jeu non trouvé" });
+    }
+
+    console.log("✅ Jeu trouvé :", game);
+
+    const extractedPath = path.join(__dirname, "../../../", game.extractedPath);
+    console.log("🔍 Chemin d'extraction du jeu:", extractedPath);
+
+    if (!fs.existsSync(extractedPath)) {
+      console.error("❌ Dossier du jeu Unity introuvable :", extractedPath);
+      return res.status(404).json({ error: "Fichiers du jeu introuvables" });
+    }
+
+    const buildPath = path.join(extractedPath, "Build");
+    console.log("🔍 Recherche dans le dossier Build :", buildPath);
+
+    const files = fs.readdirSync(buildPath);
+    console.log("📂 Fichiers trouvés dans le dossier Build:", files);
+
+    const gameFiles = {
+      loader: files.find(f => f.endsWith(".loader.js")),
+      data: files.find(f => f.endsWith(".data")),
+      framework: files.find(f => f.endsWith(".framework.js")),
+      wasm: files.find(f => f.endsWith(".wasm")),
+    };
+
+    console.log("🔍 Fichiers Unity récupérés:", gameFiles);
+
+    if (!gameFiles.loader || !gameFiles.data || !gameFiles.framework || !gameFiles.wasm) {
+      console.error("❌ Fichiers Unity manquants !");
+      return res.status(404).json({ error: "Fichiers Unity introuvables" });
+    }
+
+    res.json({
+      extractedPath: game.extractedPath,
+      files: gameFiles,
+    });
+  } catch (error) {
+    console.error("❌ Erreur serveur :", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
+
 module.exports = router;
