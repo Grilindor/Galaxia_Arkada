@@ -1,16 +1,24 @@
-const { user, role, permission } = require("./models");
+const { user, roles, permission } = require("../models");
 
-// Exemple : Vérifier si un utilisateur a une permission spécifique
 async function hasPermission(userId, permissionName) {
-  const userWithRolesAndPermissions = await user.findByPk(userId, {
-    include: {
-      model: role,
+  try {
+    const userWithRolesAndPermissions = await user.findByPk(userId, {
       include: {
-        model: permission,
-        where: { name: permissionName },
+        model: role,
+        as: "roles",
+        include: {
+          model: permission,
+          as: "permission",
+          where: { name: permissionName },
+        },
       },
-    },
-  });
+    });
 
-  return !!userWithRolesAndPermissions;
+    return userWithRolesAndPermissions !== null;
+  } catch (error) {
+    console.error("Erreur lors de la vérification des permissions :", error);
+    return false;
+  }
 }
+
+module.exports = { hasPermission };

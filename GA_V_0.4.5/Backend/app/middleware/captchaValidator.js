@@ -18,6 +18,10 @@ const captchaValidator = async (req, res, next) => {
       }
     );
 
+    if (process.env.NODE_ENV === "test") {
+      return next(); // Bypass CAPTCHA pour les tests
+    }
+
     if (response.data.success) {
       next(); // CAPTCHA valide, passe au middleware suivant
     } else {
