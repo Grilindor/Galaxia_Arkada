@@ -1,25 +1,35 @@
-module.exports = (sequelize, Sequelize) => {
-  const RolePermission = sequelize.define('RolePermission', {
-    role_id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      references: {
-        model: 'roles', // Table de rôles
-        key: 'id',
+const { v4: uuidv4 } = require("uuid");
+
+module.exports = (sequelize, DataTypes) => {
+  const RolePermission = sequelize.define(
+    "RolePermission",
+    {
+      role_id: {
+        type: DataTypes.UUID, // Passage à UUID
+        allowNull: false,
+        references: {
+          model: "roles",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+      },
+      permission_id: {
+        type: DataTypes.UUID, // Passage à UUID
+        allowNull: false,
+        references: {
+          model: "permissions",
+          key: "id",
+        },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
     },
-    permission_id: {
-      type: Sequelize.INTEGER,
-      primaryKey: true,
-      references: {
-        model: 'permissions', // Table de permissions
-        key: 'id',
-      },
-    },
-  }, {
-    tableName: 'role_permissions', // Nom de la table de jointure
-    timestamps: false, // Pas de champs createdAt/updatedAt
-  });
+    {
+      tableName: "role_permissions",
+      timestamps: false,
+    }
+  );
 
   return RolePermission;
 };
