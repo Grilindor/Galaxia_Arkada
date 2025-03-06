@@ -1,6 +1,19 @@
 import styled from "styled-components";
-export const MainContainer = styled.div`
+import { createGlobalStyle } from "styled-components";
 
+
+
+export const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+  }
+`;
+
+export const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,16 +29,15 @@ export const ButtonContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 15px;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   border-bottom: 2px solid #ddd;
-  width: 100%;
 `;
 export const LogoImage = styled.img`
   width: 80px;
   margin-right: 20px;
 `;
 export const Button = styled.button`
-  background-color: #3498DB;
+  background-color: #3498db;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -33,7 +45,7 @@ export const Button = styled.button`
   border-radius: 5px;
   transition: background-color 0.3s ease;
   &:hover {
-    background-color: #2980B9;
+    background-color: #2980b9;
   }
 `;
 export const ProfileActionButton = styled(Button)`
@@ -45,7 +57,7 @@ export const ProfileSectionContainer = styled.div`
   grid-template-columns: 2fr 1fr;
   gap: 20px;
   margin: 20px;
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -54,7 +66,7 @@ export const ProfileDetailsContainer = styled.div`
   display: flex;
   flex-direction: column; /* Organise les éléments verticalement */
   align-items: flex-start; /* Aligne les éléments à gauche */
-  background-color: #F0F0F0;
+  background-color: #f0f0f0;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -80,7 +92,7 @@ export const InputField = styled.input`
 `;
 export const OnlineFriendsContainer = styled.div`
   padding: 15px;
-  background-color: #E9ECEF;
+  background-color: #e9ecef;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   text-align: left;
@@ -92,13 +104,13 @@ export const OnlineFriendsContainer = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    border: 2px solid #3498DB;
+    border: 2px solid #3498db;
   }
 `;
 export const FooterContainer = styled.div`
   text-align: center;
   margin-top: 20px;
   padding: 15px;
-  background-color: #F4F4F4;
+  background-color: #f4f4f4;
   border-top: 1px solid #ddd;
 `;
