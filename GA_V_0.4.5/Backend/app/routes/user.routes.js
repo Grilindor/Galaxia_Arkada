@@ -6,39 +6,43 @@ const {
   checkUserExistsByEmail,
   checkUserExistsByID,
 } = require("../middleware/checkUserExists");
-const signin = require("../controllers/user.signin");
+const { signIn } = require("../controllers/user.signin");
 const { signOut } = require("../controllers/user.signout");
 const { loginLimiter } = require("../middleware/loginLimiter");
 const captchaValidator = require("../middleware/captchaValidator");
+const { checkPermission } = require("../middleware/checkPermission");
 
-// Voir un utilisateur par son jwt
+console.log("captchaValidator:", captchaValidator);
+console.log("loginLimiter:", loginLimiter);
+console.log("signIn:", signIn);
+// Profil de l'utilisateur
 router.get("/Profile", [authJwt.verifyToken], controller.getUserProfile);
 
-// Créer un utilisateur
+// Inscription d'un utilisateur
 router.post("/signup", [checkUserExistsByEmail], controller.createUser);
 
-// Connexion d'un utilisateur
-router.post("/signin", captchaValidator, loginLimiter, signin.signIn);
+// Connexion
+router.post("/signin", captchaValidator, loginLimiter, signIn);
 
-// Mettre à jour un utilisateur par ID
+// Mise à jour des informations de l'utilisateur
 router.put(
   "/update",
   [authJwt.verifyToken],
   (req, res, next) => {
-    const idFromToken = req.userId; // récupéré depuis le middleware authJwt.verifyToken
-    req.params.id = idFromToken; // Ajoute l'ID dans les paramètres de la requête
+    const idFromToken = req.userId;
+    req.params.id = idFromToken;
     next();
   },
   checkUserExistsByID,
   controller.updateUser
-); // Appelle le contrôleur
+);
 
-// Supprimer un utilisateur par UUID
+// Suppression de l'utilisateur
 router.delete(
   "/delet",
   [authJwt.verifyToken],
   (req, res, next) => {
-    const idFromToken = req.userId; // récupéré depuis le middleware authJwt.verifyToken
+    const idFromToken = req.userId;
     req.params.id = idFromToken;
     next();
   },
@@ -46,11 +50,33 @@ router.delete(
   controller.deleteUser
 );
 
-// Déconnexion d'un utilisateur
+// Déconnexion
 router.post(
   "/auth/signout",
   [authJwt.verifyToken, checkUserExistsByID],
   signOut
 );
 
+// Attribution d'un rôle à un utilisateur
+/*router.post(
+  "/add-role",
+  [authJwt.verifyToken, checkPermission("admin")],
+  controller.addRoleToUser
+);
+
+// Route pour accéder au panneau d'administration
+router.get(
+  "/admin",
+  [authJwt.verifyToken, checkPermission("can_access_admin_panel")],
+  (req, res) => {
+    res.json({ message: "Bienvenue dans l'administration" });
+  }
+);
+
+router.get(
+  "/user/:userId/roles",
+  [authJwt.verifyToken],
+  controller.getUserRoles
+);
+*/
 module.exports = router;
