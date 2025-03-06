@@ -1,75 +1,95 @@
 import React, { useEffect, useState } from "react";
-import { Unity, useUnityContext } from "react-unity-webgl";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function UnityGame() {
-    const { id: gameId } = useParams();
-    console.log("🕹️ gameId reçu :", gameId);
+  const { id: gameId } = useParams();
+  const [gamePath, setGamePath] = useState(null);
+  const [gameFiles, setGameFiles] = useState(null);
+  const [isReady, setIsReady] = useState(false);
+  const [error, setError] = useState(null);
 
-    const [gamePath, setGamePath] = useState(null);
-    const [gameFiles, setGameFiles] = useState(null);
+  useEffect(() => {
+    const fetchGameData = async () => {
+      try {
+        console.log("📡 Récupération des fichiers du jeu...");
+        const response = await axios.get(`http://localhost:5000/api/games/${gameId}/files`);
+        console.log("✅ Données reçues :", response.data);
 
-    useEffect(() => {
-        const fetchGameData = async () => {
-            console.log("📡 Récupération des données du jeu...");
-            try {
-                const response = await axios.get(`/api/games/${gameId}`);
-                console.log("✅ Réponse API reçue :", response.data);
+        setGamePath(response.data.extractedPath);
+        setGameFiles(response.data.files);
+      } catch (err) {
+        console.error("❌ Erreur lors de la récupération des fichiers du jeu:", err);
+        setError("Erreur lors du chargement des fichiers du jeu.");
+      }
+    };
 
-                let extractedPath = response.data.extractedPath;
-                let possiblePath = `${extractedPath}/Build`;
+    fetchGameData();
+  }, [gameId]);
 
-                // On vérifie si le chemin contient bien les fichiers Unity
-                const checkPath = await axios.get(`/api/check-path?path=${possiblePath}`).catch(() => null);
+  useEffect(() => {
+    if (gamePath && gameFiles) {
+      const checkGameReady = async () => {
+        const url = `http://localhost:5000/${gamePath}/Build/${gameFiles.loader}`;
+        try {
+          console.log("🔍 Vérification de la disponibilité du fichier :", url);
+          const res = await fetch(url, { method: "HEAD" });
 
-                if (!checkPath) {
-                    console.warn("⚠️ Fichiers Unity non trouvés dans :", possiblePath);
+          if (res.ok) {
+            console.log("✅ Le jeu est prêt !");
+            setIsReady(true);
+          } else {
+            throw new Error("Fichier Unity introuvable.");
+          }
+        } catch (err) {
+          console.error("❌ Le jeu n'est pas encore disponible :", err);
+          setError("Le jeu n'est pas encore disponible.");
+        }
+      };
 
-                    // On teste avec le dossier en doublon
-                    const doublePath = `${extractedPath}/${extractedPath.split("/").pop()}/Build`;
-                    const checkDoublePath = await axios.get(`/api/check-path?path=${doublePath}`).catch(() => null);
-
-                    if (checkDoublePath) {
-                        console.log("✅ Correction du chemin :", doublePath);
-                        extractedPath = `${extractedPath}/${extractedPath.split("/").pop()}`;
-                    } else {
-                        console.error("❌ Aucun fichier Unity trouvé !");
-                    }
-                }
-
-                setGamePath(extractedPath);
-                setGameFiles(response.data.files);
-            } catch (error) {
-                console.error("❌ Erreur lors de la récupération des fichiers du jeu:", error);
-            }
-        };
-
-        fetchGameData();
-    }, [gameId]);
-
-    const { unityProvider } = useUnityContext({
-        loaderUrl: gameFiles ? `${gamePath}/Build/${gameFiles.loader}` : "",
-        dataUrl: gameFiles ? `${gamePath}/Build/${gameFiles.data}` : "",
-        frameworkUrl: gameFiles ? `${gamePath}/Build/${gameFiles.framework}` : "",
-        codeUrl: gameFiles ? `${gamePath}/Build/${gameFiles.wasm}` : "",
-    });
-
-    console.log("📌 État actuel - gamePath :", gamePath);
-    console.log("📌 État actuel - gameFiles :", gameFiles);
-
-    console.log("🛠️ Unity Loader URL :", gameFiles ? `${gamePath}/Build/${gameFiles.loader}` : "❌ Non défini");
-    console.log("🛠️ Unity Data URL :", gameFiles ? `${gamePath}/Build/${gameFiles.data}` : "❌ Non défini");
-    console.log("🛠️ Unity Framework URL :", gameFiles ? `${gamePath}/Build/${gameFiles.framework}` : "❌ Non défini");
-    console.log("🛠️ Unity Code URL :", gameFiles ? `${gamePath}/Build/${gameFiles.wasm}` : "❌ Non défini");
-
-    if (!gamePath || !gameFiles) {
-        return <p>⏳ Chargement du jeu...</p>;
+      checkGameReady();
     }
+  }, [gamePath, gameFiles]);
 
-    return (
-        <Unity unityProvider={unityProvider} style={{ width: 800, height: 600 }} />
-    );
+  useEffect(() => {
+    if (isReady && gamePath && gameFiles) {
+      console.log("🛠 Chargement du script Unity...");
+      const script = document.createElement("script");
+      script.src = `http://localhost:5000/${gamePath}/Build/${gameFiles.loader}`;
+      script.onload = () => {
+        console.log("🚀 Initialisation du jeu Unity...");
+        window.createUnityInstance(document.getElementById("unity-container"), {
+          dataUrl: `http://localhost:5000/${gamePath}/Build/${gameFiles.data}`,
+          frameworkUrl: `http://localhost:5000/${gamePath}/Build/${gameFiles.framework}`,
+          codeUrl: `http://localhost:5000/${gamePath}/Build/${gameFiles.wasm}`,
+        }).catch((error) => {
+          console.error("❌ Erreur lors du chargement du jeu Unity:", error);
+          setError("Erreur lors du chargement du jeu.");
+        });
+      };
+      script.onerror = () => {
+        console.error("❌ Impossible de charger le script Unity.");
+        setError("Impossible de charger le script Unity.");
+      };
+
+      document.body.appendChild(script);
+    }
+  }, [isReady, gamePath, gameFiles]);
+
+  if (error) {
+    return <p>❌ {error}</p>;
+  }
+
+  if (!gamePath || !gameFiles || !isReady) {
+    return <p>⏳ Chargement du jeu...</p>;
+  }
+
+  return (
+    <div>
+      <h2>Jeu Unity</h2>
+      <div id="unity-container" style={{ width: "100%", height: "600px" }} />
+    </div>
+  );
 }
 
 export default UnityGame;
