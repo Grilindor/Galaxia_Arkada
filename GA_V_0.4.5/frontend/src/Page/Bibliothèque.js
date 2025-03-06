@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
 import {
+  GlobalStyle,
   Container,
   Sidebar,
   ContentArea,
@@ -14,7 +15,6 @@ import {
   GameInfo,
   NavButton,
 } from "../styles/Bibliothèque_SC";
-
 function Bibliothèque() {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -103,6 +103,7 @@ function Bibliothèque() {
           <p>Vous devez être connecté pour voir les jeux.</p>
         )}
       </ContentArea>
+      <GlobalStyle />
     </Container>
   );
 }

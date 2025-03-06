@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import logo from "../image/logo_1.png";
 import {
@@ -16,7 +17,6 @@ import {
   GamesList,
   Game,
   Footer,
-  gameData,
 } from "../styles/Home_SC";
 //import logoImportGame from "../image/logoimportgame.jpg";
 import pub from "../image/pub_Dev_Max.png";
@@ -25,8 +25,23 @@ import banderole from "../image/banderole.png";
 
 function Home() {
   const [theme, setTheme] = useState("light");
+  const [games, setGames] = useState([]); // Stocker les jeux récupérés
   const navigate = useNavigate();
   const isLoggedIn = sessionStorage.getItem("token") !== null;
+
+  // Charger les jeux depuis la base de données
+  useEffect(() => {
+    const fetchGames = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/games/all"); // URL backend
+        setGames(response.data); // Mettez à jour l'état avec les jeux
+      } catch (error) {
+        console.error("Error fetching games:", error);
+      }
+    };
+
+    fetchGames();
+  }, []); // Exécuté une seule fois au chargement de la page
 
   const toggleTheme = () => {
     const newTheme = theme === "light" ? "dark" : "light";
@@ -171,23 +186,28 @@ function Home() {
           />
         </Sidebar>
         <GamesList>
-          {gameData.map((game) => (
+          {games.map((game) => (
             <Game key={game.id}>
               <NavButton
                 className="game-image"
-                onClick={() => navigate("/game")}
+                onClick={() => navigate(`/game/${game.id}`)} // Accès au jeu
               >
                 <img
-                  src={game.image}
+                  src={`http://localhost:3000/${game.imagePath}`} // Correction ici
                   alt={game.name}
                   style={{ width: "100%", height: "auto", borderRadius: "5px" }}
                 />
               </NavButton>
               <h3>{game.name}</h3>
-              <p>Note : {game.rating}</p>
+              <p>{game.description}</p>
+              <p>
+                <strong>Tags :</strong>{" "}
+                {game.tags.map((tag) => tag.name).join(", ")}
+              </p>
             </Game>
           ))}
         </GamesList>
+
         <Sidebar>
           <img
             src={evenement}

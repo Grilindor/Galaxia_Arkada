@@ -15,6 +15,7 @@ const SignUp = () => {
     birthdate: false,
     receiveEmail: false,
     isRobot: false,
+    isDeveloper: false, // Ajout de l'état pour vérifier si l'utilisateur est un développeur
   });
 
   const [error, setError] = useState(null); // Gestion des erreurs
@@ -53,7 +54,13 @@ const SignUp = () => {
   return (
     <div className={css(styles.container)}>
       <div className={css(styles.logo)}>
-        <img src={logo} alt="Galaxia Logo" className={css(styles.logoImage)} />
+        <a href="/home">
+          <img
+            src={logo}
+            alt="Galaxia Logo"
+            className={css(styles.logoImage)}
+          />
+        </a>
       </div>
       <h2 className={css(styles.text)}>Create an Account</h2>
       {error && <p className={css(styles.errorText)}>{error}</p>}
@@ -130,6 +137,16 @@ const SignUp = () => {
             required
           />
           I am not a robot
+        </label>
+        {/* Ajout de la case pour vérifier si l'utilisateur est un développeur */}
+        <label className={css(styles.checkboxLabel)}>
+          <input
+            type="checkbox"
+            name="isDeveloper"
+            checked={formData.isDeveloper}
+            onChange={handleChange}
+          />
+          I am a developer
         </label>
         <label className={css(styles.checkboxLabel)}>
           <input type="checkbox" required />

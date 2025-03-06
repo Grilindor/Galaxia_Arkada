@@ -26,6 +26,7 @@ const GameSubmissionForm = () => {
   const navigate = useNavigate();
   const [selectedTags, setSelectedTags] = useState([]);
   const [tagOptions, setTagOptions] = useState([]);
+  const [imageFile, setImageFile] = useState(null);
 
   // Récupère les tags depuis le backend au chargement du composant
   useEffect(() => {
@@ -67,6 +68,7 @@ const GameSubmissionForm = () => {
     formData.append("gameEngine", gameData.gameEngine);
     selectedTags.forEach((tag) => formData.append("tags[]", tag)); // modif recent ici "tags" en "tags[]""
     formData.append("zipFile", zipFileName);
+    formData.append("gameImage", imageFile);
 
     // Log pour vérifier les données envoyées
     console.log("Submitting form data:", {
@@ -163,6 +165,12 @@ const GameSubmissionForm = () => {
           accept=".zip"
           onChange={handleFileChange}
           required
+        />
+        <input
+          type="file"
+          name="gameImage"
+          accept="image/png"
+          onChange={(e) => setImageFile(e.target.files[0])}
         />
         {error && <p style={{ color: "red" }}>{error}</p>}
         <Button type="submit">Soumettre</Button>
