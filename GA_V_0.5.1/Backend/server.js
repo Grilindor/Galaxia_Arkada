@@ -6,7 +6,7 @@ const db = require("./app/models");
 const initData = require("./app/utils/initData"); // Initialisation des tags
 const path = require("path");
 const fs = require("fs");
-
+const helmet = require("helmet");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,7 +28,6 @@ app.use(
   })
 );
 
-const helmet = require("helmet");
 const escapeHtml = (str) =>
   str.replace(
     /[&<>"']/g,
@@ -37,7 +36,7 @@ const escapeHtml = (str) =>
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
-        '"': "&quot;",
+        "\"": "&quot;",
         "'": "&#39;",
       }[match])
   );
@@ -82,6 +81,14 @@ app.use("/api/games", gameRoutes);
 app.use("/api/tags", tagRoutes);
 app.use('/Game_Images', express.static('Game_Images'));
 
+// Servir les fichiers extraits de Unity avec CORS
+app.use('/Extracted_Games', express.static(path.join(__dirname, '../Extracted_Games'), {
+  setHeaders: (res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  }
+}));
+
 // Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error("Erreur:", err.stack);
@@ -90,7 +97,7 @@ app.use((err, req, res, next) => {
 
 // Synchronisation de la base de données et initialisation des données
 db.sequelize
-  .sync({ alter : true })
+  .sync({ alter: true })
   .then(async () => {
     console.log("📦 Database synchronized.");
 
