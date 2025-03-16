@@ -1,5 +1,4 @@
-import styled from "styled-components";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
   body {
@@ -13,6 +12,11 @@ export const GlobalStyle = createGlobalStyle`
 
 export const Container = styled.div`
   display: flex;
+  flex-direction: row;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 export const Sidebar = styled.div`
@@ -20,6 +24,12 @@ export const Sidebar = styled.div`
   background-color: #f4f4f4;
   padding: 20px;
   border-right: 2px solid #ddd;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #ddd;
+  }
 `;
 
 export const ContentArea = styled.div`
@@ -29,8 +39,12 @@ export const ContentArea = styled.div`
 
 export const GamesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
 `;
 
 export const StyledImage = styled.img`
@@ -46,6 +60,7 @@ export const Nav = styled.nav`
   background-color: #f4f4f4;
   padding: 10px 20px;
   border-bottom: 2px solid #ddd;
+  flex-wrap: wrap;
 `;
 
 export const Button = styled.button`
@@ -55,9 +70,14 @@ export const Button = styled.button`
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 5px;
+  transition: background-color 0.3s ease;
 
   &:hover {
     background-color: #2980b9;
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px 12px;
   }
 `;
 

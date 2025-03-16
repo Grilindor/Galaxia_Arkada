@@ -31,6 +31,16 @@ export const styles = StyleSheet.create({
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
+
+    // Media queries pour rendre le formulaire responsive
+    "@media (max-width: 768px)": {
+      width: "80%",
+      padding: "15px",
+    },
+    "@media (max-width: 480px)": {
+      width: "90%",
+      padding: "10px",
+    },
   },
   logo: {
     marginBottom: "20px",
@@ -38,6 +48,11 @@ export const styles = StyleSheet.create({
   logoImage: {
     width: "100px",
     height: "auto",
+
+    // Réduire la taille du logo sur mobile
+    "@media (max-width: 480px)": {
+      width: "80px",
+    },
   },
   form: {
     display: "flex",
@@ -50,6 +65,11 @@ export const styles = StyleSheet.create({
     border: "1px solid #ccc",
     borderRadius: "4px",
     fontSize: "16px",
+
+    // Réduire la taille du texte sur mobile
+    "@media (max-width: 480px)": {
+      fontSize: "14px",
+    },
   },
   button: {
     padding: "10px",
@@ -61,6 +81,12 @@ export const styles = StyleSheet.create({
     cursor: "pointer",
     transition: "background-color 0.3s ease",
     marginBottom: "20px",
+
+    // Réduire la taille du bouton sur mobile
+    "@media (max-width: 480px)": {
+      fontSize: "14px",
+      padding: "8px",
+    },
   },
   buttonHover: {
     ":hover": {
@@ -76,6 +102,11 @@ export const styles = StyleSheet.create({
     fontSize: "20px",
     textAlign: "center",
     marginBottom: "20px",
+
+    // Ajuster la taille du texte sur mobile
+    "@media (max-width: 480px)": {
+      fontSize: "18px",
+    },
   },
   errorText: {
     color: "red",

@@ -1,8 +1,6 @@
 import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
 
-
-
 export const GlobalStyle = createGlobalStyle`
   body {
     background-color: transparent;
@@ -23,7 +21,13 @@ export const MainContainer = styled.div`
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 90%;
   margin: auto;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    margin: 10px 0;
+  }
 `;
+
 export const ButtonContainer = styled.div`
   display: flex;
   align-items: center;
@@ -31,11 +35,18 @@ export const ButtonContainer = styled.div`
   padding: 15px;
   background-color: #f4f4f4;
   border-bottom: 2px solid #ddd;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
+
 export const LogoImage = styled.img`
   width: 80px;
   margin-right: 20px;
 `;
+
 export const Button = styled.button`
   background-color: #3498db;
   color: white;
@@ -44,14 +55,21 @@ export const Button = styled.button`
   cursor: pointer;
   border-radius: 5px;
   transition: background-color 0.3s ease;
+
   &:hover {
     background-color: #2980b9;
   }
+
+  @media (max-width: 768px) {
+    padding: 8px 15px;
+  }
 `;
+
 export const ProfileActionButton = styled(Button)`
   margin: 10px 0;
   width: 100%;
 `;
+
 export const ProfileSectionContainer = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -61,17 +79,24 @@ export const ProfileSectionContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
 `;
+
 export const ProfileDetailsContainer = styled.div`
   display: flex;
-  flex-direction: column; /* Organise les éléments verticalement */
-  align-items: flex-start; /* Aligne les éléments à gauche */
+  flex-direction: column;
+  align-items: flex-start;
   background-color: #f0f0f0;
   padding: 15px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  text-align: left; /* Assure que le texte est à gauche */
+  text-align: left;
 `;
+
 export const ProfileImage = styled.img`
   width: 100px;
   height: 100px;
@@ -79,6 +104,7 @@ export const ProfileImage = styled.img`
   margin: 15px auto;
   display: block;
 `;
+
 export const InputField = styled.input`
   margin: 8px 0;
   padding: 10px;
@@ -89,16 +115,23 @@ export const InputField = styled.input`
   display: block;
   margin-left: auto;
   margin-right: auto;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
+
 export const OnlineFriendsContainer = styled.div`
   padding: 15px;
   background-color: #e9ecef;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   text-align: left;
+
   h2 {
     margin-bottom: 10px;
   }
+
   img {
     margin: 5px;
     width: 50px;
@@ -107,6 +140,7 @@ export const OnlineFriendsContainer = styled.div`
     border: 2px solid #3498db;
   }
 `;
+
 export const FooterContainer = styled.div`
   text-align: center;
   margin-top: 20px;

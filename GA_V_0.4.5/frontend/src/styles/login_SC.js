@@ -15,6 +15,10 @@ export const LoginContainer = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-attachment: fixed;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 export const Form = styled.form`
@@ -26,6 +30,11 @@ export const Form = styled.form`
   border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    width: 90%;
+    padding: 20px;
+  }
 `;
 
 export const LogoContainer = styled.div`
@@ -37,12 +46,20 @@ export const LogoContainer = styled.div`
 export const LoginLogo = styled.img`
   width: 80px;
   cursor: pointer;
+
+  @media (max-width: 480px) {
+    width: 60px;
+  }
 `;
 
 export const LoginTitle = styled.h2`
   text-align: center;
   font-size: 24px;
   margin-bottom: 20px;
+
+  @media (max-width: 480px) {
+    font-size: 20px;
+  }
 `;
 
 export const InputContainer = styled.div`
@@ -56,6 +73,10 @@ export const Input = styled.input`
   border-radius: 4px;
   font-size: 16px;
   box-sizing: border-box;
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+  }
 `;
 
 export const SubmitButton = styled.button`
@@ -68,14 +89,24 @@ export const SubmitButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-bottom: 20px;
+
   &:hover {
     background-color: #333;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 14px;
+    padding: 8px;
   }
 `;
 
 export const FormLinks = styled.div`
   text-align: center;
   font-size: 14px;
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+  }
 `;
 
 export const Link = styled.a`
@@ -96,4 +127,9 @@ export const ThemeToggle = styled.label`
   top: 20px;
   right: 20px;
   cursor: pointer;
+
+  @media (max-width: 480px) {
+    top: 10px;
+    right: 10px;
+  }
 `;
