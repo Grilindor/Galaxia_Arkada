@@ -2,17 +2,24 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const db = require("../models");
 require("dotenv").config({ path: "./Backend/.env" });
-
 const User = db.user;
 const Token = db.token;
+
+const result = require("dotenv").config();
+if (result.error) {
+  console.error("Erreur de chargement du fichier .env", result.error);
+}
+
+console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
 exports.signIn = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).send({ message: "Email and/or password are required!" });
-  };
-
+    return res
+      .status(400)
+      .send({ message: "Email and password are required!" });
+  }
 
   try {
     const user = await User.findOne({ where: { email } });
@@ -21,7 +28,6 @@ exports.signIn = async (req, res) => {
       return res.status(404).send({ message: "User Not Found." });
     }
 
-    // Vérifie si le compte est temporairement verrouillé
     if (user.lockUntil && user.lockUntil > new Date()) {
       return res.status(403).send({
         message: `Compte verrouillé. Réessayez après ${user.lockUntil}.`,
@@ -29,6 +35,7 @@ exports.signIn = async (req, res) => {
     }
 
     const passwordIsValid = await bcrypt.compare(password, user.password);
+    //const passwordIsValid = await bcrypt.compare(req.body.password, user.password);
 
     if (!passwordIsValid) {
       // Incrémente les tentatives échouées
@@ -49,7 +56,7 @@ exports.signIn = async (req, res) => {
     await user.save();
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: 43200, // 12 heures 3600 pour 1h
+      expiresIn: 43200, // 12 heures
     });
 
     // Sauvegarder le token dans la base de données

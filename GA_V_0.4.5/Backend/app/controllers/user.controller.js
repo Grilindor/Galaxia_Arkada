@@ -5,7 +5,7 @@ const saltRounds = 10;
 
 // Voir tous les utilisateurs avec pagination
 exports.getAllUsers = async (req, res) => {
-  const page = parseInt(req.query.page) || 1;
+  const page = req.query.page || 1;
   const limit = 10;
   const offset = (page - 1) * limit;
 
@@ -13,9 +13,8 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.findAndCountAll({
       limit,
       offset,
-      order: [['createdAt', 'DESC']], // Optionnel : Tri par date de création
+      order: [["createdAt", "DESC"]],
     });
-
     res.status(200).json({
       totalUsers: users.count,
       totalPages: Math.ceil(users.count / limit),
@@ -23,7 +22,6 @@ exports.getAllUsers = async (req, res) => {
       users: users.rows,
     });
   } catch (err) {
-    console.error("Erreur lors de la récupération des utilisateurs :", err.message);
     res.status(500).send({ message: err.message });
   }
 };
@@ -31,7 +29,7 @@ exports.getAllUsers = async (req, res) => {
 // Voir un utilisateur par ID
 exports.getUserProfile = async (req, res) => {
   try {
-    //console.log("Requête reçue pour récupérer le profil de l'utilisateur.");  Log de début
+    console.log("Requête reçue pour récupérer le profil de l'utilisateur."); // Log de début
 
     // Vérifier si l'ID de l'utilisateur est bien extrait du token
     if (!req.userId) {
@@ -39,29 +37,33 @@ exports.getUserProfile = async (req, res) => {
       return res.status(400).send({ message: "Invalid Token." });
     }
 
-    //console.log("ID de l'utilisateur extrait du token :", req.userId); // Affichage de l'ID utilisateur
+    console.log("ID de l'utilisateur extrait du token :", req.userId); // Affichage de l'ID utilisateur
 
     // Récupérer toutes les informations de l'utilisateur via son ID extrait du token (req.userId)
     const user = await User.findByPk(req.userId);
 
     // Vérifier si l'utilisateur a été trouvé dans la base de données
     if (!user) {
-      console.error("Erreur : Utilisateur non trouvé dans la base de données avec cet ID :", req.userId);
+      console.error(
+        "Erreur : Utilisateur non trouvé dans la base de données avec cet ID :",
+        req.userId
+      );
       return res.status(404).send({ message: "User Not Found." });
     }
 
-    //console.log("Utilisateur trouvé :", user); // Afficher les informations utilisateur trouvées
+    console.log("Utilisateur trouvé :", user); // Afficher les informations utilisateur trouvées
 
     // Renvoyer toutes les informations de l'utilisateur
     res.status(200).send(user);
     console.log("Informations de l'utilisateur renvoyées avec succès.");
-
   } catch (err) {
-    console.error("Erreur lors de la récupération des informations de l'utilisateur :", err.message); // Log de l'erreur
+    console.error(
+      "Erreur lors de la récupération des informations de l'utilisateur :",
+      err.message
+    ); // Log de l'erreur
     res.status(500).send({ message: err.message });
   }
 };
-
 
 // Créer un utilisateur avec le rôle
 exports.createUser = async (req, res) => {
@@ -102,7 +104,7 @@ exports.updateUser = async (req, res) => {
     await user.update(updateData);
     res.status(200).send(user);
   } catch (err) {
-    console.error("Erreur lors de la mise à jour de l'utilisateur :", err.message);
+    // console.error("Erreur lors de la mise à jour de l'utilisateur :", err.message);
     res.status(500).send({ message: err.message });
   }
 };
@@ -118,7 +120,7 @@ exports.deleteUser = async (req, res) => {
     await user.destroy();
     res.status(200).send({ message: "User was deleted successfully!" });
   } catch (err) {
-    console.error("Erreur lors de la suppression de l'utilisateur :", err.message);
+    // console.error("Erreur lors de la suppression de l'utilisateur :", err.message);
     res.status(500).send({ message: err.message });
   }
 };

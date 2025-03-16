@@ -9,7 +9,11 @@ export const AuthProvider = ({ children }) => {
 
   // Fonction pour gérer le login
   const login = async (email, password, captchaToken) => {
-    console.log("Tentative de connexion avec", { email, password, captchaToken });
+    console.log("Tentative de connexion avec", {
+      email,
+      password,
+      captchaToken,
+    });
     if (!email || !password || !captchaToken) {
       console.error("Email, mot de passe ou CAPTCHA manquant.");
       setError("Veuillez remplir tous les champs et valider le CAPTCHA.");
@@ -18,9 +22,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await axios.post(
         "http://localhost:3000/api/users/signin",
-        { email, password, recaptchaToken: captchaToken }
+        { email, password, captchaToken }
       );
       console.log("Réponse du serveur :", response);
+      console.log("Réponse serveur :", response.data);
       const data = response.data;
 
       if (response.status === 200) {
@@ -47,17 +52,23 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await axios.get("http://localhost:3000/api/users/Profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:3000/api/users/Profile",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const data = response.data;
       console.log("Réponse du serveur pour les infos utilisateur :", data);
       setUser(data); // Définir l'utilisateur ici après avoir récupéré les données
     } catch (err) {
-      console.error("Erreur lors de la récupération des informations utilisateur", err);
+      console.error(
+        "Erreur lors de la récupération des informations utilisateur",
+        err
+      );
     }
   };
 
@@ -68,16 +79,23 @@ export const AuthProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.put("http://localhost:3000/api/users/update", updatedUserData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.put(
+        "http://localhost:3000/api/users/update",
+        updatedUserData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = response.data;
       console.log("Mise à jour des infos utilisateur réussie :", data);
       setUser(data); // Définir l'utilisateur après mise à jour
     } catch (err) {
-      console.error("Erreur lors de la mise à jour des informations utilisateur", err);
+      console.error(
+        "Erreur lors de la mise à jour des informations utilisateur",
+        err
+      );
     }
   };
 
@@ -89,7 +107,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, error, fetchUserData, update }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, error, fetchUserData, update }}
+    >
       {children}
     </AuthContext.Provider>
   );

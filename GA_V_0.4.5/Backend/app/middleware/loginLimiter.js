@@ -1,4 +1,4 @@
-const rateLimit = require('express-rate-limit');
+const rateLimit = require("express-rate-limit");
 
 // un limiteur pour la route de connexion
 const loginLimiter = rateLimit({
