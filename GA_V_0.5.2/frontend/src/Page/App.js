@@ -14,7 +14,7 @@ import Bibliothèque from "./Bibliothèque";
 import Forgotpassword from "./ForgotPassword";
 import Game from "./Game";
 import GameSubmissionForm from "./GameSubmissionForm";
-import UnityGame from "./thebeggarking.js (enpause)";
+import UnityGame from "./UnityGame";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminPage from "../Admin_page/Admin";
 import AdminPagestats from "../Admin_page/Admin_stats";
@@ -56,9 +56,7 @@ function AppRoutes() {
       <Route
         path="/GameSubmissionForm"
         element={
-          <ProtectedRoute allowedRoles={["admin", "devo", "user"]}>
-            {" "}
-            {/* enlever user*/}
+          <ProtectedRoute allowedRoles={["admin", "devo", "user"]}> {/*enlever le user*/}
             <GameSubmissionForm />
           </ProtectedRoute>
         }

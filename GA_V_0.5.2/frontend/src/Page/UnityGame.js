@@ -1,97 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { Unity, useUnityContext } from "react-unity-webgl";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function UnityGame() {
   const { id: gameId } = useParams();
-  console.log("🕹️ gameId reçu :", gameId);
-
-  const [gamePath, setGamePath] = useState(null);
-  const [gameFiles, setGameFiles] = useState(null);
+  const [gameUrl, setGameUrl] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchGameData = async () => {
-      console.log("📡 Récupération des données du jeu...");
       try {
-        const response = await axios.get(`/api/games/${gameId}`);
-        console.log("✅ Réponse API reçue :", response.data);
+        console.log("📡 Récupération des fichiers du jeu...");
+        const response = await axios.get(`http://localhost:5000/api/games/${gameId}/files`);
+        console.log("✅ Données reçues :", response.data);
 
-        let extractedPath = response.data.extractedPath;
-        let possiblePath = `${extractedPath}/Build`;
-
-        // On vérifie si le chemin contient bien les fichiers Unity
-        const checkPath = await axios
-          .get(`/api/check-path?path=${possiblePath}`)
-          .catch(() => null);
-
-        if (!checkPath) {
-          console.warn("⚠️ Fichiers Unity non trouvés dans :", possiblePath);
-
-          // On teste avec le dossier en doublon
-          const doublePath = `${extractedPath}/${extractedPath
-            .split("/")
-            .pop()}/Build`;
-          const checkDoublePath = await axios
-            .get(`/api/check-path?path=${doublePath}`)
-            .catch(() => null);
-
-          if (checkDoublePath) {
-            console.log("✅ Correction du chemin :", doublePath);
-            extractedPath = `${extractedPath}/${extractedPath
-              .split("/")
-              .pop()}`;
-          } else {
-            console.error("❌ Aucun fichier Unity trouvé !");
-          }
+        if (response.data.extractedPath) {
+          setGameUrl(`http://localhost:5000/${response.data.extractedPath}/index.html`); //dernière modife ici
+        } else {
+          throw new Error("Chemin du jeu introuvable");
         }
-
-        setGamePath(extractedPath);
-        setGameFiles(response.data.files);
-      } catch (error) {
-        console.error(
-          "❌ Erreur lors de la récupération des fichiers du jeu:",
-          error
-        );
+      } catch (err) {
+        console.error("❌ Erreur lors de la récupération des fichiers du jeu:", err);
+        setError("Erreur lors du chargement du jeu.");
       }
     };
 
     fetchGameData();
   }, [gameId]);
 
-  const { unityProvider } = useUnityContext({
-    loaderUrl: gameFiles ? `${gamePath}/Build/${gameFiles.loader}` : "",
-    dataUrl: gameFiles ? `${gamePath}/Build/${gameFiles.data}` : "",
-    frameworkUrl: gameFiles ? `${gamePath}/Build/${gameFiles.framework}` : "",
-    codeUrl: gameFiles ? `${gamePath}/Build/${gameFiles.wasm}` : "",
-  });
+  if (error) {
+    return <p>❌ {error}</p>;
+  }
 
-  console.log("📌 État actuel - gamePath :", gamePath);
-  console.log("📌 État actuel - gameFiles :", gameFiles);
-
-  console.log(
-    "🛠️ Unity Loader URL :",
-    gameFiles ? `${gamePath}/Build/${gameFiles.loader}` : "❌ Non défini"
-  );
-  console.log(
-    "🛠️ Unity Data URL :",
-    gameFiles ? `${gamePath}/Build/${gameFiles.data}` : "❌ Non défini"
-  );
-  console.log(
-    "🛠️ Unity Framework URL :",
-    gameFiles ? `${gamePath}/Build/${gameFiles.framework}` : "❌ Non défini"
-  );
-  console.log(
-    "🛠️ Unity Code URL :",
-    gameFiles ? `${gamePath}/Build/${gameFiles.wasm}` : "❌ Non défini"
-  );
-
-  if (!gamePath || !gameFiles) {
+  if (!gameUrl) {
     return <p>⏳ Chargement du jeu...</p>;
   }
 
   return (
-    <Unity unityProvider={unityProvider} style={{ width: 800, height: 600 }} />
+    <div>
+      <h2>Jeu Unity</h2>
+      <iframe
+        src={gameUrl}
+        title="Unity Game"
+        width="100%"
+        height="600px"
+        style={{ border: "none" }}
+      />
+    </div>
   );
 }
 

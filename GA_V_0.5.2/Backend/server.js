@@ -45,16 +45,26 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
         objectSrc: ["'none'"],
         upgradeInsecureRequests: [],
+        frameAncestors: ["'self'", "http://localhost:3000", "http://localhost:5000", "*"],
       },
     },
     xssFilter: true,
     noSniff: true,
-    frameguard: { action: "deny" },
+    frameguard: false, // Désactiver la restriction sur les iframes
   })
 );
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "frame-ancestors 'self' http://localhost:3000 http://localhost:5000 *"
+  );
+  next();
+});
+
 
 app.use(morgan("dev"));
 app.use(bodyParser.json());
@@ -86,6 +96,16 @@ app.use("/api/users", userRoutes);
 app.use("/api/games", gameRoutes);
 app.use("/api/tags", tagRoutes);
 app.use("/Game_Images", express.static("Game_Images"));
+
+// Servir les fichiers extraits de Unity avec CORS
+app.use('/Extracted_Games', express.static(path.join(__dirname, '../Extracted_Games'), {
+  setHeaders: (res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  }
+}));
+
+
 
 // Middleware global pour capturer les erreurs
 app.use((err, req, res, next) => {
